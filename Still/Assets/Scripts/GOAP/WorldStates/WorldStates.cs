@@ -1,0 +1,50 @@
+﻿using NUnit.Framework;
+using Still.GOAP.WorldState.Config;
+using System;
+using System.Collections.Generic;
+using UniRx;
+namespace Still.GOAP.WorldState
+{
+    public class WorldStates
+    {
+        /// <summary>ステートの値が変わった時に発火されるイベント</summary>
+        public IObservable<string> OnStateChanged => _onStateChanged;
+        public Dictionary<string, int> CurrentStates => _currentWorldStates;
+
+        private readonly Subject<string> _onStateChanged = new();
+        private readonly Dictionary<string, int> _currentWorldStates;
+
+
+        public WorldStates(WorldStateConfig config)
+        {
+            foreach (var state in config.GetStates())
+            {
+                _currentWorldStates.Add(state.Key, state.Value);
+            }
+        }
+        /// <summary>
+        /// ステートの値を書き換える
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void ModifyState(string key, int value)
+        {
+            if (value == 0) return;
+            _currentWorldStates[key] = value;
+            _onStateChanged.OnNext(key);
+        }
+        /// <summary>
+        /// ステートの値を加算する
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void AdditionState(string key, int value)
+        {
+            if (value == 0) return;
+            _currentWorldStates[key] += value;
+            _onStateChanged.OnNext(key);
+        }
+
+        public int GetStateValue(string key) => _currentWorldStates[key]; 
+    }
+}
