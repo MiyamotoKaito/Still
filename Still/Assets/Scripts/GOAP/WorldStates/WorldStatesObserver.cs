@@ -1,5 +1,6 @@
 ﻿using Still.GOAP.Goal.Config;
-using Still.GOAP.Planner.ExeCutor;
+using Still.GOAP.Planner;
+using Still.GOAP.Planner.Executor;
 using System.Collections.Generic;
 using UniRx;
 
@@ -11,7 +12,7 @@ namespace Still.GOAP.WorldState.Observer
         private GoapExecutor _executor;
         private List<SubGoalConfig> _goals;
         private CompositeDisposable _disposables = new CompositeDisposable();
-        public WorldStatesObserver(WorldStates worldStates,GoapExecutor executor, List<SubGoalConfig> goals)
+        public WorldStatesObserver(WorldStates worldStates, GoapExecutor executor, List<SubGoalConfig> goals)
         {
             _worldStates = worldStates;
             _executor = executor;
@@ -22,7 +23,7 @@ namespace Still.GOAP.WorldState.Observer
             }
         }
         /// <summary>
-        /// ゴールの
+        /// ゴールの登録
         /// </summary>
         /// <param name="config"></param>
         private void GoalSubscribe(SubGoalConfig config)
@@ -42,43 +43,44 @@ namespace Still.GOAP.WorldState.Observer
             }).AddTo(_disposables);
             _executor.UpdateGoalPriority(config, config.AchievedPriority);
         }
+        /// <summary>
+        /// ゴールを設定する前提条件がクリアされていたら
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
         private bool CanChangeGoalPriority(SubGoalConfig config)
         {
-            if (_executor.CurrentGoal.Key == config) return false;
+            if (_executor.CurrentGoal.Key == config　&& _executor.Goals[config] == config.Priority) return false;
 
             var worldStates = _worldStates.CurrentStates;
-            foreach (var condition in config.GetGoalsWorldStateSettings())
-            {
-                if (worldStates.TryGetValue(condition.Key, out int value))
-                {
-                    if (condition.Value != value)
-                    {
-                        return false;
-                    }
-                }
-            }
+            if (!Evalution.IsSatisfied(worldStates, config.GetGoalsWorldStateSettings())) return false;
+
             return true;
         }
+        /// <summary>
+        /// ゴールが達成された時の効果を反映する
+        /// </summary>
+        /// <param name="config"></param>
         private void ApplyGoalAchievedEffect(SubGoalConfig config)
         {
             foreach (var dic in config.GetGoalsEffect())
             {
                 _worldStates.ModifyState(dic.Key, dic.Value);
             }
-
         }
+        /// <summary>
+        /// ゴールの達成条件がクリアされていたら
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
         private bool CheckConditions(SubGoalConfig config)
         {
             if (_executor.CurrentGoal.Key != config) return false;
 
+            var worldStates = _worldStates.CurrentStates;
             var conditions = config.GetGoalsConditions();
-            foreach (var condition in conditions)
-            {
-                if (condition.Value != _worldStates.GetStateValue(condition.Key))
-                {
-                    return false;
-                }
-            }
+            if (!Evalution.IsSatisfied(worldStates, config.GetGoalsWorldStateSettings())) return false;
+
             return true;
         }
         public void Dispose()
