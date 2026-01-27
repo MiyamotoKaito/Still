@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
-using Still.GOAP.WorldState.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Still.GOAP.WorldState.Config;
 using UniRx;
 namespace Still.GOAP.WorldState
 {
@@ -12,7 +11,7 @@ namespace Still.GOAP.WorldState
         public Dictionary<string, int> CurrentStates => _currentWorldStates;
 
         private readonly Subject<string> _onStateChanged = new();
-        private readonly Dictionary<string, int> _currentWorldStates;
+        private readonly Dictionary<string, int> _currentWorldStates = new();
 
 
         public WorldStates(WorldStateConfig config)
@@ -29,7 +28,7 @@ namespace Still.GOAP.WorldState
         /// <param name="value"></param>
         public void ModifyState(string key, int value)
         {
-            if (value == 0) return;
+            if (value == _currentWorldStates[key]) return;
             _currentWorldStates[key] = value;
             _onStateChanged.OnNext(key);
         }
@@ -45,6 +44,6 @@ namespace Still.GOAP.WorldState
             _onStateChanged.OnNext(key);
         }
 
-        public int GetStateValue(string key) => _currentWorldStates[key]; 
+        public int GetStateValue(string key) => _currentWorldStates[key];
     }
 }
