@@ -5,6 +5,7 @@ using Still.GOAP.Agent;
 using Still.GOAP.Goal.Config;
 using Still.GOAP.WorldState;
 using UniRx;
+using UnityEditor.VersionControl;
 namespace Still.GOAP.Planner.Executor
 {
     public class GoapExecutor
@@ -12,12 +13,12 @@ namespace Still.GOAP.Planner.Executor
         public KeyValuePair<SubGoalConfig, int> CurrentGoal => _currentGoal.Value;
         public Dictionary<SubGoalConfig, int> Goals => _goals;
         /// <summary>全てのゴールをまとめる辞書</summary>
-        private readonly Dictionary<SubGoalConfig, int> _goals;
+        private readonly Dictionary<SubGoalConfig, int> _goals = new();
         /// <summary>現在最も優先度が高いゴール</summary>
         private readonly ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
         private IAction _currentAction;
-        private Stack<IAction> _routeActions;
-        private readonly List<IAction> _usableActions;
+        private Stack<IAction> _routeActions = new();
+        private readonly List<IAction> _usableActions = new();
         private WorldStates _worldStates;
 
         public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
@@ -84,7 +85,8 @@ namespace Still.GOAP.Planner.Executor
         /// <param name="priority"></param>
         public void UpdateGoalPriority(SubGoalConfig config, int priority)
         {
-
+            _goals[config] = priority; // 追加または更新
+            SetGoalPriority();
         }
         /// <summary>
         /// 効果をワールドステートに反映する
