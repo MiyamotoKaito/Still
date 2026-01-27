@@ -30,9 +30,9 @@ namespace Still.GOAP.Goal.Config
         /// ゴールを設定するための条件を取得する
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, int> GetGoalsWorldStateSettings()
+        public Dictionary<string, Condition> GetGoalsWorldStateSettings()
         {
-            var dict = new Dictionary<string, int>();
+            var dict = new Dictionary<string, Condition>();
             foreach (var state in _settingGoalConditions)
             {
                 dict[state.WorldStateKey] = state.Value; // 後勝ちで上書き
@@ -43,9 +43,9 @@ namespace Still.GOAP.Goal.Config
         /// ゴールを達成するための条件を取得する
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, int> GetGoalsConditions()
+        public Dictionary<string, Condition> GetGoalsConditions()
         {
-            var dict = new Dictionary<string, int>();
+            var dict = new Dictionary<string, Condition>();
             foreach (var state in _targetWorldStates)
             {
                 dict[state.WorldStateKey] = state.Value; // 後勝ちで上書き
