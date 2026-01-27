@@ -15,11 +15,10 @@ namespace Still.GOAP.Agent.Config
 
         [Header("<color=cyan>ここから下はアクションごとの設定</color>")]
 
-        [Header("<color=yellow>ExploreAction</color>")]
+        [Header("<color=yellow>PatrolAction</color>")]
         public float Radius;
-        public float ReExploreDelay = 5f; // 探索完了から次までの休憩時間
 
-        [Header("<color=yellow>ExploreAction</color>")]
+        [Header("<color=yellow>SearchAction</color>")]
         public float Duration;
     }
 }
