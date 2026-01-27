@@ -1,8 +1,6 @@
-﻿using NUnit.Framework.Internal;
-using Still.GOAP.Action;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Overlays;
+using Still.GOAP.Action;
 namespace Still.GOAP.Planner
 {
     public static class Planner
@@ -31,6 +29,9 @@ namespace Still.GOAP.Planner
                 // 使用可能なアクションを全て試す
                 foreach (var action in usableActions)
                 {
+                    //アクションの前提条件が達成されているかどうかの文が抜けてるかも
+                    if (Evalution.IsSatisfied(currentWorldStates, action.Preconditions)) continue;
+
                     var nextState = ApplyEffects(current.States, action.Effects);
                     int newG = current.G + action.ActionCost;
                     var hash = StateHash(nextState);
@@ -61,7 +62,7 @@ namespace Still.GOAP.Planner
             //既にゴールに達している？
             if (Evalution.IsSatisfied(currentStates, goal)) return 0;
 
-            var tempStates = new Dictionary<string, int>();
+            var tempStates = new Dictionary<string, int>(currentStates);
             //推定ステップ数
             int estimatedSteps = 0;
             int maxSteps = 15;
