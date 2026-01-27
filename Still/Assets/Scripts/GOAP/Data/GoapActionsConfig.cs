@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace Still.GOAP.Action.Config
 {
-    [CreateAssetMenu(fileName = "EnemyActionConfig", menuName = "Config/GOAP/Actions")]
+    [CreateAssetMenu(fileName = "ActionConfig", menuName = "Config/GOAP/Actions")]
     public class GhostActionData : ScriptableObject
     {
         public List<IAction> GhostActions => _ghostActions;
