@@ -1,5 +1,4 @@
-﻿using Still.Enum.CompareType;
-using Still.Enum.WorldStates;
+﻿using Still.Enum.WorldStates;
 using UnityEngine;
 namespace Still.GOAP.Action.Setting
 {
@@ -7,12 +6,10 @@ namespace Still.GOAP.Action.Setting
     public class HasConditionActions
     {
         public string WorldStateKey => _key.ToString();
-        public int Value => _value;
-        public CompareType CompareType => _compareType;
+        public Condition Value => _value;
 
         [SerializeField] private WorldStateType _key;
-        [SerializeField] private int _value;
-        [SerializeField] private CompareType _compareType;
+        [SerializeField] private Condition _value;
     }
     [System.Serializable]
     public class NoConditionActions
