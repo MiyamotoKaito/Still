@@ -9,9 +9,9 @@ namespace Still.GOAP.WorldState.Observer
 {
     public class WorldStatesObserver
     {
-        private WorldStates _worldStates;
-        private GoapExecutor _executor;
-        private CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly WorldStates _worldStates;
+        private readonly GoapExecutor _executor;
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
         public WorldStatesObserver(WorldStates worldStates, GoapExecutor executor, List<SubGoalConfig> goals)
         {
             _worldStates = worldStates;
