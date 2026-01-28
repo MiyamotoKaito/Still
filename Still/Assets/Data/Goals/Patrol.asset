@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: Patrol
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Goal.Config.GSubGoalConfig
   _settingGoalConditions:
-  - _key: 5
+  - _key: 6
     _value:
       Value: 0
       Comparison: 0
   _targetWorldStates:
-  - _key: 4
+  - _key: 5
     _value:
       Value: 1
       Comparison: 0
   _achievedtWorldStates:
-  - _key: 5
+  - _key: 6
     _value: 0
-  - _key: 4
+  - _key: 5
     _value: 0
   _priority: 1
   _achievedPrioity: 1

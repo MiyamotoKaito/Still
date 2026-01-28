@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec42426af2703744383536a135161569, type: 3}
   m_Name: WorldStateConfig
-  m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.WorldStates.Config.WorldStateConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.WorldState.Config.WorldStateConfig
   InitialStates:
   - Key: 0
     Value: 0
@@ -28,4 +28,28 @@ MonoBehaviour:
   - Key: 6
     Value: 0
   - Key: 7
+    Value: 0
+  - Key: 8
+    Value: 0
+  - Key: 9
+    Value: 0
+  - Key: 10
+    Value: 0
+  - Key: 11
+    Value: 0
+  - Key: 12
+    Value: 0
+  - Key: 13
+    Value: 0
+  - Key: 14
+    Value: 0
+  - Key: 15
+    Value: 0
+  - Key: 16
+    Value: 0
+  - Key: 17
+    Value: 0
+  - Key: 18
+    Value: 0
+  - Key: 19
     Value: 0
