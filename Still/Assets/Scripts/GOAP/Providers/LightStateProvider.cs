@@ -7,7 +7,7 @@ namespace Still.GOAP.Provider
     public class LightStateProvider : MonoBehaviour
     {
         [Inject] private readonly WorldStates _worldStates;
-        [SerializeField] private readonly LightSwitch _lightSwich;
+        [SerializeField] private  LightSwitch _lightSwich;
 
         private void Start()
         {
