@@ -5,7 +5,6 @@ using Still.GOAP.Agent;
 using Still.GOAP.Goal.Config;
 using Still.GOAP.WorldState;
 using UniRx;
-using Unity.Collections;
 using UnityEngine;
 namespace Still.GOAP.Planner.Executor
 {
@@ -27,16 +26,18 @@ namespace Still.GOAP.Planner.Executor
             if(usableActions == null || worldStates == null || goals == null)
             Debug.Log("なんか入ってない");
 
+            Debug.Log("Executorが呼ばれた");
+
             _usableActions = usableActions;
             _worldStates = worldStates;
             _goals = InitGoals(goals);
-            SetGoalPriority();
             _currentGoal
                 .Where(x => x.Key != null)
                 .Subscribe(x =>
                 {
                     Plan(x.Key);
                 });
+            SetGoalPriority();
         }
         /// <summary>
         /// ゴールの初期化
@@ -120,7 +121,14 @@ namespace Still.GOAP.Planner.Executor
             var plan = Planner.Planning(_usableActions, currentWorldStates, goal);
 
             if (plan != null)
+            {
                 _routeActions = plan;
+                Debug.Log($"{goalConfig.name} へのプラン作成成功。ステップ数: {plan.Count}");
+            }
+            else
+            {
+                Debug.LogWarning($"{goalConfig.name} へのパスが見つかりませんでした。");
+            }
         }
         /// <summary>
         /// 今実行しているプランを破棄する
@@ -135,6 +143,7 @@ namespace Still.GOAP.Planner.Executor
         /// </summary>
         private void SetGoalPriority()
         {
+            Debug.Log($"{_goals.Count}");
             var bestGoal = _goals.OrderBy(x => x.Value).First();
             //　今現在一番優先度が高いゴールではなかったら設定する
             if (_currentGoal.Value.Value != bestGoal.Value)
