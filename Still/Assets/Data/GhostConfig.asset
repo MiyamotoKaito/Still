@@ -16,5 +16,5 @@ MonoBehaviour:
   GhostDashSpeed: 5
   GhostStopDistance: 2
   GhostFovLength: 20
-  Radius: 5
+  Radius: 20
   Duration: 5
