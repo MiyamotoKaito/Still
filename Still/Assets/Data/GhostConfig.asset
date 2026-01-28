@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33447d9e137e93e45ad8b8c022b498ff, type: 3}
   m_Name: GhostConfig
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Agent.Config.GhostConfig
-  GhostMoveSpeed: 0
-  GhostDashSpeed: 0
-  GhostStopDistance: 0
-  GhostFovLength: 0
-  Radius: 0
-  ReExploreDelay: 5
-  Duration: 0
+  GhostMoveSpeed: 3
+  GhostDashSpeed: 5
+  GhostStopDistance: 2
+  GhostFovLength: 20
+  Radius: 5
+  Duration: 5

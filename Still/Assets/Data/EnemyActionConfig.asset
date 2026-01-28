@@ -12,7 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e7f4fc94ed5a9b44b4f521f7ed8a589, type: 3}
   m_Name: EnemyActionConfig
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Action.Config.GhostActionData
-  _ghostActions: []
+  _ghostActions:
+  - rid: 7538373281775878352
+  - rid: 7538373281775878353
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7538373281775878352
+      type: {class: CatchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 5
+          _value:
+            Value: 0
+            Comparison: 0
+        _effects:
+        - _key: 5
+          _value: 1
+        _actionCost: 1
+    - rid: 7538373281775878353
+      type: {class: SearchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 5
+          _value:
+            Value: 1
+            Comparison: 0
+        - _key: 4
+          _value:
+            Value: 0
+            Comparison: 0
+        _effects:
+        - _key: 4
+          _value: 1
+        _actionCost: 1
