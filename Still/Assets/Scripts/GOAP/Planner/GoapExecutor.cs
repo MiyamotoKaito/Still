@@ -144,7 +144,7 @@ namespace Still.GOAP.Planner.Executor
         private void SetGoalPriority()
         {
             Debug.Log($"{_goals.Count}");
-            var bestGoal = _goals.OrderBy(x => x.Value).First();
+            var bestGoal = _goals.OrderByDescending(x => x.Value).First();
             //　今現在一番優先度が高いゴールではなかったら設定する
             if (_currentGoal.Value.Value != bestGoal.Value)
             {
