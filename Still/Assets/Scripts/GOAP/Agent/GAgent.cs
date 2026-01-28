@@ -2,6 +2,7 @@ using Still.GOAP.Agent.Config;
 using Still.GOAP.Planner.Executor;
 using UnityEngine;
 using UnityEngine.AI;
+using VContainer;
 namespace Still.GOAP.Agent
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
@@ -21,7 +22,7 @@ namespace Still.GOAP.Agent
             Vector3 randomDirection = new Vector3(random2D.x, 0f, random2D.y);
             randomDirection += transform.position;
 
-            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, _ghostConfig.Radius, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, _ghostConfig.Radius / 2, NavMesh.AllAreas))
                 return hit.position;
             else return Vector3.zero;
         }
@@ -39,12 +40,11 @@ namespace Still.GOAP.Agent
         private Animator _animator;
         private NavMeshAgent _navmeshAgent;
 
-
-        public GAgent(GhostConfig ghostConfig, GoapExecutor executor)
+        [Inject]
+        public void Construct(GhostConfig ghostConfig, GoapExecutor executor)
         {
             _ghostConfig = ghostConfig;
             _executor = executor;
-            Init();
         }
 
         private void Awake()
@@ -52,7 +52,7 @@ namespace Still.GOAP.Agent
             _animator = GetComponent<Animator>();
             _navmeshAgent = GetComponent<NavMeshAgent>();
         }
-        private void Init()
+        private void Start()
         {
             _speed = _ghostConfig.GhostMoveSpeed;
             _navmeshAgent.speed = _speed;
