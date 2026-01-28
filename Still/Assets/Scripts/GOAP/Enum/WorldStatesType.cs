@@ -15,6 +15,16 @@
         DistanceFromGhost,
         IsAlerted,
 
+        // ターゲットとコンテキスト
+        CurrentTargetID,
+        HasTarget,
+        IsAtTarget,
+        IsAtLightSwitch,
+        IsInRangeOftarget,
+        CurrentTargetIsPlayer,
+        CurrentTagetIsLightSwitch,
+        CurrentTargeIsSound,
+
         // オブジェクト・環境の状態
         OnLighting,
         OnLightSwitchIsBroken,
