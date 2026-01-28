@@ -1,5 +1,6 @@
 ﻿using Still.Enum.CompareType;
 using System.Collections.Generic;
+using UnityEngine;
 namespace Still.GOAP.Planner
 {
     public static class Evalution
@@ -15,6 +16,7 @@ namespace Still.GOAP.Planner
                 // 現在のWorldStateにキーが存在しない場合、条件は満たされていないと判断
                 if (!currentWorldStates.TryGetValue(key, out int currentValue))
                 {
+                    Debug.Log($"ワールドステートがない : {key}");
                     return false;
                 }
 
