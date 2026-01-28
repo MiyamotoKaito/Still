@@ -13,6 +13,8 @@
         EnemyPatrol,
         DistanceFromGhost,
 
+        // オブジェクト
+        OnLighting,
         // イベント
         EventCount,
     }
