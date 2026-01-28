@@ -5,6 +5,8 @@ using Still.GOAP.Agent;
 using Still.GOAP.Goal.Config;
 using Still.GOAP.WorldState;
 using UniRx;
+using Unity.Collections;
+using UnityEngine;
 namespace Still.GOAP.Planner.Executor
 {
     public class GoapExecutor
@@ -22,9 +24,13 @@ namespace Still.GOAP.Planner.Executor
 
         public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
         {
+            if(usableActions == null || worldStates == null || goals == null)
+            Debug.Log("なんか入ってない");
+
             _usableActions = usableActions;
             _worldStates = worldStates;
             _goals = InitGoals(goals);
+            SetGoalPriority();
             _currentGoal
                 .Where(x => x.Key != null)
                 .Subscribe(x =>
@@ -64,7 +70,7 @@ namespace Still.GOAP.Planner.Executor
                 _currentAction = _routeActions.Pop();
                 _currentAction.SetTarget(controller);
             }
-            // 前提条件が達成されているのが崩れているかどうか
+            // 実行中に前提条件が維持されているか確認
             if (!_currentAction.Execute(controller))
             {
                 CancelCurrentPlan();
@@ -133,6 +139,7 @@ namespace Still.GOAP.Planner.Executor
             //　今現在一番優先度が高いゴールではなかったら設定する
             if (_currentGoal.Value.Value != bestGoal.Value)
             {
+                Debug.Log("ゴールを設定");
                 _currentGoal.Value = bestGoal;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Still.GOAP.Action;
+using UnityEngine;
 namespace Still.GOAP.Planner
 {
     public static class Planner
@@ -22,7 +23,7 @@ namespace Still.GOAP.Planner
                 var current = open.Dequeue();
 
                 // ゴールに達成していたら経路を再構築して返す
-                if (Evalution.IsSatisfied(currentWorldStates, HighestPriorityGoal))
+                if (Evalution.IsSatisfied(current.States, HighestPriorityGoal))
                 {
                     return ReconstructPath(current);
                 }
@@ -30,7 +31,7 @@ namespace Still.GOAP.Planner
                 foreach (var action in usableActions)
                 {
                     //アクションの前提条件が達成されているかどうかの文が抜けてるかも
-                    if (Evalution.IsSatisfied(currentWorldStates, action.Preconditions)) continue;
+                    if (!Evalution.IsSatisfied(current.States, action.Preconditions)) continue;
 
                     var nextState = ApplyEffects(current.States, action.Effects);
                     int newG = current.G + action.ActionCost;
@@ -41,7 +42,7 @@ namespace Still.GOAP.Planner
 
                     // 最良コストを更新し、新しいノードをOpenに追加
                     bestG[hash] = newG;
-                    int h = Heruistic(currentWorldStates, HighestPriorityGoal, usableActions);
+                    int h = Heruistic(nextState, HighestPriorityGoal, usableActions);
                     var nextNode = new Node(current, nextState, action, newG, h);
                     open.Enqueue(nextNode, nextNode.F);
                 }
@@ -69,12 +70,12 @@ namespace Still.GOAP.Planner
 
             while (estimatedSteps < maxSteps)
             {
-                IAction bestAction = FindBestAction(currentStates, goal, usableActions);
+                IAction bestAction = FindBestAction(tempStates, goal, usableActions);
 
-                // そんな事ないと思いたいが、アクションのリストがnullだったらコストをintの最大値を返す
+                // そんな事ないと思いたいが、アクションのリストがnullだったらクソでかコストを返す
                 if (bestAction == null)
                 {
-                    return int.MaxValue;
+                    return 10000;
                 }
 
                 // 選んだアクションを1回実行したと仮定して、ステートを更新
@@ -86,13 +87,13 @@ namespace Still.GOAP.Planner
                 // アクションを1回実行したのでステップを1足す
                 estimatedSteps++;
                 // もしゴールに達成していたらステップ数を返す
-                if (Evalution.IsSatisfied(currentStates, goal))
+                if (Evalution.IsSatisfied(tempStates, goal))
                 {
                     return estimatedSteps;
                 }
             }
             // 最大回数試してみてもたどり着けなかった
-            return int.MaxValue;
+            return 10000;
         }
         /// <summary>
         /// 効果を反映したあとどれくらいゴールの条件が達成されたかを見て達成数は一番大きかったアクションを返します
@@ -195,6 +196,7 @@ namespace Still.GOAP.Planner
         /// </summary>
         private static Stack<IAction> ReconstructPath(Node goalNode)
         {
+            Debug.Log("最適パスを発見");
             var path = new Stack<IAction>();
             var current = goalNode;
             while (current.Parent != null && current.Action != null)
