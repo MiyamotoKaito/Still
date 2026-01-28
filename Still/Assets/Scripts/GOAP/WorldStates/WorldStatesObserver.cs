@@ -31,14 +31,22 @@ namespace Still.GOAP.WorldState.Observer
             _worldStates.OnStateChanged
             .Subscribe(_ =>
             {
+                if (CheckConditions(config))
+                {
+                    ApplyGoalAchievedEffect(config);
+                    _executor.UpdateGoalPriority(config, config.AchievedPriority);
+                    return;
+                }
                 if (CanChangeGoalPriority(config))
                 {
                     _executor.UpdateGoalPriority(config, config.Priority);
                 }
-                else if (CheckConditions(config))
+                else
                 {
-                    ApplyGoalAchievedEffect(config);
-                    _executor.UpdateGoalPriority(config, config.AchievedPriority);
+                    if (_executor.Goals[config] != config.AchievedPriority)
+                    {
+                        _executor.UpdateGoalPriority(config, config.AchievedPriority);
+                    }
                 }
             }).AddTo(_disposables);
             _executor.UpdateGoalPriority(config, config.AchievedPriority);
@@ -79,7 +87,7 @@ namespace Still.GOAP.WorldState.Observer
 
             var worldStates = _worldStates.CurrentStates;
             var conditions = config.GetGoalsConditions();
-            if (!Evalution.IsSatisfied(worldStates, config.GetGoalsWorldStateSettings())) return false;
+            if (!Evalution.IsSatisfied(worldStates, conditions)) return false;
 
             return true;
         }

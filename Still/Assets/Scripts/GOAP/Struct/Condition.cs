@@ -1,5 +1,5 @@
 ﻿using Still.Enum.CompareType;
-
+[System.Serializable]
 public struct Condition
 {
     public int Value;
