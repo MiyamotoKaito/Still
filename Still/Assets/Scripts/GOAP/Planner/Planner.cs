@@ -30,7 +30,7 @@ namespace Still.GOAP.Planner
                 // 使用可能なアクションを全て試す
                 foreach (var action in usableActions)
                 {
-                    //アクションの前提条件が達成されているかどうかの文が抜けてるかも
+
                     if (!Evalution.IsSatisfied(current.States, action.Preconditions)) continue;
 
                     var nextState = ApplyEffects(current.States, action.Effects);
@@ -196,14 +196,16 @@ namespace Still.GOAP.Planner
         /// </summary>
         private static Stack<IAction> ReconstructPath(Node goalNode)
         {
-            Debug.Log("最適パスを発見");
             var path = new Stack<IAction>();
+            var cost = 0;
             var current = goalNode;
             while (current.Parent != null && current.Action != null)
             {
+                cost += current.F;
                 path.Push(current.Action);
                 current = current.Parent;
             }
+            Debug.Log($"最適パスを発見 : 累計コスト{cost} \n{string.Join("->", path)}");
             return path;
         }
         /// <summary>
