@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using Still.GOAP.Action;
+﻿using Still.GOAP.Action;
 using Still.GOAP.Action.Config;
 using Still.GOAP.Agent;
 using Still.GOAP.Agent.Config;
 using Still.GOAP.Goal.Config;
 using Still.GOAP.Planner.Executor;
+using Still.GOAP.Provider;
 using Still.GOAP.WorldState;
 using Still.GOAP.WorldState.Config;
 using Still.GOAP.WorldState.Observer;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -33,6 +34,7 @@ public class GoapLifeTimeScope : LifetimeScope
         builder.Register<WorldStatesObserver>(Lifetime.Singleton).AsSelf();
 
         // 3. シーン上のAgentの登録
+        builder.RegisterComponentInHierarchy<LightStateProvider>();
         builder.RegisterComponentInHierarchy<GAgent>();
 
         // 4. ビルド直後のコールバック（ここが重要！）
