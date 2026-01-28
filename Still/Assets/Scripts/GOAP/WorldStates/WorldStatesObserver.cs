@@ -73,7 +73,7 @@ namespace Still.GOAP.WorldState.Observer
         /// <param name="config"></param>
         private void ApplyGoalAchievedEffect(SubGoalConfig config)
         {
-            Debug.Log("ゴールが達成された");
+            Debug.Log("ゴールが達成されたのでワールドステートの値を書き換える");
             foreach (var dic in config.GetGoalsEffect())
             {
                 _worldStates.ModifyState(dic.Key, dic.Value);
