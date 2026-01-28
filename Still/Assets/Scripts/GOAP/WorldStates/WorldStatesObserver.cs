@@ -1,8 +1,9 @@
-﻿using Still.GOAP.Goal.Config;
+﻿using System.Collections.Generic;
+using Still.GOAP.Goal.Config;
 using Still.GOAP.Planner;
 using Still.GOAP.Planner.Executor;
-using System.Collections.Generic;
 using UniRx;
+using UnityEngine;
 
 namespace Still.GOAP.WorldState.Observer
 {
@@ -10,17 +11,16 @@ namespace Still.GOAP.WorldState.Observer
     {
         private WorldStates _worldStates;
         private GoapExecutor _executor;
-        private List<SubGoalConfig> _goals;
         private CompositeDisposable _disposables = new CompositeDisposable();
         public WorldStatesObserver(WorldStates worldStates, GoapExecutor executor, List<SubGoalConfig> goals)
         {
             _worldStates = worldStates;
             _executor = executor;
-            _goals = goals;
             foreach (var goal in goals)
             {
                 GoalSubscribe(goal);
             }
+            Debug.Log($"WorldStatesObserverを生成");
         }
         /// <summary>
         /// ゴールの登録
@@ -49,6 +49,7 @@ namespace Still.GOAP.WorldState.Observer
                     }
                 }
             }).AddTo(_disposables);
+            Debug.Log("ゴールを購読");
             _executor.UpdateGoalPriority(config, config.AchievedPriority);
         }
         /// <summary>
@@ -63,6 +64,7 @@ namespace Still.GOAP.WorldState.Observer
             var worldStates = _worldStates.CurrentStates;
             if (!Evalution.IsSatisfied(worldStates, config.GetGoalsWorldStateSettings())) return false;
 
+            Debug.Log("ゴールを設定する");
             return true;
         }
         /// <summary>
@@ -89,6 +91,7 @@ namespace Still.GOAP.WorldState.Observer
             var conditions = config.GetGoalsConditions();
             if (!Evalution.IsSatisfied(worldStates, conditions)) return false;
 
+            Debug.Log("ゴールの達成条件がクリアされた");
             return true;
         }
         public void Dispose()
