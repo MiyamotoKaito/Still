@@ -15,6 +15,8 @@ MonoBehaviour:
   _ghostActions:
   - rid: 7538373307407007821
   - rid: 7538373281775878353
+  - rid: 7538373307407007822
+  - rid: 7538373307407007823
   references:
     version: 2
     RefIds:
@@ -33,8 +35,6 @@ MonoBehaviour:
         _effects:
         - _key: 4
           _value: 1
-        - _key: 5
-          _value: 0
         _actionCost: 1
     - rid: 7538373307407007821
       type: {class: PatrolAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
@@ -47,4 +47,32 @@ MonoBehaviour:
         _effects:
         - _key: 5
           _value: 1
-        _actionCost: 0
+        _actionCost: 5
+    - rid: 7538373307407007822
+      type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 0
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 3
+          _value: 1
+        _actionCost: 4
+    - rid: 7538373307407007823
+      type: {class: CatchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 3
+          _value:
+            Value: 1
+            Comparison: 0
+        - _key: 2
+          _value:
+            Value: 0
+            Comparison: 0
+        _effects:
+        - _key: 2
+          _value: 1
+        _actionCost: 3
