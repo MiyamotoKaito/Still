@@ -18,6 +18,10 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
+            if (agent.Config == null)
+            {
+                Debug.Log("コンフィグない");
+            }
             _duration = agent.Config.Duration;
         }
         private float _duration;
