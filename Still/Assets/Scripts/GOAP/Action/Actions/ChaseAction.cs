@@ -1,4 +1,4 @@
-using Still.Enum.WorldStates;
+﻿using Still.Enum.WorldStates;
 using Still.GOAP.Agent;
 using Still.GOAP.Planner;
 namespace Still.GOAP.Action
@@ -24,9 +24,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
-            //_player = GameObject.FindAnyObjectByType<Player>();
+            agent.SetSpeed(agent.Config.GhostDashSpeed);
         }
-
-        //private Player _player;
     }
 }

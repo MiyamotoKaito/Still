@@ -8,20 +8,16 @@ namespace Still.GOAP.Action
         private LightSwitch _lightSwtich;
         public override bool Perform(IAgentController agent)
         {
-            if (_lightSwtich == null) return true;
+            if (_lightSwtich == null) return false;
 
-            if (agent.IsArrived)
-            {
-                Debug.Log(($"[Action] {nameof(SetTargetToLightSwitchAction)}: 目的地に到着しました。"));
-                return true;
-            }
-            return false;
+            Debug.Log(($"[Action] {nameof(SetTargetToLightSwitchAction)}: LightSwitchをターゲットに決定"));
+            return true;
         }
 
         public override void SetTarget(IAgentController agent)
         {
             _lightSwtich = GameObject.FindAnyObjectByType<LightSwitch>();
-            agent.SetMoveDestination(_lightSwtich.transform.position);
+            agent.SetTarget(_lightSwtich.transform.position);
         }
     }
 }
