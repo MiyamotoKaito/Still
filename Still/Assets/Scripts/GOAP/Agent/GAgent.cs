@@ -1,4 +1,4 @@
-using Still.GOAP.Agent.Config;
+﻿using Still.GOAP.Agent.Config;
 using Still.GOAP.Planner.Executor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,6 +15,13 @@ namespace Still.GOAP.Agent
         public Vector3 Position => this.gameObject.transform.position;
 
         public bool IsArrived => !_navmeshAgent.pathPending && _navmeshAgent.remainingDistance < _ghostConfig.GhostStopDistance;
+
+        public Vector3 TargetPos => _targetPosition;
+
+        public void SetTarget(Vector3 targetPos)
+        {
+            _targetPosition = targetPos;
+        }
 
         public Vector3 GetRandomPos()
         {
@@ -39,6 +46,7 @@ namespace Still.GOAP.Agent
         private float _speed;
         private Animator _animator;
         private NavMeshAgent _navmeshAgent;
+        private Vector3 _targetPosition;
 
         [Inject]
         public void Construct(GhostConfig ghostConfig, GoapExecutor executor)
@@ -61,5 +69,6 @@ namespace Still.GOAP.Agent
         {
             _executor?.SetAction(this);
         }
+
     }
 }
