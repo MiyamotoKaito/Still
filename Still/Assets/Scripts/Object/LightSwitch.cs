@@ -9,7 +9,7 @@ public class LightSwitch : MonoBehaviour
     [ContextMenu("スイッチ切り替え")]
     public void SwitchToggle()
     {
-        IsOn = IsOn = true ? false : true;
+        IsOn = IsOn == true ? false : true;
         SwitchChanged.Invoke(IsOn);
     }
 }
