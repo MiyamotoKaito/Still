@@ -15,7 +15,7 @@ namespace Still.GOAP.Planner.Executor
         /// <summary>全てのゴールをまとめる辞書</summary>
         private readonly Dictionary<SubGoalConfig, int> _goals = new();
         /// <summary>現在最も優先度が高いゴール</summary>
-        private readonly ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
+        private ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
         private IAction _currentAction;
         private Stack<IAction> _routeActions = new();
         private readonly List<IAction> _usableActions = new();
@@ -23,8 +23,8 @@ namespace Still.GOAP.Planner.Executor
 
         public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
         {
-            if(usableActions == null || worldStates == null || goals == null)
-            Debug.Log("なんか入ってない");
+            if (usableActions == null || worldStates == null || goals == null)
+                Debug.Log("なんか入ってない");
 
             Debug.Log("Executorが呼ばれた");
 
@@ -54,7 +54,7 @@ namespace Still.GOAP.Planner.Executor
             return dic;
         }
         public void SetAction(IAgentController controller)
-        {
+        { 
             // アクションが設定されていなかったらリターン
             if (_currentAction == null && _routeActions.Count == 0)
             {
@@ -80,8 +80,18 @@ namespace Still.GOAP.Planner.Executor
             // アクションの実行
             if (_currentAction.Perform(controller))
             {
-                ApplyEffects(_currentAction.Effects);
-                _currentAction = null;
+                // Effectsがnullかチェック
+                if (_currentAction.Effects == null)
+                {
+                    Debug.LogWarning($"[Executor] {_currentAction.GetType().Name}のEffectsがnullです");
+                    _currentAction = null;
+                }
+                else
+                {
+                    var effects = _currentAction.Effects; // 先に参照を保存
+                    _currentAction = null; // ★先にnullにする★
+                    ApplyEffects(effects); // その後でEffectsを適用
+                }
             }
         }
         /// <summary>
@@ -128,6 +138,7 @@ namespace Still.GOAP.Planner.Executor
             else
             {
                 Debug.LogWarning($"{goalConfig.name} へのパスが見つかりませんでした。");
+                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
             }
         }
         /// <summary>
@@ -143,12 +154,11 @@ namespace Still.GOAP.Planner.Executor
         /// </summary>
         private void SetGoalPriority()
         {
-            Debug.Log($"{_goals.Count}");
             var bestGoal = _goals.OrderByDescending(x => x.Value).First();
             //　今現在一番優先度が高いゴールではなかったら設定する
             if (_currentGoal.Value.Value != bestGoal.Value)
             {
-                Debug.Log("ゴールを設定");
+                Debug.Log($"最も高いゴールを設定{bestGoal.Key}{bestGoal.Value}");
                 _currentGoal.Value = bestGoal;
             }
         }
