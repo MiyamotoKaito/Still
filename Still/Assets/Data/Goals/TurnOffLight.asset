@@ -21,11 +21,13 @@ MonoBehaviour:
   - _key: 17
     _value:
       Value: 0
-      Comparison: 4
+      Comparison: 0
+  - _key: 11
+    _value:
+      Value: 1
+      Comparison: 0
   _achievedtWorldStates:
-  - _key: 17
-    _value: 0
-  - _key: 12
+  - _key: 11
     _value: 0
   _priority: 4
   _achievedPrioity: 0

@@ -318,8 +318,8 @@ MonoBehaviour:
   _actionData: {fileID: 11400000, guid: 58a562f2cd0eb3f4fbf43ab7196f2a02, type: 2}
   _worldStatesConfig: {fileID: 11400000, guid: 8e5917fa50c1b684a97b87d8de94a90e, type: 2}
   _subgoals:
-  - {fileID: 11400000, guid: 7cca5644dbbfd3e488fb588f2b6064bf, type: 2}
   - {fileID: 11400000, guid: 8d536c0b15aa01d4ebf0899c7712ed4d, type: 2}
+  - {fileID: 11400000, guid: 7cca5644dbbfd3e488fb588f2b6064bf, type: 2}
 --- !u!4 &1133966927
 Transform:
   m_ObjectHideFlags: 0
@@ -508,7 +508,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: f4843ddccdfeb3a429ff1d6ebe20b92d, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: b3e8cd74404def842a3bb1e4f45871f3, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1672349476
 Transform:
@@ -542,6 +542,7 @@ GameObject:
   - component: {fileID: 1752016675}
   - component: {fileID: 1752016674}
   - component: {fileID: 1752016676}
+  - component: {fileID: 1752016677}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -713,6 +714,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Provider.LightStateProvider
   _lightSwich: {fileID: 1233676819}
+--- !u!54 &1752016677
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752016668}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1855905514
 GameObject:
   m_ObjectHideFlags: 0
