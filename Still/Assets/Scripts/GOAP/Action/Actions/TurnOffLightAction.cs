@@ -7,7 +7,7 @@ namespace Still.GOAP.Action
     {
         public override bool Perform(IAgentController agent)
         {
-            if (_lightSwith == null) return true; // ターゲットがなければ即完了
+            if (_lightSwith == null) return false; // ターゲットがなければ即完了
 
             // スイッチを切り替える（物理的な操作）
             if (_lightSwith.IsOn) // 電気がついている場合のみオフにする
@@ -24,6 +24,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
+            Debug.Log($"{this.GetType().Name}アクション開始");
             _lightSwith = GameObject.FindAnyObjectByType<LightSwitch>();
         }
         private LightSwitch _lightSwith;

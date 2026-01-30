@@ -16,6 +16,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
+            Debug.Log($"{this.GetType().Name}アクション開始");
             _lightSwtich = GameObject.FindAnyObjectByType<LightSwitch>();
             agent.SetTarget(_lightSwtich.transform.position);
         }

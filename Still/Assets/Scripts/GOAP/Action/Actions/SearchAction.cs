@@ -22,6 +22,7 @@ namespace Still.GOAP.Action
             {
                 Debug.Log("コンフィグない");
             }
+            Debug.Log($"{this.GetType().Name}アクション開始");
             _duration = agent.Config.Duration;
         }
         private float _duration;

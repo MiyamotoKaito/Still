@@ -9,6 +9,7 @@ namespace Still.GOAP.Action
         {
             if (agent.IsArrived)
             {
+                Debug.Log("目的地にたどり着いた");
                 return true;
             }
             return false;
@@ -16,6 +17,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
+            Debug.Log($"{this.GetType().Name}アクション開始");
             _targetPos = agent.TargetPos;
             agent.SetMoveDestination(_targetPos);
         }

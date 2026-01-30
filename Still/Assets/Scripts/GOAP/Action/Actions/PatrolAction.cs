@@ -16,6 +16,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
+            Debug.Log($"{this.GetType().Name}アクション開始");
             Vector3 targetPos = agent.GetRandomPos();
             // NavMeshAgent に目的地をセット
             agent.SetMoveDestination(targetPos);
