@@ -31,24 +31,38 @@ namespace Still.GOAP.WorldState.Observer
             _worldStates.OnStateChanged
             .Subscribe(_ =>
             {
+                // 現在のゴールが達成できるか？
                 if (CheckConditions(config))
                 {
+                    Debug.Log($"{config.name}が達成されたので優先度を下げた");
                     ApplyGoalAchievedEffect(config);
                     _executor.UpdateGoalPriority(config, config.AchievedPriority);
                     return;
                 }
+
+                // 現在実行中のゴールは優先度変更の対象外とする
+                if (_executor.CurrentGoal.Key == config && _executor.CurrentGoal.Value == config.Priority)
+                {
+                    // 現在実行中のゴールはスキップ（優先度を変更しない）
+                    return;
+                }
+
+                // 最も優先度が高い以外のゴールでゴールをセットする前提条件が達成されていたら
                 if (CanChangeGoalPriority(config))
                 {
+                    Debug.Log($"{config.name}の優先度を上げた");
                     _executor.UpdateGoalPriority(config, config.Priority);
                 }
                 else
                 {
                     if (_executor.Goals[config] != config.AchievedPriority)
                     {
+                        Debug.Log($"{config.name}の達成条件が満たされなくなったので優先度を下げた");
                         _executor.UpdateGoalPriority(config, config.AchievedPriority);
                     }
                 }
             }).AddTo(_disposables);
+
             Debug.Log("ゴールを購読");
             _executor.UpdateGoalPriority(config, config.AchievedPriority);
         }
@@ -59,12 +73,11 @@ namespace Still.GOAP.WorldState.Observer
         /// <returns></returns>
         private bool CanChangeGoalPriority(SubGoalConfig config)
         {
-            if (_executor.CurrentGoal.Key == config　&& _executor.Goals[config] == config.Priority) return false;
+            if (_executor.CurrentGoal.Key == config　&& _executor.CurrentGoal.Value == config.Priority) return false;
 
             var worldStates = _worldStates.CurrentStates;
             if (!Evalution.IsSatisfied(worldStates, config.GetGoalsWorldStateSettings())) return false;
 
-            Debug.Log("ゴールを設定する");
             return true;
         }
         /// <summary>
