@@ -13,20 +13,25 @@ namespace Still.GOAP.Action
             {
                 return true;
             }
-            _worldStates.ModifyState(WorldStateType.IsChasing.ToString(), 0);
             agent.SetSpeed(agent.Config.GhostMoveSpeed);
             return false;
         }
 
         public override bool Perform(IAgentController agent)
         {
-            throw new System.NotImplementedException();
+            if (agent.IsArrived)
+            {
+                Debug.Log("目的地にたどり着いた");
+                return true;
+            }
+            return false;
         }
 
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
             agent.SetSpeed(agent.Config.GhostDashSpeed);
+            //agent.SetMoveDestination();
         }
     }
 }
