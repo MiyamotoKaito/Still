@@ -1,6 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public interface IPlayerController
 {
-    void UpdatePosition(Vector3 pos);
+    Vector2 CurrentMoveValue { get; }
+    bool IsDash { get; }
+    void Move(Vector3 direction, float speed);
+    void EnablePlayerInput();
+    void DisablePlayerInput();
 }
