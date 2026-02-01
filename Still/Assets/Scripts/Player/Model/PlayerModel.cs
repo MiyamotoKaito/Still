@@ -1,14 +1,12 @@
-using UnityEngine;
-namespace Still.Player.Mode
+﻿namespace Still.Player.Model
 {
     public class PlayerModel
     {
-        public Vector3 Position { get; set; }
-        public float Speed { get; set; } = 5f;
-
-        public void Move(Vector3 direction, float deltaTime)
+        public float CurrentSpeed => _currentSpeed;
+        private float _currentSpeed;
+        public void SetMoveSpeed(float dashSpeed)
         {
-            Position += direction * Speed * deltaTime;
+            _currentSpeed = dashSpeed;
         }
     }
 }
