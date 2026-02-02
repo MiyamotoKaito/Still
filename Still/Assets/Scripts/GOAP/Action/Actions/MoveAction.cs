@@ -18,9 +18,9 @@ namespace Still.GOAP.Action
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
-            _targetPos = agent.TargetPos;
-            agent.SetMoveDestination(_targetPos);
+            _targetPos = agent.CurrentTarget;
+            agent.SetMoveDestination(_targetPos.transform.position);
         }
-        private Vector3 _targetPos;
+        private GameObject _targetPos;
     }
 }

@@ -5,11 +5,9 @@ namespace Still.GOAP.Action
     [System.Serializable]
     public class SetTargetToLightSwitchAction : ActionBase
     {
-        private LightSwitch _lightSwtich;
         public override bool Perform(IAgentController agent)
         {
-            if (_lightSwtich == null) return false;
-
+            if(agent.CurrentTarget == null) return false;
             Debug.Log(($"[Action] {nameof(SetTargetToLightSwitchAction)}: LightSwitchをターゲットに決定"));
             return true;
         }
@@ -17,8 +15,15 @@ namespace Still.GOAP.Action
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
-            _lightSwtich = GameObject.FindAnyObjectByType<LightSwitch>();
-            agent.SetTarget(_lightSwtich.transform.position);
+            var lights = GameObject.FindObjectsByType<LightSwitch>(FindObjectsSortMode.None);
+            foreach (var light in lights)
+            {
+                if (light.IsOn)
+                {
+                    agent.SetTarget(light.gameObject);
+                    break;
+                }
+            }
         }
     }
 }

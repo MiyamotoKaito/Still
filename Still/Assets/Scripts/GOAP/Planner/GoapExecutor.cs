@@ -20,6 +20,8 @@ namespace Still.GOAP.Planner.Executor
         private Stack<IAction> _routeActions = new();
         private readonly List<IAction> _usableActions = new();
         private WorldStates _worldStates;
+        // 初期化完了フラグ
+        private bool _isStarted = false;
 
         public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
         {
@@ -35,9 +37,12 @@ namespace Still.GOAP.Planner.Executor
                 .Where(x => x.Key != null)
                 .Subscribe(x =>
                 {
-                    Plan(x.Key);
+                    if (_isStarted)
+                    {
+                        Plan(x.Key);
+                    }
                 });
-            SetGoalPriority();
+
         }
         /// <summary>
         /// ゴールの初期化
@@ -53,8 +58,16 @@ namespace Still.GOAP.Planner.Executor
             }
             return dic;
         }
+        public void RefreshGoal()
+        {
+            SetGoalPriority();
+            _isStarted = true;
+            Debug.Log("[GoapExecutor] プランニングを開始します。");
+        }
         public void SetAction(IAgentController controller)
-        { 
+        {
+            if (!_isStarted) return;
+
             // アクションが設定されていなかったらリターン
             if (_currentAction == null && _routeActions.Count == 0)
             {
@@ -80,18 +93,13 @@ namespace Still.GOAP.Planner.Executor
             // アクションの実行
             if (_currentAction.Perform(controller))
             {
-                // Effectsがnullかチェック
-                if (_currentAction.Effects == null)
-                {
-                    Debug.LogWarning($"[Executor] {_currentAction.GetType().Name}のEffectsがnullです");
-                    _currentAction = null;
-                }
-                else
-                {
-                    var effects = _currentAction.Effects; // 先に参照を保存
-                    _currentAction = null; // ★先にnullにする★
-                    ApplyEffects(effects); // その後でEffectsを適用
-                }
+                var effects = _currentAction.Effects;
+                _currentAction = null;
+                ApplyEffects(effects);
+                // ★追加：アクション完了直後に「現在のゴールが達成されたか」を確認する
+                // これを入れないとObserverの通知（UniRx）を待つ間に、
+                // Executorが次の（空の）パトロールプランを立ててしまう
+                CheckCurrentGoalStatus();
             }
         }
         /// <summary>
@@ -139,6 +147,21 @@ namespace Still.GOAP.Planner.Executor
             {
                 Debug.LogWarning($"{goalConfig.name} へのパスが見つかりませんでした。");
                 UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
+            }
+        }
+        /// <summary>
+        /// 現在のゴールが達成されているか確認して優先度を操作する
+        /// </summary>
+        private void CheckCurrentGoalStatus()
+        {
+            var config = _currentGoal.Value.Key;
+            if (config == null) return;
+
+            // Evalutionクラスなどの判定メソッドを使って現在の状態をチェック
+            if (Evalution.IsSatisfied(_worldStates.CurrentStates, config.GetGoalsConditions()))
+            {
+                Debug.Log($"[Executor] アクションの結果、ゴール {config.name} を達成しました");
+                UpdateGoalPriority(config, config.AchievedPriority);
             }
         }
         /// <summary>

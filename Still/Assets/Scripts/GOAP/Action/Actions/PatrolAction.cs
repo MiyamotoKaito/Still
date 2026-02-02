@@ -1,4 +1,4 @@
-using Still.GOAP.Agent;
+﻿using Still.GOAP.Agent;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
@@ -9,6 +9,7 @@ namespace Still.GOAP.Action
         {
             if (agent.IsArrived)
             {
+                Debug.Log($"{this.GetType().Name}アクション完了");
                 return true;
             }
             return false;

@@ -15,17 +15,13 @@ namespace Still.GOAP.Action
                 _lightSwith.SwitchToggle(); // スイッチをオフにする操作
                 Debug.Log($"[Action] {nameof(TurnOffLightAction)}: 電気スイッチをオフにしました。");
             }
-            else
-            {
-                Debug.LogWarning($"[Action] {nameof(TurnOffLightAction)}: 電気がすでに消えています。");
-            }
             return true; // アクションは完了
         }
 
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
-            _lightSwith = GameObject.FindAnyObjectByType<LightSwitch>();
+            _lightSwith = agent.CurrentTarget.GetComponent<LightSwitch>();
         }
         private LightSwitch _lightSwith;
     }

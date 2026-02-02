@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Still.GOAP.WorldState.Config;
 using UniRx;
+using UnityEngine;
 namespace Still.GOAP.WorldState
 {
     public class WorldStates
@@ -39,9 +40,9 @@ namespace Still.GOAP.WorldState
         /// <param name="value"></param>
         public void AdditionState(string key, int value)
         {
-            if (value == 0) return;
             _currentWorldStates[key] += value;
             _onStateChanged.OnNext(key);
+            Debug.Log($"{key}の値が書き変わった : 現在{_currentWorldStates[key]}");
         }
 
         public int GetStateValue(string key) => _currentWorldStates[key];

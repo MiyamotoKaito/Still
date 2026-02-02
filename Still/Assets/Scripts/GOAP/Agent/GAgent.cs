@@ -16,11 +16,11 @@ namespace Still.GOAP.Agent
 
         public bool IsArrived => !_navmeshAgent.pathPending && _navmeshAgent.remainingDistance < _ghostConfig.GhostStopDistance;
 
-        public Vector3 TargetPos => _targetPosition;
+        public GameObject CurrentTarget => _currentTarget;
 
-        public void SetTarget(Vector3 targetPos)
+        public void SetTarget(GameObject targetPos)
         {
-            _targetPosition = targetPos;
+            _currentTarget = targetPos;
         }
 
         public Vector3 GetRandomPos()
@@ -46,7 +46,7 @@ namespace Still.GOAP.Agent
         private float _speed;
         private Animator _animator;
         private NavMeshAgent _navmeshAgent;
-        private Vector3 _targetPosition;
+        private GameObject _currentTarget;
 
         [Inject]
         public void Construct(GhostConfig ghostConfig, GoapExecutor executor)

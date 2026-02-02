@@ -18,9 +18,9 @@ MonoBehaviour:
       Value: 1
       Comparison: 5
   _targetWorldStates:
-  - _key: 17
+  - _key: 12
     _value:
-      Value: 0
+      Value: 1
       Comparison: 0
   - _key: 11
     _value:
@@ -28,6 +28,8 @@ MonoBehaviour:
       Comparison: 0
   _achievedtWorldStates:
   - _key: 11
+    _value: 0
+  - _key: 12
     _value: 0
   _priority: 4
   _achievedPrioity: 0
