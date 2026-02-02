@@ -8,6 +8,7 @@ namespace Still.Player.Model
     public class StaminaModel
     {
         public event Action<float> OnStaminaChanged;
+        public float MaxStamina => _maxStamina;
         public float CurrentStamina => _currentStamina;
 
         private float _maxStamina;

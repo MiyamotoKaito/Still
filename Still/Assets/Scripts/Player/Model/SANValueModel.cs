@@ -23,7 +23,7 @@ namespace Still.Player.Model
         /// <param name="amount"></param>
         public void ModifySAN(float amount)
         {
-            _currentSan = Math.Clamp(_currentSan - amount, 0, _maxSan);
+            _currentSan = Math.Clamp(_currentSan + amount, 0, _maxSan);
             OnSANChanged?.Invoke(_currentSan);
         }
         /// <summary>

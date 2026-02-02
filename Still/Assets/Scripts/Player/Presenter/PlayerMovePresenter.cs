@@ -11,7 +11,6 @@ namespace Still.Player.Presenter
         private readonly PlayerModel _model;
         private readonly PlayerConfig _config;
         private readonly StaminaModel _staminaModel;
-        private readonly SANValueModel _sanValueModel;
 
         public PlayerMovePresenter(IPlayerController playerView,
             PlayerModel model,

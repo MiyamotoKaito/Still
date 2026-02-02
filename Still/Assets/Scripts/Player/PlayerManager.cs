@@ -12,6 +12,7 @@ namespace Still.Player
         private PlayerView _playerView;
         private CameraView _cameraView;
         private StaminaView _staminaView;
+        private SANView _sanView;
 
         private PlayerMovePresenter _movePresenter;
         private PlayerStatusPresenter _playerStatusPresenter;
@@ -29,7 +30,7 @@ namespace Still.Player
             _sanValueModel = new SANValueModel(_config.DefaultSANValue);
             // プレゼンターの初期化
             _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
-            _playerStatusPresenter = new PlayerStatusPresenter(_playerView, _staminaView, _staminaModel, _sanValueModel);
+            _playerStatusPresenter = new PlayerStatusPresenter(_config, _playerView, _staminaView, _sanView, _staminaModel, _sanValueModel);
 
             _playerView.EnablePlayerInput();
         }
@@ -38,6 +39,7 @@ namespace Still.Player
             _playerView = FindAnyObjectByType<PlayerView>();
             _cameraView = FindAnyObjectByType<CameraView>();
             _staminaView = FindAnyObjectByType<StaminaView>();
+            _sanView = FindAnyObjectByType<SANView>();
         }
         private void Update()
         {

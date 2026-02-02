@@ -6,7 +6,7 @@ namespace Still.Player.View
     {
         private Image _staminaGauge;
 
-        private void Start()
+        private void Awake()
         {
             _staminaGauge = GetComponent<Image>();
         }
@@ -14,7 +14,6 @@ namespace Still.Player.View
         public void UpdateStamina(float value)
         {
             _staminaGauge.fillAmount = value / 100;
-            Debug.Log($"StaminaView: スタミナ更新 {value}");
         }
     }
 }
