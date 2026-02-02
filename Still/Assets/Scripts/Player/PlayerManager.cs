@@ -7,23 +7,42 @@ namespace Still.Player
 {
     public class PlayerManager : MonoBehaviour
     {
-        [SerializeField] private PlayerView _playerView;
-        [SerializeField] private CameraView _cameraView;
         [SerializeField] private PlayerConfig _config;
 
-        private PlayerPresenter _presenter;
-        private PlayerModel _model;
+        private PlayerView _playerView;
+        private CameraView _cameraView;
+        private StaminaView _staminaView;
+
+        private PlayerMovePresenter _movePresenter;
+        private PlayerStatusPresenter _playerStatusPresenter;
+
+        private PlayerModel _playerModel;
+        private StaminaModel _staminaModel;
+        private SANValueModel _sanValueModel;
 
         private void Awake()
         {
-            _model = new PlayerModel();
-            _presenter = new PlayerPresenter(_playerView, _model, _config, _cameraView);
+            ViewInit();
+            // モデルの初期化
+            _playerModel = new PlayerModel();
+            _staminaModel = new StaminaModel(_config.DefaultStaminaValue);
+            _sanValueModel = new SANValueModel(_config.DefaultSANValue);
+            // プレゼンターの初期化
+            _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
+            _playerStatusPresenter = new PlayerStatusPresenter(_playerView, _staminaView, _staminaModel, _sanValueModel);
+
             _playerView.EnablePlayerInput();
         }
-
+        private void ViewInit()
+        {
+            _playerView = FindAnyObjectByType<PlayerView>();
+            _cameraView = FindAnyObjectByType<CameraView>();
+            _staminaView = FindAnyObjectByType<StaminaView>();
+        }
         private void Update()
         {
-            _presenter.Update();
+            _movePresenter.Update();
+            _playerStatusPresenter.StatusUpdate();
         }
         private void OnDestroy()
         {

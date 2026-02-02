@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
   PlayerDefaultSpeed: 3
   PlayerMaxSpeed: 15
+  DefaultStaminaValue: 100
+  DefaultSANValue: 100
