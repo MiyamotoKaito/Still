@@ -55,7 +55,7 @@ public class GoapLifeTimeScope : LifetimeScope
             }
             var executor = container.Resolve<GoapExecutor>();
             executor.RefreshGoal();
-            Debug.Log("VContainer Build完了: WorldStatesObserverを強制起動しました");
+            Debug.Log("VContainer Build完了");
         });
     }
 }
