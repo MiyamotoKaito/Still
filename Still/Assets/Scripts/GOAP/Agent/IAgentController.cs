@@ -5,6 +5,8 @@ namespace Still.GOAP.Agent
     public interface IAgentController
     {
         GhostConfig Config { get; }
+        GameObject CurrentTarget { get; }
+        void SetTarget(GameObject targetPos);
         float Speed { get; }
         void SetSpeed(float speed);
         Vector3 GetRandomPos();

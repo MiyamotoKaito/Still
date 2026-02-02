@@ -15,16 +15,18 @@ namespace Still.GOAP.Planner.Executor
         /// <summary>全てのゴールをまとめる辞書</summary>
         private readonly Dictionary<SubGoalConfig, int> _goals = new();
         /// <summary>現在最も優先度が高いゴール</summary>
-        private readonly ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
+        private ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
         private IAction _currentAction;
         private Stack<IAction> _routeActions = new();
         private readonly List<IAction> _usableActions = new();
         private WorldStates _worldStates;
+        // 初期化完了フラグ
+        private bool _isStarted = false;
 
         public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
         {
-            if(usableActions == null || worldStates == null || goals == null)
-            Debug.Log("なんか入ってない");
+            if (usableActions == null || worldStates == null || goals == null)
+                Debug.Log("なんか入ってない");
 
             Debug.Log("Executorが呼ばれた");
 
@@ -35,9 +37,12 @@ namespace Still.GOAP.Planner.Executor
                 .Where(x => x.Key != null)
                 .Subscribe(x =>
                 {
-                    Plan(x.Key);
+                    if (_isStarted)
+                    {
+                        Plan(x.Key);
+                    }
                 });
-            SetGoalPriority();
+
         }
         /// <summary>
         /// ゴールの初期化
@@ -53,8 +58,16 @@ namespace Still.GOAP.Planner.Executor
             }
             return dic;
         }
+        public void RefreshGoal()
+        {
+            SetGoalPriority();
+            _isStarted = true;
+            Debug.Log("[GoapExecutor] プランニングを開始します。");
+        }
         public void SetAction(IAgentController controller)
         {
+            if (!_isStarted) return;
+
             // アクションが設定されていなかったらリターン
             if (_currentAction == null && _routeActions.Count == 0)
             {
@@ -80,8 +93,13 @@ namespace Still.GOAP.Planner.Executor
             // アクションの実行
             if (_currentAction.Perform(controller))
             {
-                ApplyEffects(_currentAction.Effects);
+                var effects = _currentAction.Effects;
                 _currentAction = null;
+                ApplyEffects(effects);
+                // ★追加：アクション完了直後に「現在のゴールが達成されたか」を確認する
+                // これを入れないとObserverの通知（UniRx）を待つ間に、
+                // Executorが次の（空の）パトロールプランを立ててしまう
+                CheckCurrentGoalStatus();
             }
         }
         /// <summary>
@@ -128,6 +146,22 @@ namespace Still.GOAP.Planner.Executor
             else
             {
                 Debug.LogWarning($"{goalConfig.name} へのパスが見つかりませんでした。");
+                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
+            }
+        }
+        /// <summary>
+        /// 現在のゴールが達成されているか確認して優先度を操作する
+        /// </summary>
+        private void CheckCurrentGoalStatus()
+        {
+            var config = _currentGoal.Value.Key;
+            if (config == null) return;
+
+            // Evalutionクラスなどの判定メソッドを使って現在の状態をチェック
+            if (Evalution.IsSatisfied(_worldStates.CurrentStates, config.GetGoalsConditions()))
+            {
+                Debug.Log($"[Executor] アクションの結果、ゴール {config.name} を達成しました");
+                UpdateGoalPriority(config, config.AchievedPriority);
             }
         }
         /// <summary>
@@ -143,12 +177,11 @@ namespace Still.GOAP.Planner.Executor
         /// </summary>
         private void SetGoalPriority()
         {
-            Debug.Log($"{_goals.Count}");
-            var bestGoal = _goals.OrderBy(x => x.Value).First();
+            var bestGoal = _goals.OrderByDescending(x => x.Value).First();
             //　今現在一番優先度が高いゴールではなかったら設定する
             if (_currentGoal.Value.Value != bestGoal.Value)
             {
-                Debug.Log("ゴールを設定");
+                Debug.Log($"最も高いゴールを設定{bestGoal.Key}{bestGoal.Value}");
                 _currentGoal.Value = bestGoal;
             }
         }

@@ -1,5 +1,4 @@
-using Still.GOAP.Agent;
-using Still.GOAP.Planner;
+﻿using Still.GOAP.Agent;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
@@ -14,7 +13,7 @@ namespace Still.GOAP.Action
 
         public override void SetTarget(IAgentController agent)
         {
-
+            Debug.Log($"{this.GetType().Name}アクション開始");
         }
     }
 }

@@ -1,6 +1,7 @@
-using Still.Enum.WorldStates;
+﻿using Still.Enum.WorldStates;
 using Still.GOAP.Agent;
 using Still.GOAP.Planner;
+using UnityEngine;
 namespace Still.GOAP.Action
 {
     [System.Serializable]
@@ -12,21 +13,25 @@ namespace Still.GOAP.Action
             {
                 return true;
             }
-            _worldStates.ModifyState(WorldStateType.IsChasing.ToString(), 0);
             agent.SetSpeed(agent.Config.GhostMoveSpeed);
             return false;
         }
 
         public override bool Perform(IAgentController agent)
         {
-            throw new System.NotImplementedException();
+            if (agent.IsArrived)
+            {
+                Debug.Log("目的地にたどり着いた");
+                return true;
+            }
+            return false;
         }
 
         public override void SetTarget(IAgentController agent)
         {
-            //_player = GameObject.FindAnyObjectByType<Player>();
+            Debug.Log($"{this.GetType().Name}アクション開始");
+            agent.SetSpeed(agent.Config.GhostDashSpeed);
+            //agent.SetMoveDestination();
         }
-
-        //private Player _player;
     }
 }
