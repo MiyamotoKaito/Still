@@ -2,254 +2,186 @@
 using System.Linq;
 using Still.GOAP.Action;
 using UnityEngine;
+
 namespace Still.GOAP.Planner
 {
     public static class Planner
     {
         public static Stack<IAction> Planning(List<IAction> usableActions,
                                               Dictionary<string, int> currentWorldStates,
-                                              Dictionary<string, Condition> HighestPriorityGoal)
+                                              Dictionary<string, Condition> highestPriorityGoal)
         {
             var open = new PriorityQueue<Node>();
-            var bestG = new Dictionary<string, int>();
+            var closed = new HashSet<string>();
 
-            var start = new Node(null, currentWorldStates, null, 0, Heruistic(currentWorldStates,
-                                                                              HighestPriorityGoal,
-                                                                              usableActions));
+            var start = new Node(null, highestPriorityGoal, null, 0,
+                                CountUnsatisfiedConditions(currentWorldStates, highestPriorityGoal));
             open.Enqueue(start, start.F);
-            bestG[StateHash(currentWorldStates)] = 0;
+
             while (open.Count > 0)
             {
                 var current = open.Dequeue();
+                var hash = StateHash(current.SubGoals);
 
-                // ゴールに達成していたら経路を再構築して返す
-                if (Evalution.IsSatisfied(current.States, HighestPriorityGoal))
+                if (closed.Contains(hash)) continue;
+                closed.Add(hash);
+
+                // ゴール到達チェック
+                if (Evalution.IsSatisfied(currentWorldStates, current.SubGoals))
                 {
                     return ReconstructPath(current);
                 }
-                // 使用可能なアクションを全て試す
+
+                // アクション展開
                 foreach (var action in usableActions)
                 {
+                    if (!CanSatisfyAnyGoal(action, current.SubGoals)) continue;
 
-                    if (!Evalution.IsSatisfied(current.States, action.Preconditions)) continue;
+                    var newSubGoal = ApplyRegression(current.SubGoals, action);
+                    var newHash = StateHash(newSubGoal);
 
-                    var nextState = ApplyEffects(current.States, action.Effects);
+                    if (closed.Contains(newHash)) continue;
+
                     int newG = current.G + action.ActionCost;
-                    var hash = StateHash(nextState);
-
-                    // 既に同じかそれ以上の効率的な経路が見つかっていればスキップ
-                    if (bestG.TryGetValue(hash, out int oldG) && oldG <= newG) continue;
-
-                    // 最良コストを更新し、新しいノードをOpenに追加
-                    bestG[hash] = newG;
-                    int h = Heruistic(nextState, HighestPriorityGoal, usableActions);
-                    var nextNode = new Node(current, nextState, action, newG, h);
+                    int h = CountUnsatisfiedConditions(currentWorldStates, newSubGoal);
+                    var nextNode = new Node(current, newSubGoal, action, newG, h);
                     open.Enqueue(nextNode, nextNode.F);
                 }
             }
+
+            Debug.LogWarning("プランニング失敗: ゴールに到達する経路が見つかりませんでした");
             return null;
         }
+
         /// <summary>
-        /// 推定コストを計算するヒューリスティック関数
+        /// アクションの効果がサブゴールの少なくとも1つを満たせるかチェック
         /// </summary>
-        /// <param name="currentStates"></param>
-        /// <param name="goal"></param>
-        /// <param name="usableActions"></param>
-        /// <returns></returns>
-        private static int Heruistic(Dictionary<string, int> currentStates,
-                                     Dictionary<string, Condition> goal,
-                                     List<IAction> usableActions)
+        private static bool CanSatisfyAnyGoal(IAction action, Dictionary<string, Condition> subGoals)
         {
-            //既にゴールに達している？
-            if (Evalution.IsSatisfied(currentStates, goal)) return 0;
-
-            var tempStates = new Dictionary<string, int>(currentStates);
-            //推定ステップ数
-            int estimatedSteps = 0;
-            int maxSteps = 15;
-
-            while (estimatedSteps < maxSteps)
+            foreach (var effect in action.Effects)
             {
-                IAction bestAction = FindBestAction(tempStates, goal, usableActions);
-
-                // そんな事ないと思いたいが、アクションのリストがnullだったらクソでかコストを返す
-                if (bestAction == null)
+                if (subGoals.ContainsKey(effect.Key) &&
+                    IsSingleConditionMet(effect.Value, subGoals[effect.Key]))
                 {
-                    return 10000;
-                }
-
-                // 選んだアクションを1回実行したと仮定して、ステートを更新
-                foreach (var effect in bestAction.Effects)
-                {
-                    tempStates[effect.Key] = effect.Value;
-                }
-
-                // アクションを1回実行したのでステップを1足す
-                estimatedSteps++;
-                // もしゴールに達成していたらステップ数を返す
-                if (Evalution.IsSatisfied(tempStates, goal))
-                {
-                    return estimatedSteps;
+                    return true;
                 }
             }
-            // 最大回数試してみてもたどり着けなかった
-            return 10000;
+            return false;
         }
+
         /// <summary>
-        /// 効果を反映したあとどれくらいゴールの条件が達成されたかを見て達成数は一番大きかったアクションを返します
+        /// サブゴールからアクションの効果を除去し、前提条件を追加
         /// </summary>
-        /// <param name="currentStates"></param>
-        /// <param name="goal"></param>
-        /// <param name="actions"></param>
-        /// <returns></returns>
-        private static IAction FindBestAction(Dictionary<string, int> currentStates,
-                                              Dictionary<string, Condition> goal,
-                                              List<IAction> actions)
+        private static Dictionary<string, Condition> ApplyRegression(
+            Dictionary<string, Condition> subGoals, IAction action)
         {
-            IAction bestAction = null;
-            int maxProgress = -1;
+            var newSubGoals = new Dictionary<string, Condition>(subGoals);
 
-            foreach (var action in actions)
+            // 効果で満たされる条件を削除
+            foreach (var effect in action.Effects)
             {
-                // アクションの前提条件が達成されていなかったらスキップ
-                if (!Evalution.IsSatisfied(currentStates, action.Preconditions)) continue;
-
-                // 達成数
-                int progress = CountGoalProgress(currentStates, goal, action.Effects);
-
-                // 現在の最大の達成数より多かったら更新する
-                if (progress > maxProgress)
+                if (newSubGoals.TryGetValue(effect.Key, out var condition) &&
+                    IsSingleConditionMet(effect.Value, condition))
                 {
-                    maxProgress = progress;
-                    bestAction = action;
+                    newSubGoals.Remove(effect.Key);
                 }
             }
-            return bestAction;
-        }
-        /// <summary>
-        /// アクションの効果によって、ゴール条件が「未達」から「達成」に変わったものの数を数えています。
-        /// </summary>
-        /// <param name="currentStates"></param>
-        /// <param name="goal"></param>
-        /// <param name="effects"></param>
-        /// <returns></returns>
-        private static int CountGoalProgress(Dictionary<string, int> currentStates,
-                                             Dictionary<string, Condition> goal,
-                                             Dictionary<string, int> effects)
-        {
-            // 達成数
-            int progress = 0;
-            // 比較用のステート
-            var nextState = new Dictionary<string, int>(currentStates);
-            foreach (var effect in effects)
+
+            // 前提条件を追加
+            foreach (var precondition in action.Preconditions)
             {
-                nextState[effect.Key] = effect.Value;
+                newSubGoals[precondition.Key] = precondition.Value;
             }
-            foreach (var goalEntry in goal)
-            {
-                // 効果が反映される前のステートはゴールの条件が達成されているか
-                bool isMetBefore = Evalution.IsSatisfied(currentStates, new Dictionary<string, Condition>
-                {
-                    {
-                        goalEntry.Key,
-                        goalEntry.Value
-                    }
-                });
-                // 効果が反映された後のステートはゴールの条件が達成されているか
-                bool isMetAfter = Evalution.IsSatisfied(nextState, new Dictionary<string, Condition>
-                {
-                    {
-                        goalEntry.Key,
-                        goalEntry.Value
-                    }
-                });
-                // 効果が反映された後だけゴールの条件が達成されていたら達成数を1足す
-                if (!isMetBefore && isMetAfter)
-                {
-                    progress++;
-                }
-            }
-            return progress;
+
+            return newSubGoals;
         }
+
         /// <summary>
-        /// ステートにアクションの効果を適用し、新しいステートを返します。
+        /// 単一の条件が満たされているかチェック（Evalution.IsSatisfiedのラッパー）
         /// </summary>
-        private static Dictionary<string, int> ApplyEffects(
-            Dictionary<string, int> state,
-            Dictionary<string, int> effects)
+        private static bool IsSingleConditionMet(int value, Condition condition)
         {
-            var newState = new Dictionary<string, int>(state);
-            foreach (var eff in effects)
-                newState[eff.Key] = eff.Value;
-            return newState;
+            var state = new Dictionary<string, int> { { "temp", value } };
+            var cond = new Dictionary<string, Condition> { { "temp", condition } };
+            return Evalution.IsSatisfied(state, cond);
         }
+
         /// <summary>
-        /// ステートをキーでソートし、一意の文字列（ハッシュ）を生成します。
+        /// 満たされていない条件の数をカウント
         /// </summary>
-        private static string StateHash(Dictionary<string, int> state)
+        private static int CountUnsatisfiedConditions(Dictionary<string, int> currentStates,
+                                                     Dictionary<string, Condition> subGoals)
         {
-            // キーでソートすることで、順序が違っても同じ内容なら同じハッシュになるようにする
-            return string.Join("|", state.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key}={kv.Value}"));
+            return subGoals.Count(goal => !IsSingleConditionMet(
+                currentStates.GetValueOrDefault(goal.Key, int.MinValue), goal.Value));
         }
+
         /// <summary>
-        /// ゴールノードから親を遡ってアクションの経路を構築します。
+        /// 状態のハッシュ文字列を生成
+        /// </summary>
+        private static string StateHash(Dictionary<string, Condition> subGoals)
+        {
+            return string.Join("|", subGoals.OrderBy(kv => kv.Key)
+                .Select(kv => $"{kv.Key}={kv.Value.Comparison}:{kv.Value.Value}"));
+        }
+
+        /// <summary>
+        /// アクション経路を再構築
         /// </summary>
         private static Stack<IAction> ReconstructPath(Node goalNode)
         {
-            var path = new Stack<IAction>();
-            var cost = 0;
+            var actions = new List<IAction>();
             var current = goalNode;
+
             while (current.Parent != null && current.Action != null)
             {
-                cost += current.F;
-                path.Push(current.Action);
+                actions.Add(current.Action);
                 current = current.Parent;
             }
-            Debug.Log($"最適パスを発見 : 累計コスト{cost} \n{string.Join("->", path)}");
+            Debug.Log($"最適パスを発見 : 累計コスト{goalNode.F} \n{string.Join(" -> ", actions)}");
+
+            // リストは既に正しい順序（開始→ゴール）なので、そのままStackに詰める
+            var path = new Stack<IAction>();
+            for (int i = actions.Count - 1; i >= 0; i--)
+            {
+                path.Push(actions[i]);
+            }
             return path;
         }
-        /// <summary>
-        /// GOAPのプランニングをするためのノードクラス
-        /// </summary>
+
         public class Node
         {
             public Node Parent;
-            public Dictionary<string, int> States;
+            public Dictionary<string, Condition> SubGoals;
             public IAction Action;
             public int G;
             public int H;
             public int F => G + H;
 
-            public Node(Node parent, Dictionary<string, int> states, IAction action, int g, int h)
+            public Node(Node parent, Dictionary<string, Condition> subGoals, IAction action, int g, int h)
             {
                 Parent = parent;
-                States = states;
+                SubGoals = subGoals;
                 Action = action;
                 G = g;
                 H = h;
             }
         }
-        /// <summary>
-        /// 最も小さい値を取り出すQueue
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+
         public class PriorityQueue<T>
         {
             private List<(T item, int priority)> elements = new();
             public int Count => elements.Count;
-            public void Enqueue(T item, int priority)
-            {
-                elements.Add((item, priority));
-            }
+
+            public void Enqueue(T item, int priority) => elements.Add((item, priority));
+
             public T Dequeue()
             {
-                var index = 0;
+                int index = 0;
                 for (int i = 1; i < elements.Count; i++)
                 {
-                    if (elements[index].priority > elements[i].priority)
-                    {
+                    if (elements[i].priority < elements[index].priority)
                         index = i;
-                    }
                 }
                 var best = elements[index].item;
                 elements.RemoveAt(index);
