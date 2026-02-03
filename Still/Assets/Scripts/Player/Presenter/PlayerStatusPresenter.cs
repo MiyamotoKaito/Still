@@ -20,9 +20,7 @@ namespace Still.Player.Presenter
             _sanValueModel = sanValueModel;
 
             _staminaModel.SetMaxStamina(config.DefaultStaminaValue);
-            _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
             _sanValueModel.SetMaxSAN(config.DefaultSANValue);
-            _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
         }
 
         public void StatusUpdate()
@@ -30,15 +28,16 @@ namespace Still.Player.Presenter
             if (_playerView.IsDash)
             {
                 _staminaModel.ModifyStamina(-10 * Time.deltaTime);
-                _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
+
                 _sanValueModel.ModifySAN(-2 * Time.deltaTime);
-                _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
+
             }
             else if (_staminaModel.CurrentStamina < _staminaModel.MaxStamina && !_playerView.IsDash)
             {
                 _staminaModel.ModifyStamina(5 * Time.deltaTime);
-                _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
             }
+            _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
+            _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
         }
     }
 }
