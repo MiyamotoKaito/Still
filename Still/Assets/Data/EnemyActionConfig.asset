@@ -25,65 +25,65 @@ MonoBehaviour:
       type: {class: PatrolAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
         _preconditions:
-        - _key: 6
+        - _key: 5
           _value:
             Value: 0
             Comparison: 0
         _effects:
-        - _key: 6
+        - _key: 5
           _value: 1
         _actionCost: 5
     - rid: 622163703035068629
       type: {class: SearchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
         _preconditions:
-        - _key: 6
+        - _key: 5
           _value:
             Value: 1
             Comparison: 0
         _effects:
-        - _key: 5
+        - _key: 4
           _value: 1
         _actionCost: 1
     - rid: 622163703035068630
       type: {class: SetTargetToLightSwitchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
         _preconditions:
-        - _key: 17
+        - _key: 9
           _value:
             Value: 1
             Comparison: 5
         _effects:
-        - _key: 10
+        - _key: 6
           _value: 1
         _actionCost: 3
     - rid: 622163703035068634
       type: {class: TurnOffLightAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
         _preconditions:
-        - _key: 17
+        - _key: 9
           _value:
             Value: 1
             Comparison: 5
-        - _key: 11
+        - _key: 7
           _value:
             Value: 1
             Comparison: 0
         _effects:
-        - _key: 12
+        - _key: 10
           _value: 1
         _actionCost: 2
     - rid: 7538373351181910093
       type: {class: MoveAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
         _preconditions:
-        - _key: 10
+        - _key: 6
           _value:
             Value: 1
             Comparison: 0
         _effects:
-        - _key: 11
+        - _key: 7
           _value: 1
-        - _key: 10
+        - _key: 6
           _value: 0
         _actionCost: 5
