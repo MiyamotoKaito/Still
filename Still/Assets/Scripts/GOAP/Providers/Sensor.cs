@@ -1,4 +1,5 @@
 ﻿using Still.Enum.WorldStates;
+using Still.GOAP.Agent.Config;
 using Still.GOAP.WorldState;
 using Still.Player.View;
 using UnityEngine;
@@ -9,28 +10,44 @@ namespace Still.GOAP.Providers
     public class Sensor : MonoBehaviour
     {
         [Inject] private WorldStates _worldStates;
-        [SerializeField]
+        [Inject] private GhostConfig _ghostConfig;
+        [SerializeField] private LayerMask _playerLayer;
         private float _checkInterval = 5;
+        private float _timer = 0f;
         private void Update()
         {
-            Physics.Raycast(transform.position, transform.forward, out RaycastHit hit);
-            if (hit.collider != null)
+            var canseePlayer = Physics.Raycast(
+                transform.position,
+                transform.forward,
+                out RaycastHit hit,
+                _ghostConfig.GhostFovLength,
+                _playerLayer);
+
+            // プレイヤーが見えている場合
+            if (canseePlayer)
             {
-                if (hit.collider.TryGetComponent<PlayerView>(out var player))
+                if (_worldStates.GetStateValue(WorldStateType.PlayerVisible.ToString()) == 0)
                 {
-                    if (_worldStates.GetStateValue(WorldStateType.PlayerVisible.ToString()) == 0)
-                    {
-                        _worldStates.ModifyState(WorldStateType.PlayerVisible.ToString(), 1);
-                    }
+                    _worldStates.ModifyState(WorldStateType.PlayerVisible.ToString(), 1);
+                    Debug.Log("[Sensor] プレイヤーを発見！");
                 }
+                // タイマーをリセット
+                _timer = 0f;
             }
-            else if (hit.collider == null)  
+            // プレイヤーが見えていない場合
+            else
             {
-                _checkInterval -= Time.deltaTime;
-                if (_checkInterval < 0)
+                // 現在プレイヤーが見えている状態なら、タイマーを開始
+                if (_worldStates.GetStateValue(WorldStateType.PlayerVisible.ToString()) == 1)
                 {
-                    _worldStates.ModifyState(WorldStateType.PlayerVisible.ToString(), 0);
-                    _checkInterval = 5f;
+                    _timer += Time.deltaTime;
+
+                    if (_timer >= _checkInterval)
+                    {
+                        _worldStates.ModifyState(WorldStateType.PlayerVisible.ToString(), 0);
+                        _timer = 0f;
+                        Debug.Log("[Sensor] プレイヤーを見失いました");
+                    }
                 }
             }
         }
