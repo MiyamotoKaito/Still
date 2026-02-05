@@ -25,6 +25,8 @@
 
         // イベント
         EventCount,
+        InTheRoom,
         FearLevel,
+        Knock,
     }
 }
