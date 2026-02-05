@@ -1,5 +1,4 @@
-﻿using Still.GOAP.Action;
-using Still.GOAP.Agent;
+﻿using Still.GOAP.Agent;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
@@ -9,6 +8,7 @@ namespace Still.GOAP.Action
         public override bool Perform(IAgentController agent)
         {
             AudioManager.Instance.PlaySE("Knock");
+            _playerManager.SANValueModel.ModifySAN(-5);
             return true;
         }
 
