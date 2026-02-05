@@ -913,7 +913,7 @@ GameObject:
   - component: {fileID: 1193700092}
   - component: {fileID: 1193700096}
   - component: {fileID: 1193700091}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1642,7 +1642,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8345c8f809d5b439bfba97369b9dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Providers.Sensor
-  _checkInterval: 5
+  _playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1855905514
 GameObject:
   m_ObjectHideFlags: 0
