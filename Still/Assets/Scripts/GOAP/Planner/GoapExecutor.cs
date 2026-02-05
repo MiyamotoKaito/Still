@@ -16,7 +16,6 @@ namespace Still.GOAP.Planner.Executor
         private readonly Dictionary<SubGoalConfig, int> _goals = new();
         /// <summary>現在最も優先度が高いゴール</summary>
         private ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
-        [SerializeField,SubclassSelector]
         private IAction _currentAction;
         private Stack<IAction> _routeActions = new();
         private readonly List<IAction> _usableActions = new();
@@ -88,24 +87,11 @@ namespace Still.GOAP.Planner.Executor
             // 実行中に前提条件が維持されているか確認
             if (!_currentAction.Execute(controller))
             {
-                if (!_currentAction.Execute(controller))
-                {
-                    Debug.LogWarning($"[Executor] アクション {_currentAction.GetType().Name} の実行条件が破綻しました。");
-                    CancelCurrentPlan();
-
-                    // 現在のゴールで再プランニングを試みる
-                    if (_currentGoal.Value.Key != null)
-                    {
-                        Plan(_currentGoal.Value.Key);
-                    }
-                    else
-                    {
-                        // ゴールがない場合は優先度を再評価
-                        Debug.LogWarning("[Executor] 現在のゴールがnullです。ゴールを再設定します。");
-                        SetGoalPriority();
-                    }
-                    return;
-                }
+                Debug.LogWarning($"[Executor] アクション {_currentAction.GetType().Name} の実行条件が破綻しました。");
+                CancelCurrentPlan();
+                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
+                SetGoalPriority();
+                return;
             }
             // アクションの実行
             if (_currentAction.Perform(controller))
