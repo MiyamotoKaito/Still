@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Still.GOAP.Action.Setting;
 using Still.GOAP.Agent;
 using Still.GOAP.Planner;
 using Still.GOAP.WorldState;
+using Still.Player;
 using UnityEngine;
 using VContainer;
 namespace Still.GOAP.Action
@@ -53,11 +54,13 @@ namespace Still.GOAP.Action
         private Dictionary<string, Condition> _pDic;
         private Dictionary<string, int> _eDic;
         protected WorldStates _worldStates;
+        protected PlayerManager _playerManager;
 
         [Inject]
         public void Init(WorldStates worldState)
         {
             _worldStates = worldState;
+            _playerManager = GameObject.FindAnyObjectByType<PlayerManager>();
         }
         public Dictionary<string, Condition> ToDictionary(List<HasConditionActions> list)
         {

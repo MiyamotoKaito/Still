@@ -1,6 +1,7 @@
 ﻿using Still.Enum.WorldStates;
 using Still.GOAP.Agent;
 using Still.GOAP.Planner;
+using Still.Player.View;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
@@ -14,6 +15,7 @@ namespace Still.GOAP.Action
                 return true;
             }
             agent.SetSpeed(agent.Config.GhostMoveSpeed);
+            _worldStates.ModifyState(WorldStateType.IsChasing.ToString(), 0);
             return false;
         }
 
@@ -30,8 +32,11 @@ namespace Still.GOAP.Action
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
+            var player = GameObject.FindAnyObjectByType<PlayerView>();
+            agent.SetTarget(player.gameObject);
             agent.SetSpeed(agent.Config.GhostDashSpeed);
-            //agent.SetMoveDestination();
+            agent.SetMoveDestination(player.transform.position);
+            AudioManager.Instance.PlaySE("Laugh");
         }
     }
 }
