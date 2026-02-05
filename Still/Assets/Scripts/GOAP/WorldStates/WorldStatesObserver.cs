@@ -50,7 +50,7 @@ namespace Still.GOAP.WorldState.Observer
                 // 最も優先度が高い以外のゴールでゴールをセットする前提条件が達成されていたら
                 if (CanChangeGoalPriority(config))
                 {
-                    Debug.Log($"{config.name}の優先度を上げた");
+                    Debug.Log($"{config.name}ゴールの優先度を上げた");
                     _executor.UpdateGoalPriority(config, config.Priority);
                 }
                 else
