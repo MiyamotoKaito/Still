@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Action.Config.GhostActionData
   _ghostActions:
   - rid: 622163703035068628
-  - rid: 622163703035068629
+  - rid: 6149759955516522610
   - rid: 622163703035068630
   - rid: 622163703035068634
   - rid: 7538373351181910093
+  - rid: 6149759955516522634
+  - rid: 6149759955516522635
   references:
     version: 2
     RefIds:
@@ -33,18 +35,6 @@ MonoBehaviour:
         - _key: 5
           _value: 1
         _actionCost: 5
-    - rid: 622163703035068629
-      type: {class: SearchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
-      data:
-        _preconditions:
-        - _key: 5
-          _value:
-            Value: 1
-            Comparison: 0
-        _effects:
-        - _key: 4
-          _value: 1
-        _actionCost: 1
     - rid: 622163703035068630
       type: {class: SetTargetToLightSwitchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
@@ -73,6 +63,42 @@ MonoBehaviour:
         - _key: 10
           _value: 1
         _actionCost: 2
+    - rid: 6149759955516522610
+      type: {class: LookAroundAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 5
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 4
+          _value: 1
+        _actionCost: 0
+    - rid: 6149759955516522634
+      type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 0
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 3
+          _value: 1
+        _actionCost: 5
+    - rid: 6149759955516522635
+      type: {class: CatchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 3
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 2
+          _value: 1
+        _actionCost: 10
     - rid: 7538373351181910093
       type: {class: MoveAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:

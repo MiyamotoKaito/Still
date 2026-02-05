@@ -502,6 +502,62 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &820919512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 820919513}
+  - component: {fileID: 820919514}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &820919513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820919512}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &820919514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820919512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5e5917553f49fc42a72891a43999e55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  _bgmPlayer: {fileID: 0}
+  _seList:
+  - _clip: {fileID: 8300000, guid: cb3d886118429d24ebe0acc718d1186a, type: 3}
+    _name: Laugh
+    _volume: 0.1
+  - _clip: {fileID: 8300000, guid: 45aadcb078668b24cac29f0b39f21b6c, type: 3}
+    _name: Ashioto
+    _volume: 0.1
+  _bgmList:
+  - _clip: {fileID: 8300000, guid: e8403142ea53b1d4ca1ea2ca3eb9ad8c, type: 3}
+    _name: Title
+    _volume: 0.1
 --- !u!1 &1133966925
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,13 +590,16 @@ MonoBehaviour:
   parentReference:
     TypeName: 
   autoRun: 1
-  autoInjectGameObjects: []
+  autoInjectGameObjects:
+  - {fileID: 1549448621}
+  - {fileID: 1752016668}
   _agentConfig: {fileID: 11400000, guid: 6826a2863dd234e478a46082f4961bc7, type: 2}
   _actionData: {fileID: 11400000, guid: 58a562f2cd0eb3f4fbf43ab7196f2a02, type: 2}
   _worldStatesConfig: {fileID: 11400000, guid: 8e5917fa50c1b684a97b87d8de94a90e, type: 2}
   _subgoals:
   - {fileID: 11400000, guid: 8d536c0b15aa01d4ebf0899c7712ed4d, type: 2}
   - {fileID: 11400000, guid: 7cca5644dbbfd3e488fb588f2b6064bf, type: 2}
+  - {fileID: 11400000, guid: b3a920a1e0a2ca149af1682fd20ede24, type: 2}
 --- !u!4 &1133966927
 Transform:
   m_ObjectHideFlags: 0
@@ -956,7 +1015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1549448622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1204,6 +1263,7 @@ GameObject:
   - component: {fileID: 1752016675}
   - component: {fileID: 1752016674}
   - component: {fileID: 1752016677}
+  - component: {fileID: 1752016678}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -1389,6 +1449,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1752016678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752016668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8345c8f809d5b439bfba97369b9dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Providers.Sensor
+  _checkInterval: 5
 --- !u!1 &1855905514
 GameObject:
   m_ObjectHideFlags: 0
@@ -2199,3 +2272,4 @@ SceneRoots:
   - {fileID: 1151939061}
   - {fileID: 1549448623}
   - {fileID: 151033277}
+  - {fileID: 820919513}
