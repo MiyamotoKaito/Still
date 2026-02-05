@@ -13,18 +13,21 @@ namespace Still.Player.Presenter
         {
             _sanModel = sanModel;
             _worldStates = worldStates;
+
+            _sanModel.OnSANChanged += LevelUpFearLevel;
         }
 
-        public void LevelUpFearLevel()
+        public void LevelUpFearLevel(float value)
         {
-            if (_worldStates == null)
-            Debug.Log($"{_worldStates}入っていない");
-            _worldStates.OnStateChanged.Where(x => x == WorldStateType.FearLevel.ToString())
-                .Subscribe(_ => 
-                {
-                    _sanModel.ModifySAN(-10);
-                    Debug.Log($"恐怖レベル上昇！ SAN値減少: {_sanModel.CurrentSAN}");
-                });
+            int fearLevel = 0;
+            if (value < 10) fearLevel = 4;
+            else if (value < 30) fearLevel = 3;
+            else if (value < 60) fearLevel = 2;
+            else if (value < 80) fearLevel = 1;
+            else fearLevel = 0;
+
+            _worldStates.ModifyState(WorldStateType.FearLevel.ToString(), fearLevel);
+
         }
     }
 }

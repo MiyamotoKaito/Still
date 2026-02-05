@@ -9,6 +9,8 @@ namespace Still.Player
 {
     public class PlayerManager : MonoBehaviour
     {
+        public SANValueModel SANValueModel => _sanValueModel;
+
         [SerializeField] private PlayerConfig _config;
 
         private PlayerView _playerView;
@@ -38,7 +40,6 @@ namespace Still.Player
             _playerFearLevelPresenter = new PlayerFearLevelPresenter(_sanValueModel, _worldStates);
 
             _playerView.EnablePlayerInput();
-            _playerFearLevelPresenter.LevelUpFearLevel();
         }
         private void ViewInit()
         {
