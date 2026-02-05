@@ -16,6 +16,7 @@ namespace Still.GOAP.Planner.Executor
         private readonly Dictionary<SubGoalConfig, int> _goals = new();
         /// <summary>現在最も優先度が高いゴール</summary>
         private ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
+        [SerializeField,SubclassSelector]
         private IAction _currentAction;
         private Stack<IAction> _routeActions = new();
         private readonly List<IAction> _usableActions = new();
@@ -87,8 +88,24 @@ namespace Still.GOAP.Planner.Executor
             // 実行中に前提条件が維持されているか確認
             if (!_currentAction.Execute(controller))
             {
-                CancelCurrentPlan();
-                return;
+                if (!_currentAction.Execute(controller))
+                {
+                    Debug.LogWarning($"[Executor] アクション {_currentAction.GetType().Name} の実行条件が破綻しました。");
+                    CancelCurrentPlan();
+
+                    // 現在のゴールで再プランニングを試みる
+                    if (_currentGoal.Value.Key != null)
+                    {
+                        Plan(_currentGoal.Value.Key);
+                    }
+                    else
+                    {
+                        // ゴールがない場合は優先度を再評価
+                        Debug.LogWarning("[Executor] 現在のゴールがnullです。ゴールを再設定します。");
+                        SetGoalPriority();
+                    }
+                    return;
+                }
             }
             // アクションの実行
             if (_currentAction.Perform(controller))
@@ -96,9 +113,6 @@ namespace Still.GOAP.Planner.Executor
                 var effects = _currentAction.Effects;
                 _currentAction = null;
                 ApplyEffects(effects);
-                // ★追加：アクション完了直後に「現在のゴールが達成されたか」を確認する
-                // これを入れないとObserverの通知（UniRx）を待つ間に、
-                // Executorが次の（空の）パトロールプランを立ててしまう
                 CheckCurrentGoalStatus();
             }
         }
