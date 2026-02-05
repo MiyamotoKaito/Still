@@ -31,7 +31,7 @@ namespace Still.GOAP.Agent
 
             if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, _ghostConfig.Radius / 2, NavMesh.AllAreas))
                 return hit.position;
-            else return Vector3.zero;
+            else return Position;
         }
 
         public void PlayBoolAnimation(string param, bool flag) => _animator.SetBool(param, flag);
