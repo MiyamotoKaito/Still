@@ -4,16 +4,17 @@ using UnityEngine;
 namespace Still.GOAP.Action
 {
     [System.Serializable]
-    public class NockAction : ActionBase
+    public class KnockAction : ActionBase
     {
         public override bool Perform(IAgentController agent)
         {
-          return true;
+            AudioManager.Instance.PlaySE("Knock");
+            return true;
         }
 
         public override void SetTarget(IAgentController agent)
         {
-            
+            Debug.Log($"{this.GetType().Name}のターゲットを設定");
         }
     }
 }
