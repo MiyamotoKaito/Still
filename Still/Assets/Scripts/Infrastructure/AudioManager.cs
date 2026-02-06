@@ -90,7 +90,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// BGMのストップ
     /// </summary>
-    public void Stop()
+    public void StopBGM()
     {
         _bgmPlayer.Stop();
     }
