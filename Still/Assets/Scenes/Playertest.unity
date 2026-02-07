@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 183880601}
   - component: {fileID: 183880600}
   - component: {fileID: 183880599}
+  - component: {fileID: 183880603}
   - component: {fileID: 183880598}
   m_Layer: 0
   m_Name: CinemachineCamera
@@ -552,12 +553,29 @@ Transform:
   m_GameObject: {fileID: 183880597}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.58, z: 0}
+  m_LocalPosition: {x: 0, y: 1.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &183880603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183880597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBasicMultiChannelPerlin
+  NoiseProfile: {fileID: 11400000, guid: 79445edc62ac77b47aaaf6931ceaf8ab, type: 2}
+  PivotOffset: {x: 1.92, y: 1.02, z: 0}
+  AmplitudeGain: 0.5
+  FrequencyGain: 1.2
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &197724763
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,6 +592,7 @@ GameObject:
   - component: {fileID: 197724765}
   - component: {fileID: 197724771}
   - component: {fileID: 197724770}
+  - component: {fileID: 197724772}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -590,7 +609,7 @@ Transform:
   m_GameObject: {fileID: 197724763}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.83, z: 0}
+  m_LocalPosition: {x: 0, y: 1.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -831,6 +850,21 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: 0c1a612c124258b45a86af4c2773607e, type: 3}
   _stepInterval: 0.5
   _audioSource: {fileID: 197724770}
+--- !u!114 &197724772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197724763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8225fda16d076e344bc0c4a0ca858e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHeadBob
+  _horizontalBob: 0.05
+  _verticalBob: 0.08
+  _shakeSpeed: 6
 --- !u!1 &730446369
 GameObject:
   m_ObjectHideFlags: 0
@@ -1730,7 +1764,7 @@ Transform:
   m_GameObject: {fileID: 1660411199}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.58, z: 0}
+  m_LocalPosition: {x: 0, y: 1.76, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
