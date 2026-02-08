@@ -5,8 +5,8 @@ public class FootSteps : MonoBehaviour
 {
     [SerializeField] private FootStepSound[] _footStepSounds;
     [SerializeField] private float _stepInterval = 0.5f;
-    [SerializeField] private AudioSource _audioSource;
 
+    private AudioSource _audioSource;
     private float _stepTimer;
     private PlayerView _player;
 
@@ -23,12 +23,7 @@ public class FootSteps : MonoBehaviour
     private void Awake()
     {
         _player = FindAnyObjectByType<PlayerView>();
-
-        // AudioSourceがなければ追加
-        if (_audioSource == null)
-        {
-            _audioSource = gameObject.AddComponent<AudioSource>();
-        }
+        _audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void Update()
