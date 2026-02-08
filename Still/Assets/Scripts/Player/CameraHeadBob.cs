@@ -1,51 +1,41 @@
 using System;
 using Still.Player.View;
+using Unity.Cinemachine;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class CameraHeadBob : MonoBehaviour
 {
     [Header("Head Bob")]
-    [SerializeField] private float _horizontalBob = 0.05f;
-    [SerializeField] private float _verticalBob = 0.05f;
-    [SerializeField] private float _shakeSpeed = 8f;
-
-    private CameraView _camera;
-    private PlayerView _player;
-    private Vector3 _defaultPos;
-    private float _timer;
-
+    [SerializeField] private float _amplitude = 1;
+    [SerializeField] private float _frequency = 1;
+    private PlayerView _playerview;
+    private CinemachineBasicMultiChannelPerlin _noise;
+    private float _defaultAmplitude;
+    private float _defaultFrequency;
     private void Awake()
     {
-        _camera = FindAnyObjectByType<CameraView>();
-        _player = GetComponent<PlayerView>();
-        _defaultPos = _camera.transform.localPosition;
+        _playerview = GetComponent<PlayerView>();
+        _noise = FindAnyObjectByType<CinemachineBasicMultiChannelPerlin>();
+        _defaultAmplitude = _amplitude;
+        _defaultFrequency = _frequency;
+        _noise.AmplitudeGain = _amplitude;
+        _noise.FrequencyGain = _frequency;
     }
 
     private void LateUpdate()
     {
-        if (_player.CurrentMoveValue.magnitude > 0.1f)
+        if (_playerview.CurrentMoveValue.magnitude > 0.1f)
         {
-            _timer += Time.deltaTime * _shakeSpeed;
-
-            float x = Mathf.Cos(_timer) * _horizontalBob;
-            float y = Mathf.Sin(_timer * 2f) * _verticalBob;
-
-            Vector3 targetPos = _defaultPos + new Vector3(x, y, 0);
-
-            _camera.transform.localPosition = Vector3.Lerp(
-                _camera.transform.localPosition,
-                targetPos,
-                Time.deltaTime * _shakeSpeed
-            );
+            _amplitude = _defaultAmplitude;
+            _frequency = _defaultFrequency;
+            _noise.AmplitudeGain = _amplitude;
+            _noise.FrequencyGain = _frequency;
         }
         else
         {
-            _timer = 0f;
-            _camera.transform.localPosition = Vector3.Lerp(
-                _camera.transform.localPosition,
-                _defaultPos,
-                Time.deltaTime * _shakeSpeed
-            );
+            _noise.AmplitudeGain = 0;
+            _noise.FrequencyGain = 0;
         }
     }
 }
