@@ -1,4 +1,5 @@
 ﻿using Still.GOAP.WorldState;
+using Still.Object.Door;
 using Still.Player.Model;
 using Still.Player.Presenter;
 using Still.Player.View;
@@ -17,11 +18,13 @@ namespace Still.Player
         private CameraView _cameraView;
         private StaminaView _staminaView;
         private SANView _sanView;
+        private PlayerSensorView _playerSensorView;
         [Inject] private WorldStates _worldStates;
 
         private PlayerMovePresenter _movePresenter;
         private PlayerStatusPresenter _playerStatusPresenter;
         private PlayerFearLevelPresenter _playerFearLevelPresenter;
+        private PlayerSensorPresenter _playerSensorPresenter;
 
         private PlayerModel _playerModel;
         private StaminaModel _staminaModel;
@@ -38,6 +41,7 @@ namespace Still.Player
             _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
             _playerStatusPresenter = new PlayerStatusPresenter(_config, _playerView, _staminaView, _sanView, _staminaModel, _sanValueModel);
             _playerFearLevelPresenter = new PlayerFearLevelPresenter(_sanValueModel, _worldStates);
+            _playerSensorPresenter = new PlayerSensorPresenter(_playerSensorView, _playerView);
 
             _playerView.EnablePlayerInput();
         }
@@ -47,6 +51,7 @@ namespace Still.Player
             _cameraView = FindAnyObjectByType<CameraView>();
             _staminaView = FindAnyObjectByType<StaminaView>();
             _sanView = FindAnyObjectByType<SANView>();
+            _playerSensorView = FindAnyObjectByType<PlayerSensorView>();
         }
         private void Update()
         {

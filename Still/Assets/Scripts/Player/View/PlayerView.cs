@@ -8,11 +8,13 @@ namespace Still.Player.View
     {
         public Vector2 CurrentMoveValue => _currentMoveValue;
         public bool IsDash => _isDash;
+        public bool IsInteract => _isInteract;
 
         private PlayerInputActions _actions;
         private Rigidbody _rigidbody;
         private Vector2 _currentMoveValue;
         private bool _isDash;
+        private bool _isInteract;
 
         private void Awake()
         {
@@ -25,6 +27,8 @@ namespace Still.Player.View
             _actions.Player.Move.canceled += OnInputMove;
             _actions.Player.Dash.performed += OnDashPerformed;
             _actions.Player.Dash.canceled += OnDashPerformed;
+            _actions.Player.Interact.performed += OnInteractPerformed;
+            _actions.Player.Interact.canceled += OnInteractPerformed;
             _actions.Player.Enable();
         }
 
@@ -34,6 +38,8 @@ namespace Still.Player.View
             _actions.Player.Move.canceled -= OnInputMove;
             _actions.Player.Dash.performed -= OnDashPerformed;
             _actions.Player.Dash.canceled -= OnDashPerformed;
+            _actions.Player.Interact.performed -= OnInteractPerformed;
+            _actions.Player.Interact.canceled -= OnInteractPerformed;
             _actions.Player.Disable();
         }
 
@@ -52,7 +58,13 @@ namespace Still.Player.View
             else if (context.canceled)
                 _isDash = false;
         }
-
+        private void OnInteractPerformed(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                _isInteract = true;
+            else if (context.canceled)
+                _isInteract = false;
+        }
         public void Move(Vector3 direction, float speed)
         {
             _rigidbody.linearVelocity = direction * speed;

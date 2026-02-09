@@ -6,4 +6,5 @@ public class PlayerConfig : ScriptableObject
     public float PlayerMaxSpeed;
     public float DefaultStaminaValue;
     public float DefaultSANValue;
+    public float RayDistance;
 }
