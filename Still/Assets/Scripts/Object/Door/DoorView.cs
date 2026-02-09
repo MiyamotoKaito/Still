@@ -1,16 +1,18 @@
-using UnityEngine;
-
-public class Door : MonoBehaviour
+﻿using UnityEngine;
+namespace Still.Object.Door
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class DoorView : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private Animator _animator;
+        private bool _isOpen = false;
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
+        public void IsOpen()
+        {
+            _isOpen = !_isOpen;
+            _animator.SetBool("Open", _isOpen);
+        }
     }
 }
