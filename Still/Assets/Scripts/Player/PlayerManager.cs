@@ -4,6 +4,7 @@ using Still.Player.Model;
 using Still.Player.Presenter;
 using Still.Player.View;
 using UnityEngine;
+using UnityEngine.Rendering;
 using VContainer;
 
 namespace Still.Player
@@ -19,12 +20,14 @@ namespace Still.Player
         private StaminaView _staminaView;
         private SANView _sanView;
         private PlayerSensorView _playerSensorView;
+        private Volume _volume;
         [Inject] private WorldStates _worldStates;
 
         private PlayerMovePresenter _movePresenter;
         private PlayerStatusPresenter _playerStatusPresenter;
         private PlayerFearLevelPresenter _playerFearLevelPresenter;
         private PlayerSensorPresenter _playerSensorPresenter;
+        private DepthOfFieldPresenter _dofPresenter;
 
         private PlayerModel _playerModel;
         private StaminaModel _staminaModel;
@@ -43,6 +46,7 @@ namespace Still.Player
             _playerStatusPresenter = new PlayerStatusPresenter(_config, _playerView, _staminaView, _sanView, _staminaModel, _sanValueModel);
             _playerFearLevelPresenter = new PlayerFearLevelPresenter(_sanValueModel, _worldStates);
             _playerSensorPresenter = new PlayerSensorPresenter(_playerSensorView, _playerView);
+            _dofPresenter = new DepthOfFieldPresenter(_playerSensorView, _volume);
 
             _playerView.EnablePlayerInput();
         }
@@ -53,6 +57,9 @@ namespace Still.Player
             _staminaView = FindAnyObjectByType<StaminaView>();
             _sanView = FindAnyObjectByType<SANView>();
             _playerSensorView = FindAnyObjectByType<PlayerSensorView>();
+            _volume = FindAnyObjectByType<Volume>();
+
+            Cursor.lockState = CursorLockMode.Locked;
         }
         private void Update()
         {

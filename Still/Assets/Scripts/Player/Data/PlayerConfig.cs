@@ -7,4 +7,5 @@ public class PlayerConfig : ScriptableObject
     public float DefaultStaminaValue;
     public float DefaultSANValue;
     public float RayDistance;
+    public float InteractiveRayDistance;
 }

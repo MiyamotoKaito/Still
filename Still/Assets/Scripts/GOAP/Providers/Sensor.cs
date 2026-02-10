@@ -16,7 +16,7 @@ namespace Still.GOAP.Providers
         private float _timer = 0f;
         private void Update()
         {
-            var canseePlayer = Physics.Raycast(
+             var canseePlayer = Physics.Raycast(
                 transform.position,
                 transform.forward,
                 out RaycastHit hit,

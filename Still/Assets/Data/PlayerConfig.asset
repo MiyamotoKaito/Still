@@ -16,4 +16,5 @@ MonoBehaviour:
   PlayerMaxSpeed: 15
   DefaultStaminaValue: 100
   DefaultSANValue: 100
-  RayDistance: 5
+  RayDistance: 10
+  InteractiveRayDistance: 1

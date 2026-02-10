@@ -3,19 +3,30 @@ using UnityEngine;
 
 public class PlayerSensorView : MonoBehaviour
 {
+    public event Action<RaycastHit> OnHitPlayerDetected;
     public event Action<RaycastHit> OnHitDetected;
     public event Action OnHitLost;
     [SerializeField] private PlayerConfig config;
     [SerializeField] private LayerMask _layerMask;
     void Update()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance, _layerMask))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit playerHit, config.InteractiveRayDistance, _layerMask))
         {
-            OnHitDetected?.Invoke(hit);
+            OnHitPlayerDetected?.Invoke(playerHit);
         }
         else
         {
             OnHitLost?.Invoke();
         }
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance))
+        {
+            OnHitDetected?.Invoke(hit);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.forward * config.RayDistance);
     }
 }
