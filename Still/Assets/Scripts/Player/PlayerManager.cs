@@ -37,6 +37,7 @@ namespace Still.Player
             _playerModel = new PlayerModel();
             _staminaModel = new StaminaModel(_config.DefaultStaminaValue);
             _sanValueModel = new SANValueModel(_config.DefaultSANValue);
+
             // プレゼンターの初期化
             _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
             _playerStatusPresenter = new PlayerStatusPresenter(_config, _playerView, _staminaView, _sanView, _staminaModel, _sanValueModel);

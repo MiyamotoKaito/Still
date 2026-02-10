@@ -1,8 +1,6 @@
 ﻿using Still.Enum.WorldStates;
 using Still.GOAP.WorldState;
 using Still.Player.Model;
-using UniRx;
-using UnityEngine;
 namespace Still.Player.Presenter
 {
     public class PlayerFearLevelPresenter

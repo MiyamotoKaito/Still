@@ -770,10 +770,7 @@ MonoBehaviour:
   parentReference:
     TypeName: 
   autoRun: 1
-  autoInjectGameObjects:
-  - {fileID: 1549448621}
-  - {fileID: 1752016668}
-  - {fileID: 413572022}
+  autoInjectGameObjects: []
   _agentConfig: {fileID: 11400000, guid: 6826a2863dd234e478a46082f4961bc7, type: 2}
   _actionData: {fileID: 11400000, guid: 58a562f2cd0eb3f4fbf43ab7196f2a02, type: 2}
   _worldStatesConfig: {fileID: 11400000, guid: 8e5917fa50c1b684a97b87d8de94a90e, type: 2}
