@@ -1,30 +1,47 @@
 ﻿using Still.Player.View;
 using UnityEngine;
-namespace Still.Object.Door
+namespace Still.Player.Presenter
 {
     public class PlayerSensorPresenter
     {
         private PlayerSensorView _playerSensorView;
         private PlayerView _playerView;
+        private IInteractable _currentInteractable;
         public PlayerSensorPresenter(PlayerSensorView playerSensorView, PlayerView playerView)
         {
             _playerSensorView = playerSensorView;
             _playerView = playerView;
+            _playerView.OnInteractEvent += HandleInteractableInteract;
             _playerSensorView.OnHitDetected += HandleHitDetected;
+            _playerSensorView.OnHitLost += HandleHitLost;
         }
-
-        private void HandleHitDetected(RaycastHit hit)
+        private void HandleInteractableInteract()
         {
-            if (hit.collider.TryGetComponent<DoorView>(out var doorView))
+            if (_currentInteractable != null)
             {
-                if (_playerView.IsInteract)
-                doorView.IsOpen();
+                _currentInteractable.Interact();
             }
         }
-
+        private void HandleHitDetected(RaycastHit hit)
+        {
+            if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            {
+                _currentInteractable = interactable;
+                interactable.ShowUI();
+            }
+        }
+        private void HandleHitLost()
+        {
+            if (_currentInteractable != null)
+            {
+                _currentInteractable.HideUI();
+                _currentInteractable = null;
+            }
+        }
         public void Dispose()
         {
             _playerSensorView.OnHitDetected -= HandleHitDetected;
+            _playerSensorView.OnHitLost -= HandleHitLost;
         }
     }
 }
