@@ -1,13 +1,15 @@
 ﻿using Still.GOAP.Agent;
+using Unity.Cinemachine;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
     [System.Serializable]
     public class PatrolAction : ActionBase
     {
+        private Vector3 _targetPos;
         public override bool Perform(IAgentController agent)
         {
-            if (agent.IsArrived)
+            if (Vector3.Distance(agent.Position, _targetPos) < agent.Config.GhostStopDistance)
             {
                 Debug.Log($"{this.GetType().Name}アクション完了");
                 return true;
@@ -18,9 +20,9 @@ namespace Still.GOAP.Action
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
-            Vector3 targetPos = agent.GetRandomPos();
+            _targetPos = agent.GetRandomPos();
             // NavMeshAgent に目的地をセット
-            agent.SetMoveDestination(targetPos);
+            agent.SetMoveDestination(_targetPos);
         }
     }
 }
