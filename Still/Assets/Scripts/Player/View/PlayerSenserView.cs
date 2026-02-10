@@ -4,21 +4,18 @@ using UnityEngine;
 public class PlayerSensorView : MonoBehaviour
 {
     public event Action<RaycastHit> OnHitDetected;
-    public RaycastHit CurrentHit => _hit;
+    public event Action OnHitLost;
     [SerializeField] private PlayerConfig config;
-    private RaycastHit _hit;
-    private GameObject _lastHitObject;
+    [SerializeField] private LayerMask _layerMask;
     void Update()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance, _layerMask))
         {
-            if (hit.collider.gameObject != _lastHitObject)
-            {
-                Debug.Log($"Hit detected: {hit.collider.gameObject.name}");
-                _hit = hit;
-                _lastHitObject = hit.collider.gameObject;
-                OnHitDetected?.Invoke(hit);
-            }
+            OnHitDetected?.Invoke(hit);
+        }
+        else
+        {
+            OnHitLost?.Invoke();
         }
     }
 }
