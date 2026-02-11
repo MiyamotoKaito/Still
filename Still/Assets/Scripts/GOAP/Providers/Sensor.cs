@@ -16,15 +16,17 @@ namespace Still.GOAP.Providers
         private float _timer = 0f;
         private void Update()
         {
+            var cansee = Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, _ghostConfig.GhostFovLength);
+
              var canseePlayer = Physics.Raycast(
                 transform.position,
                 transform.forward,
-                out RaycastHit hit,
+                out RaycastHit hitPlayer,
                 _ghostConfig.GhostFovLength,
                 _playerLayer);
 
             // プレイヤーが見えている場合
-            if (canseePlayer)
+            if (canseePlayer && hit.collider.gameObject.TryGetComponent(out PlayerView playerView))
             {
                 if (_worldStates.GetStateValue(WorldStateType.PlayerVisible.ToString()) == 0)
                 {
