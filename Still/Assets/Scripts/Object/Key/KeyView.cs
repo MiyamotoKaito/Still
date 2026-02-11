@@ -22,7 +22,14 @@ namespace Still.Object.Key
 
         public void ShowUI()
         {
+            if (_text == null)
+            {
+                Debug.LogError($"{gameObject.name} の _text がアサインされていません！");
+                return;
+            }
+            Debug.Log($"KeyView: {gameObject.name} ShowUI called."); // どのオブジェクトか判別
             _text.gameObject.SetActive(true);
+            _text.text = "Collect Key";
         }
     }
 }

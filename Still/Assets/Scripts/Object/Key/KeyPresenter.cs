@@ -19,5 +19,9 @@ namespace Still.Object.Key
             _keyModel.Collect();
             Debug.Log("鍵が掛かっているドアを開けれるようになった");
         }
+        public void Dispose()
+        {
+            _key.OnKeyCollected -= UnlockDoor;
+        }
     }
 }

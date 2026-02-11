@@ -11,7 +11,11 @@ namespace Still.Object.Door.View
         {
             OnDoorLocked?.Invoke();
 
-            if (_isLocked) return;
+            if (_isLocked)
+            {
+                AudioManager.Instance.PlaySE("KeyLocked");
+                return;
+            }
 
             ToggleIsOpen();
         }

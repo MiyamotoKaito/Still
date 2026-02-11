@@ -16,6 +16,7 @@ namespace Still.Object.Door
         {
             _isOpen = !_isOpen;
             _animator.SetBool("Open", _isOpen);
+            AudioManager.Instance.PlaySE("DoorOpen");
         }
 
         public virtual void Interact()

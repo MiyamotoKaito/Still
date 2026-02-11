@@ -1,4 +1,5 @@
-﻿using Still.GOAP.WorldState;
+﻿using Still.Camera.Model;
+using Still.GOAP.WorldState;
 using Still.Object.Door;
 using Still.Object.Door.Model;
 using Still.Object.Door.View;
@@ -26,7 +27,7 @@ namespace Still.Player
         private PlayerSensorView _playerSensorView;
         private Volume _volume;
         private LockedDoor _lockedDoor;
-        private KeyView _key;
+        private KeyView _keyView;
         [Inject] private WorldStates _worldStates;
 
         private PlayerMovePresenter _movePresenter;
@@ -36,12 +37,14 @@ namespace Still.Player
         private DepthOfFieldPresenter _dofPresenter;
         private LockedDoorPresenter _lockedDoorPresenter;
         private KeyPresenter _keyPresenter;
+        private PlayerFovPresenter _playerFovPresenter;
 
         private PlayerModel _playerModel;
         private StaminaModel _staminaModel;
         private SANValueModel _sanValueModel;
         private LockedDoorModel _lockedDoorModel;
         private KeyModel _keyModel;
+        private FieldOfViewModel _fovModel;
 
         private void Start()
         {
@@ -52,6 +55,7 @@ namespace Still.Player
             _sanValueModel = new SANValueModel(_config.DefaultSANValue);
             _keyModel = new KeyModel();
             _lockedDoorModel = new LockedDoorModel();
+            _fovModel = new FieldOfViewModel(_config.DefaultFOV);
 
             // プレゼンターの初期化
             _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
@@ -59,8 +63,9 @@ namespace Still.Player
             _playerFearLevelPresenter = new PlayerFearLevelPresenter(_sanValueModel, _worldStates);
             _playerSensorPresenter = new PlayerSensorPresenter(_playerSensorView, _playerView);
             _dofPresenter = new DepthOfFieldPresenter(_playerSensorView, _volume);
-            _keyPresenter = new KeyPresenter(_key, _keyModel);
-            _lockedDoorPresenter = new LockedDoorPresenter(_lockedDoorModel, _lockedDoor, _keyModel);
+            _lockedDoorPresenter = new LockedDoorPresenter(_lockedDoorModel, _lockedDoor, _keyView);
+            _keyPresenter = new KeyPresenter(_keyView, _keyModel);
+            _playerFovPresenter = new PlayerFovPresenter(_playerView, _cameraView, _fovModel);
 
             _playerView.EnablePlayerInput();
         }
@@ -72,7 +77,7 @@ namespace Still.Player
             _sanView = FindAnyObjectByType<SANView>();
             _playerSensorView = FindAnyObjectByType<PlayerSensorView>();
             _volume = FindAnyObjectByType<Volume>();
-            _key = FindAnyObjectByType<KeyView>();
+            _keyView = FindAnyObjectByType<KeyView>();
             _lockedDoor = FindAnyObjectByType<LockedDoor>();
 
             Cursor.lockState = CursorLockMode.Locked;
@@ -81,6 +86,7 @@ namespace Still.Player
         {
             _movePresenter.Update();
             _playerStatusPresenter.StatusUpdate();
+            _playerFovPresenter.UpdateFOV();
         }
         private void OnDestroy()
         {
