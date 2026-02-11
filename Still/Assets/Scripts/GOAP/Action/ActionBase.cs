@@ -54,13 +54,13 @@ namespace Still.GOAP.Action
         private Dictionary<string, Condition> _pDic;
         private Dictionary<string, int> _eDic;
         protected WorldStates _worldStates;
-        protected PlayerManager _playerManager;
+        protected GameInstaller _playerManager;
 
         [Inject]
         public void Init(WorldStates worldState)
         {
             _worldStates = worldState;
-            _playerManager = GameObject.FindAnyObjectByType<PlayerManager>();
+            _playerManager = GameObject.FindAnyObjectByType<GameInstaller>();
         }
         public Dictionary<string, Condition> ToDictionary(List<HasConditionActions> list)
         {

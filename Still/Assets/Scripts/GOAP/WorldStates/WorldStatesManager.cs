@@ -9,12 +9,12 @@ namespace Still.GOAP.WorldState
     public class WorldStatesManager : MonoBehaviour
     {
         [Inject] private WorldStates _worldStates;
-        private PlayerManager _playerManager;
+        private GameInstaller _playerManager;
         private bool _isInTheRoom;
         private float _timeInTheRoom;
         private void Awake()
         {
-            _playerManager = FindAnyObjectByType<PlayerManager>();
+            _playerManager = FindAnyObjectByType<GameInstaller>();
         }
         private void Start()
         {
