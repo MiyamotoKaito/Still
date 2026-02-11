@@ -20,6 +20,9 @@ MonoBehaviour:
   - rid: 7538373351181910093
   - rid: 6149759955516522634
   - rid: 6149759955516522635
+  - rid: 6149760095779029194
+  - rid: 6149760095779029197
+  - rid: 6149760113271898112
   references:
     version: 2
     RefIds:
@@ -34,7 +37,7 @@ MonoBehaviour:
         _effects:
         - _key: 5
           _value: 1
-        _actionCost: 5
+        _actionCost: 1
     - rid: 622163703035068630
       type: {class: SetTargetToLightSwitchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
@@ -74,7 +77,7 @@ MonoBehaviour:
         _effects:
         - _key: 4
           _value: 1
-        _actionCost: 0
+        _actionCost: 1
     - rid: 6149759955516522634
       type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
@@ -99,6 +102,50 @@ MonoBehaviour:
         - _key: 2
           _value: 1
         _actionCost: 10
+    - rid: 6149760095779029194
+      type: {class: KnockAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 16
+          _value:
+            Value: 1
+            Comparison: 0
+        - _key: 7
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 16
+          _value: 0
+        _actionCost: 5
+    - rid: 6149760095779029197
+      type: {class: SetTargetToRoom, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 16
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 6
+          _value: 1
+        _actionCost: 3
+    - rid: 6149760113271898112
+      type: {class: LookAroundAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 4
+          _value:
+            Value: 0
+            Comparison: 0
+        - _key: 16
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 4
+          _value: 1
+        _actionCost: 1
     - rid: 7538373351181910093
       type: {class: MoveAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
@@ -112,4 +159,4 @@ MonoBehaviour:
           _value: 1
         - _key: 6
           _value: 0
-        _actionCost: 5
+        _actionCost: 3

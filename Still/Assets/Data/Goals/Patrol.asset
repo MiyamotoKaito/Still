@@ -22,6 +22,10 @@ MonoBehaviour:
     _value:
       Value: 1
       Comparison: 0
+  - _key: 5
+    _value:
+      Value: 1
+      Comparison: 0
   _achievedtWorldStates:
   - _key: 4
     _value: 0
