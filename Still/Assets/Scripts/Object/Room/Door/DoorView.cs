@@ -5,25 +5,25 @@ namespace Still.Object.Door
     public class DoorView : MonoBehaviour, IInteractable
     {
         [SerializeField]
-        private TextMeshProUGUI _text;
-        private Animator _animator;
-        private bool _isOpen = false;
+        protected TextMeshProUGUI _text;
+        protected Animator _animator;
+        protected bool _isOpen = false;
         private void Awake()
         {
             _animator = GetComponent<Animator>();
         }
-        private void ToggleIsOpen()
+        protected void ToggleIsOpen()
         {
             _isOpen = !_isOpen;
             _animator.SetBool("Open", _isOpen);
         }
 
-        public void Interact()
+        public virtual void Interact()
         {
             ToggleIsOpen();
         }
 
-        public void ShowUI()
+        public virtual void ShowUI()
         {
             _text.gameObject.SetActive(true);
             _text.text = _isOpen ? "Close Door" : "Open Door";
