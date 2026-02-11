@@ -9,12 +9,12 @@ namespace Still.GOAP.WorldState
     public class WorldStatesManager : MonoBehaviour
     {
         [Inject] private WorldStates _worldStates;
-        private GameInstaller _playerManager;
+        private GameInstaller _installer;
         private bool _isInTheRoom;
         private float _timeInTheRoom;
         private void Awake()
         {
-            _playerManager = FindAnyObjectByType<GameInstaller>();
+            _installer = FindAnyObjectByType<GameInstaller>();
         }
         private void Start()
         {
@@ -37,7 +37,7 @@ namespace Still.GOAP.WorldState
         /// </summary>
         private void ModifyFearLevel()
         {
-            var fearLevel = _playerManager.SANValueModel.CurrentSAN;
+            var fearLevel = _installer.SANValueModel.CurrentSAN;
 
             if (fearLevel > 80)
                 _worldStates.ModifyState(WorldStateType.FearLevel.ToString(), 0);
@@ -59,6 +59,10 @@ namespace Still.GOAP.WorldState
             {
                 _isInTheRoom = true;
             }
+            else
+            {
+                _isInTheRoom = false;
+            }
         }
         /// <summary>
         /// 部屋の滞在時間に応じてノック可能状態にする
@@ -69,9 +73,11 @@ namespace Still.GOAP.WorldState
                 return;
 
             _timeInTheRoom += Time.deltaTime;
-            if (_timeInTheRoom >= 30f)
+            if (_timeInTheRoom >= 15f)
             {
                 _worldStates.ModifyState(WorldStateType.Knock.ToString(), 1);
+                _worldStates.ModifyState(WorldStateType.InTheRoom.ToString(), 0);
+                _timeInTheRoom = 0f;
             }
         }
     }
