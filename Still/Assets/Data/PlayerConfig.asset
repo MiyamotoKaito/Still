@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
   PlayerDefaultSpeed: 3
-  PlayerMaxSpeed: 15
+  PlayerMaxSpeed: 5
   DefaultStaminaValue: 100
   DefaultSANValue: 100
+  DefaultFOV: 60
   RayDistance: 10
   InteractiveRayDistance: 1
