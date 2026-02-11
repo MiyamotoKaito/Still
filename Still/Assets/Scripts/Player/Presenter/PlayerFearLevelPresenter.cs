@@ -27,5 +27,9 @@ namespace Still.Player.Presenter
             _worldStates.ModifyState(WorldStateType.FearLevel.ToString(), fearLevel);
 
         }
+        public void Dispose()
+        {
+            _sanModel.OnSANChanged -= LevelUpFearLevel;
+        }
     }
 }

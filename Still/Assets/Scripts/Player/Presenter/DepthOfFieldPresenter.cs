@@ -36,4 +36,9 @@ public class DepthOfFieldPresenter
             depthOfField.focusMode.value = DepthOfFieldMode.Off;
         }
     }
+    public void Dispose()
+    {
+        _playerSensorView.OnHitDetected -= HandleHitDetected;
+        _playerSensorView.OnHitLost -= HandleHitLost;
+    }
 }
