@@ -14,7 +14,7 @@
 
         // ターゲットとコンテキスト
         HasTarget,
-        IsAtTarget,
+        Arrived,
         IsAtLightSwitch,
 
         // オブジェクト・環境の状態
