@@ -9,6 +9,8 @@ namespace Still.Player.View
         public Vector2 CurrentMoveValue => _currentMoveValue;
         public bool IsDash => _isDash;
         public event Action OnInteractEvent;
+        public event Action OnDashEvent;
+        public event Action OnDashCancelEvent;
 
         private PlayerInputActions _actions;
         private Rigidbody _rigidbody;
@@ -48,9 +50,15 @@ namespace Still.Player.View
         private void OnInputDash(InputAction.CallbackContext context)
         {
             if (context.performed)
+            {
+                OnDashEvent?.Invoke();
                 _isDash = true;
+            }
             else if (context.canceled)
+            {
+                OnDashCancelEvent?.Invoke();
                 _isDash = false;
+            }
         }
         private void OnInputInteract(InputAction.CallbackContext context)
         {
