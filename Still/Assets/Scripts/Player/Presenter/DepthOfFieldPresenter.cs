@@ -18,7 +18,6 @@ public class DepthOfFieldPresenter
     {
         if (_postProcessingVolume.profile.TryGet<DepthOfField>(out var depthOfField))
         {
-            Debug.Log("dof");
             depthOfField.focusMode.value = DepthOfFieldMode.Manual;
 
             // 焦点距離をヒットしたオブジェクトの距離に設定
