@@ -1,4 +1,5 @@
 ﻿using Still.Player.View;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FootSteps : MonoBehaviour
@@ -14,10 +15,10 @@ public class FootSteps : MonoBehaviour
     public class FootStepSound
     {
         public Material Material => _material;
-        public AudioClip Clip => _clip;
+        public List<AudioClip> Clip => _clip;
 
         [SerializeField] private Material _material;
-        [SerializeField] private AudioClip _clip;
+        [SerializeField] private List<AudioClip> _clip;
     }
 
     private void Awake()
@@ -63,7 +64,7 @@ public class FootSteps : MonoBehaviour
                 {
                     if (footStepSound.Material == renderer.sharedMaterial)
                     {
-                        _audioSource.PlayOneShot(footStepSound.Clip);
+                        _audioSource.PlayOneShot(footStepSound.Clip[Random.Range(0, footStepSound.Clip.Count)]);
                         return;
                     }
                 }
@@ -72,7 +73,7 @@ public class FootSteps : MonoBehaviour
             // マテリアルが一致しない場合、デフォルトの足音を再生
             if (_footStepSounds.Length > 0 && _footStepSounds[0].Clip != null)
             {
-                _audioSource.PlayOneShot(_footStepSounds[0].Clip);
+                _audioSource.PlayOneShot(_footStepSounds[0].Clip[Random.Range(0, _footStepSounds[0].Clip.Count)]);
             }
         }
     }
