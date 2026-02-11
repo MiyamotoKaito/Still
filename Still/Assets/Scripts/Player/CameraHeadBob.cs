@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Still.Player.View;
 using Unity.Cinemachine;
 using UnityEditor.ShaderGraph.Internal;
@@ -27,8 +27,14 @@ public class CameraHeadBob : MonoBehaviour
     {
         if (_playerview.CurrentMoveValue.magnitude > 0.1f)
         {
+
             _amplitude = _defaultAmplitude;
             _frequency = _defaultFrequency;
+            if (_playerview.IsDash)
+            {
+                _amplitude *= 2;
+                _frequency *= 2;
+            }
             _noise.AmplitudeGain = _amplitude;
             _noise.FrequencyGain = _frequency;
         }
