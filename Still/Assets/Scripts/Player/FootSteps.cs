@@ -52,6 +52,8 @@ public class FootSteps : MonoBehaviour
         // 既に再生中なら何もしない
         if (_audioSource.isPlaying) return;
 
+        _audioSource.pitch = _player.IsDash? 2.0f : 1.0f;
+
         // 下方向にRaycast
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f))
         {
