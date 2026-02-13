@@ -12,7 +12,7 @@ public class DepthOfFieldPresenter
         _playerSensorView = playerSensorView;
         _postProcessingVolume = postProcessingVolume;
         _playerSensorView.OnHitDetected += HandleHitDetected;
-        _playerSensorView.OnHitLost += HandleHitLost;
+        _playerSensorView.OnHitPlayerLost += HandleHitLost;
     }
     private void HandleHitDetected(RaycastHit hit)
     {
@@ -39,6 +39,6 @@ public class DepthOfFieldPresenter
     public void Dispose()
     {
         _playerSensorView.OnHitDetected -= HandleHitDetected;
-        _playerSensorView.OnHitLost -= HandleHitLost;
+        _playerSensorView.OnHitPlayerLost -= HandleHitLost;
     }
 }

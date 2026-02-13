@@ -13,7 +13,7 @@ namespace Still.Player.Presenter
             _playerView = playerView;
             _playerView.OnInteractEvent += HandleInteractableInteract;
             _playerSensorView.OnHitPlayerDetected += HandleHitDetected;
-            _playerSensorView.OnHitLost += HandleHitLost;
+            _playerSensorView.OnHitPlayerLost += HandleHitLost;
         }
         private void HandleInteractableInteract()
         {
@@ -41,7 +41,7 @@ namespace Still.Player.Presenter
         public void Dispose()
         {
             _playerSensorView.OnHitPlayerDetected -= HandleHitDetected;
-            _playerSensorView.OnHitLost -= HandleHitLost;
+            _playerSensorView.OnHitPlayerLost -= HandleHitLost;
         }
     }
 }
