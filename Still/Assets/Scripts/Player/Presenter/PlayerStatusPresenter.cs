@@ -39,5 +39,15 @@ namespace Still.Player.Presenter
             _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
             _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
         }
+        public void SANValueChange(float value)
+        {
+            _sanValueModel.ModifySAN(value);
+            _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
+        }
+        public void StaminaValueChange(float value)
+        {
+            _staminaModel.ModifyStamina(value);
+            _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
+        }
     }
 }
