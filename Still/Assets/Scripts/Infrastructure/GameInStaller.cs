@@ -1,6 +1,5 @@
 ﻿using Still.Camera.Model;
 using Still.GOAP.WorldState;
-using Still.Object.Door;
 using Still.Object.Door.Model;
 using Still.Object.Door.View;
 using Still.Object.Key;
@@ -16,6 +15,7 @@ namespace Still.Player
 {
     public class GameInstaller : MonoBehaviour
     {
+        public WorldStates WorldStates => _worldStates;
         public SANValueModel SANValueModel => _sanValueModel;
 
         [SerializeField] private PlayerConfig _config;
@@ -28,6 +28,7 @@ namespace Still.Player
         private Volume _volume;
         private LockedDoor _lockedDoor;
         private KeyView _keyView;
+        private Light _spotLight;
         [Inject] private WorldStates _worldStates;
 
         private PlayerMovePresenter _movePresenter;
@@ -38,6 +39,7 @@ namespace Still.Player
         private LockedDoorPresenter _lockedDoorPresenter;
         private KeyPresenter _keyPresenter;
         private PlayerFovPresenter _playerFovPresenter;
+        private PlayerSpotLightPresenter _playerSpotLightPresenter;
 
         private PlayerModel _playerModel;
         private StaminaModel _staminaModel;
@@ -45,6 +47,7 @@ namespace Still.Player
         private LockedDoorModel _lockedDoorModel;
         private KeyModel _keyModel;
         private FieldOfViewModel _fovModel;
+        private SpotLightModel _spotLightModel;
 
         private void Start()
         {
@@ -56,6 +59,7 @@ namespace Still.Player
             _keyModel = new KeyModel();
             _lockedDoorModel = new LockedDoorModel();
             _fovModel = new FieldOfViewModel(_config.DefaultFOV);
+            _spotLightModel = new SpotLightModel();
 
             // プレゼンターの初期化
             _movePresenter = new PlayerMovePresenter(_playerView, _playerModel, _config, _cameraView, _staminaModel);
@@ -66,6 +70,7 @@ namespace Still.Player
             _lockedDoorPresenter = new LockedDoorPresenter(_lockedDoorModel, _lockedDoor, _keyView);
             _keyPresenter = new KeyPresenter(_keyView, _keyModel);
             _playerFovPresenter = new PlayerFovPresenter(_playerView, _cameraView, _fovModel);
+            _playerSpotLightPresenter = new PlayerSpotLightPresenter(_playerView, _spotLight, _spotLightModel);
 
             _playerView.EnablePlayerInput();
         }
@@ -79,6 +84,7 @@ namespace Still.Player
             _volume = FindAnyObjectByType<Volume>();
             _keyView = FindAnyObjectByType<KeyView>();
             _lockedDoor = FindAnyObjectByType<LockedDoor>();
+            _spotLight = _playerSensorView.GetComponentInChildren<Light>();
 
             Cursor.lockState = CursorLockMode.Locked;
         }
