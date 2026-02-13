@@ -39,6 +39,7 @@ namespace Still.Player
         private LockedDoorPresenter _lockedDoorPresenter;
         private KeyPresenter _keyPresenter;
         private PlayerFovPresenter _playerFovPresenter;
+        private PlayerGhostDetectedPresenter _playerGhostDetectedPresenter;
         private PlayerSpotLightPresenter _playerSpotLightPresenter;
 
         private PlayerModel _playerModel;
@@ -70,6 +71,7 @@ namespace Still.Player
             _lockedDoorPresenter = new LockedDoorPresenter(_lockedDoorModel, _lockedDoor, _keyView);
             _keyPresenter = new KeyPresenter(_keyView, _keyModel);
             _playerFovPresenter = new PlayerFovPresenter(_playerView, _cameraView, _fovModel);
+            _playerGhostDetectedPresenter = new PlayerGhostDetectedPresenter(_playerSensorView, _worldStates);
             _playerSpotLightPresenter = new PlayerSpotLightPresenter(_playerView, _spotLight, _spotLightModel);
 
             _playerView.EnablePlayerInput();
@@ -97,6 +99,14 @@ namespace Still.Player
         private void OnDestroy()
         {
             _playerView.Dispose();
+            _playerFearLevelPresenter.Dispose();
+            _playerSensorPresenter.Dispose();
+            _dofPresenter.Dispose();
+            _lockedDoorPresenter.Dispose();
+            _keyPresenter.Dispose();
+            _playerFovPresenter.Dispose();
+            _playerGhostDetectedPresenter.Dispose();
+            _playerSpotLightPresenter.Dispose();
         }
     }
 }
