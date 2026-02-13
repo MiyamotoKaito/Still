@@ -87,7 +87,10 @@ namespace Still.GOAP.Planner.Executor
             // 実行中に前提条件が維持されているか確認
             if (!_currentAction.Execute(controller))
             {
+                Debug.LogWarning($"[Executor] アクション {_currentAction.GetType().Name} の実行条件が破綻しました。");
                 CancelCurrentPlan();
+                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
+                SetGoalPriority();
                 return;
             }
             // アクションの実行
@@ -96,9 +99,6 @@ namespace Still.GOAP.Planner.Executor
                 var effects = _currentAction.Effects;
                 _currentAction = null;
                 ApplyEffects(effects);
-                // ★追加：アクション完了直後に「現在のゴールが達成されたか」を確認する
-                // これを入れないとObserverの通知（UniRx）を待つ間に、
-                // Executorが次の（空の）パトロールプランを立ててしまう
                 CheckCurrentGoalStatus();
             }
         }

@@ -14,7 +14,7 @@ namespace Still.GOAP.Agent
 
         public Vector3 Position => this.gameObject.transform.position;
 
-        public bool IsArrived => !_navmeshAgent.pathPending && _navmeshAgent.remainingDistance < _ghostConfig.GhostStopDistance;
+        public bool IsArrived => Vector3.Distance(Position, CurrentTarget.transform.position) < _ghostConfig.GhostStopDistance;
 
         public GameObject CurrentTarget => _currentTarget;
 
@@ -31,7 +31,7 @@ namespace Still.GOAP.Agent
 
             if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, _ghostConfig.Radius / 2, NavMesh.AllAreas))
                 return hit.position;
-            else return Vector3.zero;
+            else return Position;
         }
 
         public void PlayBoolAnimation(string param, bool flag) => _animator.SetBool(param, flag);

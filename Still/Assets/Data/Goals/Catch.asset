@@ -18,12 +18,14 @@ MonoBehaviour:
       Value: 1
       Comparison: 0
   _targetWorldStates:
-  - _key: 1
+  - _key: 2
     _value:
       Value: 1
       Comparison: 0
   _achievedtWorldStates:
   - _key: 0
+    _value: 0
+  - _key: 2
     _value: 0
   _priority: 5
   _achievedPrioity: 0

@@ -13,23 +13,19 @@ MonoBehaviour:
   m_Name: TurnOffLight
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Goal.Config.SubGoalConfig
   _settingGoalConditions:
-  - _key: 17
+  - _key: 9
     _value:
       Value: 1
       Comparison: 5
   _targetWorldStates:
-  - _key: 12
-    _value:
-      Value: 1
-      Comparison: 0
-  - _key: 11
+  - _key: 10
     _value:
       Value: 1
       Comparison: 0
   _achievedtWorldStates:
-  - _key: 11
+  - _key: 10
     _value: 0
-  - _key: 12
+  - _key: 7
     _value: 0
   _priority: 4
   _achievedPrioity: 0

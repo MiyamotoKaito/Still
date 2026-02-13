@@ -8,6 +8,9 @@ namespace Still.Player.View
     {
         public Vector2 CurrentMoveValue => _currentMoveValue;
         public bool IsDash => _isDash;
+        public event Action OnInteractEvent;
+        public event Action OnDashEvent;
+        public event Action OnDashCancelEvent;
 
         private PlayerInputActions _actions;
         private Rigidbody _rigidbody;
@@ -23,20 +26,20 @@ namespace Still.Player.View
         {
             _actions.Player.Move.performed += OnInputMove;
             _actions.Player.Move.canceled += OnInputMove;
-            _actions.Player.Dash.performed += OnDashPerformed;
-            _actions.Player.Dash.canceled += OnDashPerformed;
+            _actions.Player.Dash.performed += OnInputDash;
+            _actions.Player.Dash.canceled += OnInputDash;
+            _actions.Player.Interact.started += OnInputInteract;
             _actions.Player.Enable();
         }
-
         public void DisablePlayerInput()
         {
             _actions.Player.Move.performed -= OnInputMove;
             _actions.Player.Move.canceled -= OnInputMove;
-            _actions.Player.Dash.performed -= OnDashPerformed;
-            _actions.Player.Dash.canceled -= OnDashPerformed;
+            _actions.Player.Dash.performed -= OnInputDash;
+            _actions.Player.Dash.canceled -= OnInputDash;
+            _actions.Player.Interact.started -= OnInputInteract;
             _actions.Player.Disable();
         }
-
         private void OnInputMove(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -44,20 +47,27 @@ namespace Still.Player.View
             else if (context.canceled)
                 _currentMoveValue = Vector2.zero;
         }
-
-        private void OnDashPerformed(InputAction.CallbackContext context)
+        private void OnInputDash(InputAction.CallbackContext context)
         {
             if (context.performed)
+            {
+                OnDashEvent?.Invoke();
                 _isDash = true;
+            }
             else if (context.canceled)
+            {
+                OnDashCancelEvent?.Invoke();
                 _isDash = false;
+            }
         }
-
+        private void OnInputInteract(InputAction.CallbackContext context)
+        {
+            OnInteractEvent?.Invoke();
+        }
         public void Move(Vector3 direction, float speed)
         {
             _rigidbody.linearVelocity = direction * speed;
         }
-
         public void Dispose()
         {
             DisablePlayerInput();

@@ -32,6 +32,7 @@ namespace Still.GOAP.WorldState
             if (value == _currentWorldStates[key]) return;
             _currentWorldStates[key] = value;
             _onStateChanged.OnNext(key);
+            Debug.Log($"{key}の値が変更された : 現在{_currentWorldStates[key]}");
         }
         /// <summary>
         /// ステートの値を加算する

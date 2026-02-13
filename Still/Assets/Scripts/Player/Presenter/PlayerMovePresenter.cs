@@ -4,19 +4,25 @@ using UnityEngine;
 
 namespace Still.Player.Presenter
 {
-    public class PlayerPresenter
+    public class PlayerMovePresenter
     {
         private readonly IPlayerController _playerView;
         private readonly CameraView _cameraView;
         private readonly PlayerModel _model;
         private readonly PlayerConfig _config;
+        private readonly StaminaModel _staminaModel;
 
-        public PlayerPresenter(IPlayerController playerView, PlayerModel model, PlayerConfig config, CameraView cameraView)
+        public PlayerMovePresenter(IPlayerController playerView,
+            PlayerModel model,
+            PlayerConfig config,
+            CameraView cameraView,
+            StaminaModel staminaModel)
         {
             _playerView = playerView;
             _cameraView = cameraView;
             _model = model;
             _config = config;
+            _staminaModel = staminaModel;
         }
 
         public void Update()
@@ -27,9 +33,24 @@ namespace Still.Player.Presenter
             var input = _playerView.CurrentMoveValue;
             var dir = cameraForward * input.y + cameraRight * input.x;
 
-            _model.SetMoveSpeed(_playerView.IsDash ? _config.PlayerMaxSpeed : _config.PlayerDefaultSpeed);
+            if (CanDash() && _playerView.IsDash)
+            {
+                _model.SetMoveSpeed( _config.PlayerMaxSpeed);
+            }
+            else
+            {
+                _model.SetMoveSpeed( _config.PlayerDefaultSpeed);
+            }
 
             _playerView.Move(dir, _model.CurrentSpeed);
+        }
+        /// <summary>
+        /// ダッシュできるか？
+        /// </summary>
+        /// <returns></returns>
+        private bool CanDash()
+        {
+            return _staminaModel.CurrentStamina > 0;
         }
     }
 }

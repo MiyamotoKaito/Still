@@ -1,9 +1,9 @@
-using Still.GOAP.Agent;
+﻿using Still.GOAP.Agent;
 using UnityEngine;
 namespace Still.GOAP.Action
 {
     [System.Serializable]
-    public class SearchAction : ActionBase
+    public class LookAroundAction : ActionBase
     {
         public override bool Perform(IAgentController agent)
         {
