@@ -29,5 +29,7 @@
         FearLevel,
         Knock,
 
+        GhostDetected,
+        FocusMe,
     }
 }
