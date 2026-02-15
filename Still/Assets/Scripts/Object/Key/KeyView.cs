@@ -6,9 +6,11 @@ namespace Still.Object.Key
     public class KeyView : MonoBehaviour, IInteractable
     {
         public event Action OnKeyCollected;
-
+        public GameObject[] SpawnPositions => _spawnPositions;
         [SerializeField]
         private TextMeshProUGUI _text;
+        [SerializeField]
+        private GameObject[] _spawnPositions;
         public void Init()
         {
             this.gameObject.SetActive(false);
@@ -34,6 +36,17 @@ namespace Still.Object.Key
             Debug.Log($"KeyView: {gameObject.name} ShowUI called."); // どのオブジェクトか判別
             _text.gameObject.SetActive(true);
             _text.text = "Collect Key";
+        }
+        public void Spawn()
+        {
+            if (_spawnPositions == null || _spawnPositions.Length == 0)
+            {
+                Debug.LogError($"{gameObject.name} の SpawnPositions が設定されていません！");
+                return;
+            }
+            int randomIndex = UnityEngine.Random.Range(0, _spawnPositions.Length);
+            this.transform.position = _spawnPositions[randomIndex].transform.position;
+            this.gameObject.SetActive(true);
         }
     }
 }
