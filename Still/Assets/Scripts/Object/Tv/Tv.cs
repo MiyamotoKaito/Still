@@ -1,12 +1,15 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 public class Tv : MonoBehaviour, IInteractable
 {
+    public event Action OnInteract;
     [SerializeField]
     private TextMeshProUGUI _text;
     private Light _tvLight;
     private bool _isOn = false;
+    private AudioSource _audiosource;
     private void Awake()
     {
         _tvLight = GetComponentInChildren<Light>();
@@ -23,6 +26,8 @@ public class Tv : MonoBehaviour, IInteractable
         {
             _tvLight.enabled = true;
             _isOn = true;
+            AudioManager.Instance.PlayBGM("Tv", _audiosource);
+            OnInteract?.Invoke();
             _text.gameObject.SetActive(false);
         }
     }
