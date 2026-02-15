@@ -63,6 +63,28 @@ public class AudioManager : MonoBehaviour
         }
     }
     /// <summary>
+    /// AudioSourceを指定してSE再生
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="source"></param>
+    public void PlaySE(string name, AudioSource source)
+    {
+        foreach (var se in _seList)
+        {
+            if (se.Name == name)
+            {
+                GameObject sePlayer = new GameObject("SEPlayer");
+                sePlayer.transform.SetParent(transform);
+
+                source.volume = se.Volume;
+                source.spatialBlend = 1f;
+                source.clip = se.Clip;
+                source.Play();
+                Destroy(sePlayer, se.Clip.length);
+            }
+        }
+    }
+    /// <summary>
     /// BGM再生(ループ)
     /// </summary>
     /// <param name="name"></param>
@@ -80,6 +102,25 @@ public class AudioManager : MonoBehaviour
         }
     }
     /// <summary>
+    /// AudioSourceを指定してBGM再生(ループ)
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="source"></param>
+    public void PlayBGM(string name, AudioSource source)
+    {
+        foreach (var bgm in _bgmList)
+        {
+            if (bgm.Name == name)
+            {
+                source.loop = true;
+                source.volume = bgm.Volume;
+                source.spatialBlend = 1f;
+                source.resource = bgm.Clip;
+                source.Play();
+            }
+        }
+    }
+    /// <summary>
     /// 音楽のフェード
     /// </summary>
     /// <param name="fadeTime"></param>
@@ -93,5 +134,13 @@ public class AudioManager : MonoBehaviour
     public void StopBGM()
     {
         _bgmPlayer.Stop();
+    }
+    /// <summary>
+    /// AudioSourceを指定してBGMのストップ
+    /// </summary>
+    /// <param name="source"></param>
+    public void StopBGM(AudioSource source)
+    {
+        source.Stop();
     }
 }
