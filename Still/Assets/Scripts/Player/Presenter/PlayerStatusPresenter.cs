@@ -29,7 +29,7 @@ namespace Still.Player.Presenter
             {
                 _staminaModel.ModifyStamina(-10 * Time.deltaTime);
 
-                _sanValueModel.ModifySAN(-2 * Time.deltaTime);
+                _sanValueModel.ModifySAN(-0.1f * Time.deltaTime);
 
             }
             else if (_staminaModel.CurrentStamina < _staminaModel.MaxStamina && !_playerView.IsDash)
