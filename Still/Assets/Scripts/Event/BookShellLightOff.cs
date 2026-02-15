@@ -2,7 +2,7 @@
 using Still.Player.View;
 using Unity.Cinemachine;
 using UnityEngine;
-
+[System.Serializable]
 public class BookShellLightOffEvent : IEvent
 {
     public bool IsFinished => _isFinished;
