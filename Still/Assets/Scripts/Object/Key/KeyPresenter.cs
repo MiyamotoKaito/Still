@@ -18,10 +18,11 @@ namespace Still.Object.Key
         }
         private void CheckKeyCollection(int count)
         {
-            if (count >= _keyModel.RequiredCount)
+            if (count == _keyModel.RequiredCount)
             {
                 _key.gameObject.SetActive(true);
-                Debug.Log("鍵を入手した");
+                _key.Spawn();
+                Debug.Log("鍵が出現した");
             }
         }
         private void UnlockDoor()
