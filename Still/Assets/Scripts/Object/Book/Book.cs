@@ -19,10 +19,12 @@ public class Book : MonoBehaviour, IInteractable
         _event.Initialize();
         OnInteract?.Invoke();
         _event.OnEvent();
+        this.gameObject.SetActive(false);
     }
 
     public void ShowUI()
     {
         _text.gameObject.SetActive(true);
+        _text.text = "本を回収";
     }
 }
