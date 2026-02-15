@@ -9,6 +9,10 @@ namespace Still.Object.Key
 
         [SerializeField]
         private TextMeshProUGUI _text;
+        public void Init()
+        {
+            this.gameObject.SetActive(false);
+        }
         public void HideUI()
         {
             _text.gameObject.SetActive(false);

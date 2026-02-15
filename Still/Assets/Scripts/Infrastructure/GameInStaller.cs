@@ -29,6 +29,7 @@ namespace Still.Player
         private LockedDoor _lockedDoor;
         private KeyView _keyView;
         private Light _spotLight;
+        private EventManager _eventManager;
         [Inject] private WorldStates _worldStates;
 
         private PlayerMovePresenter _movePresenter;
@@ -57,7 +58,7 @@ namespace Still.Player
             _playerModel = new PlayerModel();
             _staminaModel = new StaminaModel(_config.DefaultStaminaValue);
             _sanValueModel = new SANValueModel(_config.DefaultSANValue);
-            _keyModel = new KeyModel();
+            _keyModel = new KeyModel(3);
             _lockedDoorModel = new LockedDoorModel();
             _fovModel = new FieldOfViewModel(_config.DefaultFOV);
             _spotLightModel = new SpotLightModel();
@@ -69,7 +70,7 @@ namespace Still.Player
             _playerSensorPresenter = new PlayerSensorPresenter(_playerSensorView, _playerView);
             _dofPresenter = new DepthOfFieldPresenter(_playerSensorView, _volume);
             _lockedDoorPresenter = new LockedDoorPresenter(_lockedDoorModel, _lockedDoor, _keyView);
-            _keyPresenter = new KeyPresenter(_keyView, _keyModel);
+            _keyPresenter = new KeyPresenter(_keyView, _keyModel, _eventManager);
             _playerFovPresenter = new PlayerFovPresenter(_playerView, _cameraView, _fovModel);
             _playerGhostDetectedPresenter = new PlayerGhostDetectedPresenter(_playerSensorView, _worldStates);
             _playerSpotLightPresenter = new PlayerSpotLightPresenter(_playerView, _spotLight, _spotLightModel);
@@ -85,8 +86,10 @@ namespace Still.Player
             _playerSensorView = FindAnyObjectByType<PlayerSensorView>();
             _volume = FindAnyObjectByType<Volume>();
             _keyView = FindAnyObjectByType<KeyView>();
+            _keyView.Init();
             _lockedDoor = FindAnyObjectByType<LockedDoor>();
             _spotLight = _playerSensorView.GetComponentInChildren<Light>();
+            _eventManager = FindAnyObjectByType<EventManager>();
 
             Cursor.lockState = CursorLockMode.Locked;
         }
