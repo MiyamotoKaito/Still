@@ -112,7 +112,7 @@ namespace Still.Player
             _playerFovPresenter.UpdateFOV();
 
             // ゲームオーバー判定
-            if (_sanValueModel.CurrentSAN <= 0 && !_isGameOver)
+            if (_sanValueModel.CurrentSAN < 1 && !_isGameOver)
             {
                 _isGameOver = true;
                 GameOver().Forget();

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GhostConfig
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Agent.Config.GhostConfig
   GhostMoveSpeed: 3
-  GhostDashSpeed: 5
+  GhostDashSpeed: 6
   GhostStopDistance: 2
   GhostFovLength: 20
   Radius: 20
