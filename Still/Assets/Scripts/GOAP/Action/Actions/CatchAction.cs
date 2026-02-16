@@ -5,9 +5,13 @@ namespace Still.GOAP.Action
     [System.Serializable]
     public class CatchAction : ActionBase
     {
+        [SerializeReference, SubclassSelector]
+        private IEvent _catchEvent;
         public override bool Perform(IAgentController agent)
         {
             Debug.Log("プレイヤーをキャッチ");
+            _catchEvent.Initialize();
+            _catchEvent.OnEvent();
             return true;
         }
 

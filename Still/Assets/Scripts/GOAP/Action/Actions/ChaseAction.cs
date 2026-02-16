@@ -24,6 +24,7 @@ namespace Still.GOAP.Action
             if (agent.IsArrived)
             {
                 Debug.Log("目的地にたどり着いた");
+                AudioManager.Instance.StopBGM(agent.AudioSource);
                 return true;
             }
             return false;
@@ -32,11 +33,11 @@ namespace Still.GOAP.Action
         public override void SetTarget(IAgentController agent)
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
+            AudioManager.Instance.PlaySE("Chase", agent.AudioSource);
             var player = GameObject.FindAnyObjectByType<PlayerView>();
             agent.SetTarget(player.gameObject);
             agent.SetSpeed(agent.Config.GhostDashSpeed);
             agent.SetMoveDestination(player.transform.position);
-            AudioManager.Instance.PlaySE("Laugh");
         }
     }
 }

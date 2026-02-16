@@ -6,6 +6,7 @@ namespace Still.Object.Key
     public class KeyView : MonoBehaviour, IInteractable
     {
         public event Action OnKeyCollected;
+        public event Action OnKeySpawned;
         public GameObject[] SpawnPositions => _spawnPositions;
         [SerializeField]
         private TextMeshProUGUI _text;
@@ -47,6 +48,7 @@ namespace Still.Object.Key
             int randomIndex = UnityEngine.Random.Range(0, _spawnPositions.Length);
             this.transform.position = _spawnPositions[randomIndex].transform.position;
             this.gameObject.SetActive(true);
+            OnKeySpawned?.Invoke();
         }
     }
 }

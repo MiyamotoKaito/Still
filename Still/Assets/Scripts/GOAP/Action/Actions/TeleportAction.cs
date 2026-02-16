@@ -7,19 +7,20 @@ public class TeleportAction : ActionBase
     public override bool Perform(IAgentController agent)
     {
         if (_farthestPos == null) return false;
-
+        agent.Teleport(_farthestPos);
         return true;
     }
 
     public override void SetTarget(IAgentController agent)
     {
-        var pos = GameObject.FindObjectsByType<TeleportPos>(FindObjectsSortMode.None);
-        float dis = 500;
-        foreach (var p in pos)
+        var pos = GameObject.FindAnyObjectByType<TeleportPos>();
+        float dis = 0;
+        foreach (var p in pos.TeleportPosList)
         {
-            var d = Vector3.Distance(agent.Position, p.transform.position);
-            
-            if (d < dis)
+            float d = Mathf.Abs(agent.Position.x - p.transform.position.x)
+                                                + Mathf.Abs(agent.Position.z - p.transform.position.z);
+
+            if (d > dis)
             {
                 _farthestPos = p.transform.position;
                 dis = d;

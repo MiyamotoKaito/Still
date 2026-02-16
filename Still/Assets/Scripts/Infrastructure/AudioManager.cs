@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
@@ -126,7 +125,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="fadeTime"></param>
     public void FadeBGM(float fadeTime)
     {
-        _bgmPlayer.DOFade(0f, fadeTime);
+        DOTween.To(() => _bgmPlayer.volume, x => _bgmPlayer.volume = x, 0f, fadeTime);
     }
     /// <summary>
     /// BGMのストップ

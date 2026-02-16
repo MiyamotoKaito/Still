@@ -20,7 +20,6 @@ namespace Still.Player.Presenter
         private void Initialize()
         {
             _playerSensorView.OnHitDetected += HandleGhostDetected;
-            _playerSensorView.OnHitLost += HandleGhostLost;
         }
 
         private void HandleGhostDetected(RaycastHit hit)
@@ -34,19 +33,9 @@ namespace Still.Player.Presenter
                 Debug.Log("ゴーストを検知した");
             }
         }
-
-        private void HandleGhostLost()
-        {
-            if (_ghostDetectedValue == 1)
-            {
-                _ghostDetectedValue = 0;
-                _worldStates.ModifyState(WorldStateType.GhostDetected.ToString(), _ghostDetectedValue);
-            }
-        }
         public void Dispose()
         {
             _playerSensorView.OnHitDetected -= HandleGhostDetected;
-            _playerSensorView.OnHitLost -= HandleGhostLost;
         }
     }
 }

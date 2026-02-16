@@ -899,6 +899,7 @@ MonoBehaviour:
   - {fileID: 1371838231}
   - {fileID: 876442395}
   _startDelay: 5000
+  _canvas: {fileID: 1139447844}
 --- !u!4 &811268810
 Transform:
   m_ObjectHideFlags: 0

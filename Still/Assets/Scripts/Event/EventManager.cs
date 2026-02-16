@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Still.Object.Key;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,12 +13,14 @@ public class EventManager : MonoBehaviour
     private RecorderPlayer _recorderPlayerObject;
     private Book _bookObject;
     private int _achievedCount = 0;
+    private KeyView _keyView;
 
     private void Awake()
     {
         _tvObject = FindAnyObjectByType<Tv>();
         _recorderPlayerObject = FindAnyObjectByType<RecorderPlayer>();
         _bookObject = FindAnyObjectByType<Book>();
+        _keyView = FindAnyObjectByType<KeyView>();
         SetText();
     }
     private void OnEnable()
@@ -26,31 +29,32 @@ public class EventManager : MonoBehaviour
     }
     private void SetText()
     {
-        _tv.text = $"□:tv";
-        _recordPlayer.text = $"□:recordPlayer";
-        _book.text = $"□:book";
+        _tv.text = $"□:Tv";
+        _recordPlayer.text = $"□:PlayMusic";
+        _book.text = $"□:Book";
     }
     private void RegisterEvents()
     {
         _tvObject.OnInteract += TvCondition;
         _recorderPlayerObject.OnInteract += RecorderCondition;
         _bookObject.OnInteract += BookCondition;
+        _keyView.OnKeySpawned += SpawnKey;
     }
     private void TvCondition()
     {
-        _tv.text = $"■:tv";
+        _tv.text = $"■:Tv";
         _achievedCount++;
         OnAcheivedCountChanged?.Invoke(_achievedCount);
     }
     private void RecorderCondition()
     {
-        _recordPlayer.text = $"■:recordPlayer";
+        _recordPlayer.text = $"■:PlayMusic";
         _achievedCount++;
         OnAcheivedCountChanged?.Invoke(_achievedCount);
     }
     private void BookCondition()
     {
-        _book.text = $"■:book";
+        _book.text = $"■:Book";
         _achievedCount++;
         OnAcheivedCountChanged?.Invoke(_achievedCount);
     }
@@ -59,5 +63,13 @@ public class EventManager : MonoBehaviour
         _tvObject.OnInteract -= TvCondition;
         _recorderPlayerObject.OnInteract -= RecorderCondition;
         _bookObject.OnInteract -= BookCondition;
+        _keyView.OnKeySpawned -= SpawnKey;
+    }
+
+    private void SpawnKey()
+    {
+        _tv.gameObject.SetActive(false);
+        _recordPlayer.text = $"□:Find the key!!";
+        _book.gameObject.SetActive(false);
     }
 }

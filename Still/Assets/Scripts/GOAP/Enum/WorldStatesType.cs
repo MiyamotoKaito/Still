@@ -31,5 +31,6 @@
 
         GhostDetected,
         FocusMe,
+        Teleport,
     }
 }

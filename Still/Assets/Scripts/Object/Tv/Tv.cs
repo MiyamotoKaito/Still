@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Still.Player;
+using Still.Player.View;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -10,9 +12,12 @@ public class Tv : MonoBehaviour, IInteractable
     private Light _tvLight;
     private bool _isOn = false;
     private AudioSource _audiosource;
+    private PlayerView _playerview;
+    private GameInstaller _gameInstaller;
     private void Awake()
     {
         _tvLight = GetComponentInChildren<Light>();
+        _audiosource = GetComponent<AudioSource>();
         _tvLight.enabled = false;
     }
     public void HideUI()
@@ -24,9 +29,12 @@ public class Tv : MonoBehaviour, IInteractable
     {
         if (!_isOn)
         {
+            _playerview = FindAnyObjectByType<PlayerView>();
+            _gameInstaller = FindAnyObjectByType<GameInstaller>();
+            _gameInstaller.LastPosition.SavePosition(_playerview.transform.position);
             _tvLight.enabled = true;
             _isOn = true;
-            AudioManager.Instance.PlayBGM("Tv", _audiosource);
+            AudioManager.Instance.PlaySE("Noise", _audiosource);
             OnInteract?.Invoke();
             _text.gameObject.SetActive(false);
         }

@@ -17,8 +17,6 @@ public class BookShellLightOffEvent : IEvent
     private bool _isFinished = false;
     public void Initialize()
     {
-        _bookCam.transform.position = _playerCamera.transform.position;
-        _bookCam.LookAt = _bookShellAnimator.transform;
         _bookCam.Priority = 0;
         _isFinished = false;
         _playerView = GameObject.FindAnyObjectByType<PlayerView>();
@@ -30,11 +28,13 @@ public class BookShellLightOffEvent : IEvent
     }
     private async UniTask PlayAnimation()
     {
+        _bookCam.transform.position = _playerCamera.transform.position;
+        _bookCam.LookAt = _bookShellAnimator.transform;
         _playerView.DisablePlayerInput();
         _bookCam.Priority = 10;
         await UniTask.Delay(700); // カメラ切り替えのために待機
         _bookShellAnimator.SetTrigger("LightOff");
-        await UniTask.Delay(1000); // アニメーションの長さに合わせて待機
+        await UniTask.Delay(2000); // アニメーションの長さに合わせて待機
         _playerView.EnablePlayerInput();
         _bookCam.Priority = 0;
         _isFinished = true;

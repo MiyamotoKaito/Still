@@ -18,11 +18,12 @@ namespace Still.GOAP.Agent
 
         public GameObject CurrentTarget => _currentTarget;
 
+        public AudioSource AudioSource => _audioSource;
+
         public void SetTarget(GameObject targetPos)
         {
             _currentTarget = targetPos;
         }
-
         public Vector3 GetRandomPos()
         {
             Vector2 random2D = Random.insideUnitCircle * _ghostConfig.Radius;
@@ -37,12 +38,29 @@ namespace Still.GOAP.Agent
         public void PlayBoolAnimation(string param, bool flag) => _animator.SetBool(param, flag);
         public void PlayTriggerAnimation(string param) => _animator.SetTrigger(param);
 
-        public void SetMoveDestination(Vector3 target) => _navmeshAgent.SetDestination(target);
+        public void SetMoveDestination(Vector3 target)
+        {
+            _navmeshAgent.isStopped = false;
+            _navmeshAgent.SetDestination(target);
+        }
 
         public void SetSpeed(float speed) => _navmeshAgent.speed = speed;
 
+        public void StopMove()
+        {
+            _navmeshAgent.ResetPath();
+            _navmeshAgent.velocity = Vector3.zero;
+            _navmeshAgent.nextPosition = transform.position; // 次の位置も現在位置に固定
+        }
+
+        public void Teleport(Vector3 pos)
+        {
+            // テレポート
+            _navmeshAgent.Warp(pos);
+        }
         private GhostConfig _ghostConfig;
         private GoapExecutor _executor;
+        private AudioSource _audioSource;
         private float _speed;
         private Animator _animator;
         private NavMeshAgent _navmeshAgent;
@@ -57,6 +75,7 @@ namespace Still.GOAP.Agent
 
         private void Awake()
         {
+            _audioSource = GetComponent<AudioSource>();
             _animator = GetComponent<Animator>();
             _navmeshAgent = GetComponent<NavMeshAgent>();
         }

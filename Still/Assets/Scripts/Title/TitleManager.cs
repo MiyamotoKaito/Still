@@ -15,10 +15,13 @@ public class TitleManager : MonoBehaviour
     private Animator[] _doors;
     [SerializeField]
     private int _startDelay = 800;
+    [SerializeField]
+    private Canvas _canvas;
     private PlayerInputActions _inputActions;
     private void Awake()
     {
         SetPriority(1, 0);
+        _canvas.enabled = true;
         _inputActions = new PlayerInputActions();
     }
     private void SetPriority(int startCam, int endCam)
@@ -38,6 +41,7 @@ public class TitleManager : MonoBehaviour
 
     private void GameStart(InputAction.CallbackContext context)
     {
+        _canvas.enabled = false;
         OpenDoors().Forget();
     }
     private async UniTask OpenDoors()

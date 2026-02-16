@@ -10,30 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db73111e53b648842bc47072ec290dbf, type: 3}
-  m_Name: Nkock
+  m_Name: Catch2
   m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Goal.Config.SubGoalConfig
   _settingGoalConditions:
-  - _key: 16
+  - _key: 15
     _value:
-      Value: 1
-      Comparison: 0
-  _targetWorldStates:
-  - _key: 16
+      Value: 3
+      Comparison: 5
+  - _key: 14
     _value:
       Value: 0
       Comparison: 0
-  - _key: 7
+  _targetWorldStates:
+  - _key: 2
     _value:
       Value: 1
       Comparison: 0
-  - _key: 4
+  - _key: 14
+    _value:
+      Value: 0
+      Comparison: 0
+  - _key: 19
     _value:
       Value: 1
       Comparison: 0
   _achievedtWorldStates:
-  - _key: 7
+  - _key: 2
     _value: 0
-  - _key: 4
+  - _key: 3
     _value: 0
-  _priority: 5
+  - _key: 19
+    _value: 0
+  _priority: 4
   _achievedPrioity: 0

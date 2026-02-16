@@ -19,6 +19,7 @@ public class LightSwitch : MonoBehaviour,IInteractable
     [ContextMenu("スイッチ切り替え")]
     public void SwitchToggle()
     {
+        AudioManager.Instance.PlaySE("Light1");
         _isOn = _isOn == true ? false : true;
         if (IsOn)
         {

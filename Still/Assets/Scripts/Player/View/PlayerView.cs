@@ -42,6 +42,9 @@ namespace Still.Player.View
             _actions.Player.Interact.started -= OnInputInteract;
             _actions.Player.Toggle.started -= OnInputLightToggle;
             _actions.Player.Disable();
+
+            _currentMoveValue = Vector2.zero;
+            _isDash = false;
         }
         private void OnInputMove(InputAction.CallbackContext context)
         {

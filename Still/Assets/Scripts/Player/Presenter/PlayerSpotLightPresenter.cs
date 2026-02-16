@@ -20,6 +20,7 @@ namespace Still.Player.Presenter
         private void HandleSpotLight()
         {
             _model.SwitchToggle();
+            AudioManager.Instance.PlaySE("Light");
             _spotLight.enabled = _model.IsOn;
         }
         public void Dispose()
