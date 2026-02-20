@@ -23,6 +23,10 @@ MonoBehaviour:
   - rid: 6149760095779029194
   - rid: 6149760095779029197
   - rid: 6149760113271898112
+  - rid: 6149760133884018805
+  - rid: 6149760213427159326
+  - rid: 6149760229698174976
+  - rid: 6149760229698175063
   references:
     version: 2
     RefIds:
@@ -101,7 +105,11 @@ MonoBehaviour:
         _effects:
         - _key: 2
           _value: 1
+        - _key: 3
+          _value: 0
         _actionCost: 10
+        _catchEvent:
+          rid: 6149760213427159408
     - rid: 6149760095779029194
       type: {class: KnockAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:
@@ -146,6 +154,64 @@ MonoBehaviour:
         - _key: 4
           _value: 1
         _actionCost: 1
+    - rid: 6149760133884018805
+      type: {class: FocusMeAction, ns: Still.GOAP.Action.Actions, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 17
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 18
+          _value: 1
+        _actionCost: 1
+        _focusMeEvent:
+          rid: 6149760133884018814
+    - rid: 6149760133884018814
+      type: {class: FocusMeEvent, ns: , asm: Assembly-CSharp}
+      data:
+        _focusDuration: 0.5
+        _focusFOV: 10
+    - rid: 6149760213427159326
+      type: {class: TeleportAction, ns: , asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 18
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 19
+          _value: 1
+        _actionCost: 3
+    - rid: 6149760213427159408
+      type: {class: GameOverEvent, ns: , asm: Assembly-CSharp}
+      data: 
+    - rid: 6149760229698174976
+      type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 15
+          _value:
+            Value: 0
+            Comparison: 5
+        _effects:
+        - _key: 3
+          _value: 1
+        _actionCost: 3
+    - rid: 6149760229698175063
+      type: {class: TeleportAction, ns: , asm: Assembly-CSharp}
+      data:
+        _preconditions:
+        - _key: 2
+          _value:
+            Value: 1
+            Comparison: 0
+        _effects:
+        - _key: 19
+          _value: 1
+        _actionCost: 3
     - rid: 7538373351181910093
       type: {class: MoveAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
       data:

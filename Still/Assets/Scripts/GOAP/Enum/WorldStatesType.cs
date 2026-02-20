@@ -29,5 +29,8 @@
         FearLevel,
         Knock,
 
+        GhostDetected,
+        FocusMe,
+        Teleport,
     }
 }

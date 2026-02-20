@@ -45,7 +45,7 @@ public class GoapLifeTimeScope : LifetimeScope
                 // VContainerに「このインスタンスに[Inject]して！」と直接命令する
                 container.Inject(s);
                 // IInitializableの代わりに手動で初期化を呼ぶ
-                s.Initialize();
+                s.Init();
             }
 
             // Actionへの注入

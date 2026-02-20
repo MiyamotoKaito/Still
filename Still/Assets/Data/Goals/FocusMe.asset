@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db73111e53b648842bc47072ec290dbf, type: 3}
+  m_Name: FocusMe
+  m_EditorClassIdentifier: Assembly-CSharp::Still.GOAP.Goal.Config.SubGoalConfig
+  _settingGoalConditions:
+  - _key: 17
+    _value:
+      Value: 1
+      Comparison: 0
+  _targetWorldStates:
+  - _key: 18
+    _value:
+      Value: 1
+      Comparison: 0
+  - _key: 19
+    _value:
+      Value: 1
+      Comparison: 0
+  - _key: 17
+    _value:
+      Value: 1
+      Comparison: 0
+  _achievedtWorldStates:
+  - _key: 18
+    _value: 0
+  - _key: 19
+    _value: 0
+  - _key: 17
+    _value: 0
+  _priority: 3
+  _achievedPrioity: 0

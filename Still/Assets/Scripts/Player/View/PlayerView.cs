@@ -11,6 +11,7 @@ namespace Still.Player.View
         public event Action OnInteractEvent;
         public event Action OnDashEvent;
         public event Action OnDashCancelEvent;
+        public event Action OnLightToggleEvent;
 
         private PlayerInputActions _actions;
         private Rigidbody _rigidbody;
@@ -29,6 +30,7 @@ namespace Still.Player.View
             _actions.Player.Dash.performed += OnInputDash;
             _actions.Player.Dash.canceled += OnInputDash;
             _actions.Player.Interact.started += OnInputInteract;
+            _actions.Player.Toggle.started += OnInputLightToggle;
             _actions.Player.Enable();
         }
         public void DisablePlayerInput()
@@ -38,7 +40,11 @@ namespace Still.Player.View
             _actions.Player.Dash.performed -= OnInputDash;
             _actions.Player.Dash.canceled -= OnInputDash;
             _actions.Player.Interact.started -= OnInputInteract;
+            _actions.Player.Toggle.started -= OnInputLightToggle;
             _actions.Player.Disable();
+
+            _currentMoveValue = Vector2.zero;
+            _isDash = false;
         }
         private void OnInputMove(InputAction.CallbackContext context)
         {
@@ -63,6 +69,10 @@ namespace Still.Player.View
         private void OnInputInteract(InputAction.CallbackContext context)
         {
             OnInteractEvent?.Invoke();
+        }
+        private void OnInputLightToggle(InputAction.CallbackContext context)
+        {
+            OnLightToggleEvent?.Invoke();
         }
         public void Move(Vector3 direction, float speed)
         {

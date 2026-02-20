@@ -1,7 +1,6 @@
 ﻿using Still.Object.Door.Model;
 using Still.Object.Door.View;
 using Still.Object.Key;
-using Still.Object.Key.Model;
 using UnityEngine;
 
 public class LockedDoorPresenter

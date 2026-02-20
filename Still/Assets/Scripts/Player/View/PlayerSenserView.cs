@@ -5,6 +5,7 @@ public class PlayerSensorView : MonoBehaviour
 {
     public event Action<RaycastHit> OnHitPlayerDetected;
     public event Action<RaycastHit> OnHitDetected;
+    public event Action OnHitPlayerLost;
     public event Action OnHitLost;
     [SerializeField] private PlayerConfig config;
     [SerializeField] private LayerMask _layerMask;
@@ -16,11 +17,15 @@ public class PlayerSensorView : MonoBehaviour
         }
         else
         {
-            OnHitLost?.Invoke();
+            OnHitPlayerLost?.Invoke();
         }
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance))
         {
             OnHitDetected?.Invoke(hit);
+        }
+        else
+        {
+            OnHitLost?.Invoke();
         }
     }
 

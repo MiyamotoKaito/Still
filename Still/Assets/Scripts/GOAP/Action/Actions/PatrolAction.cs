@@ -21,6 +21,7 @@ namespace Still.GOAP.Action
         {
             Debug.Log($"{this.GetType().Name}アクション開始");
             _targetPos = agent.GetRandomPos();
+            agent.SetSpeed(agent.Config.GhostMoveSpeed);
             // NavMeshAgent に目的地をセット
             agent.SetMoveDestination(_targetPos);
         }
