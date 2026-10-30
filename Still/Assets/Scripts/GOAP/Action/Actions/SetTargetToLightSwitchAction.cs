@@ -1,28 +1,45 @@
-﻿using Still.GOAP.Agent;
-using UnityEngine;
-namespace Still.GOAP.Action
+using System;
+using Still.Common;
+using VContainer;
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///点いている照明スイッチをターゲットにする
+    ///</summary>
+    [Serializable]
     public class SetTargetToLightSwitchAction : ActionBase
     {
-        public override bool Perform(IAgentController agent)
+        private ILightSwitchUsecase _lightSwitches;
+
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
+        [Inject]
+        public void InjectDependencies(ILightSwitchUsecase lightSwitches)
         {
-            if(agent.CurrentTarget == null) return false;
-            Debug.Log(($"[Action] {nameof(SetTargetToLightSwitchAction)}: LightSwitchをターゲットに決定"));
-            return true;
+            _lightSwitches = lightSwitches;
         }
 
+        ///<summary>
+        ///ターゲットが決まったら完了
+        ///</summary>
+        public override bool Perform(IAgentController agent)
+        {
+            return agent.CurrentTarget != null;
+        }
+
+        ///<summary>
+        ///点いているスイッチを探す
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
-            var lights = GameObject.FindObjectsByType<LightSwitch>(FindObjectsSortMode.None);
-            foreach (var light in lights)
+            agent.SetTarget(null);
+            foreach (var lightSwitch in _lightSwitches.LightSwitches)
             {
-                if (light.IsOn)
-                {
-                    agent.SetTarget(light.gameObject);
-                    break;
-                }
+                if (!lightSwitch.IsOn) continue;
+                agent.SetTarget(lightSwitch.Transform);
+                return;
             }
         }
     }

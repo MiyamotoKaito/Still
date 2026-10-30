@@ -1,30 +1,31 @@
-﻿using Still.GOAP.Agent;
+using System;
 using UnityEngine;
-namespace Still.GOAP.Action
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///その場で一定時間見回す
+    ///</summary>
+    [Serializable]
     public class LookAroundAction : ActionBase
     {
+        private float _remaining;
+
+        ///<summary>
+        ///時間が経ったら完了
+        ///</summary>
         public override bool Perform(IAgentController agent)
         {
-            _duration -= Time.deltaTime;
-
-            if (_duration <= 0)
-            {
-                return true;
-            }
-            return false;
+            _remaining -= Time.deltaTime;
+            return _remaining <= 0;
         }
 
+        ///<summary>
+        ///見回す時間を設定する
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            if (agent.Config == null)
-            {
-                Debug.Log("コンフィグない");
-            }
-            Debug.Log($"{this.GetType().Name}アクション開始");
-            _duration = agent.Config.Duration;
+            _remaining = agent.Config.Duration;
         }
-        private float _duration;
     }
 }

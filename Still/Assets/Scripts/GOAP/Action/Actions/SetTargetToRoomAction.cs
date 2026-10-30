@@ -1,28 +1,40 @@
-﻿using Still.GOAP.Agent;
-using Still.Object;
-using UnityEngine;
-namespace Still.GOAP.Action
+using System;
+using Still.Common;
+using VContainer;
+
+namespace Still.Goap
 {
-    [System.Serializable]
-    public class SetTargetToRoom : ActionBase
+    ///<summary>
+    ///プレイヤーがいる部屋のドアをターゲットにする
+    ///</summary>
+    [Serializable]
+    public class SetTargetToRoomAction : ActionBase
     {
+        private IRoomQuery _rooms;
+
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
+        [Inject]
+        public void InjectDependencies(IRoomQuery rooms)
+        {
+            _rooms = rooms;
+        }
+
+        ///<summary>
+        ///即完了する（ターゲットが無ければ次のMoveActionが破綻して再計画される）
+        ///</summary>
         public override bool Perform(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
             return true;
         }
 
+        ///<summary>
+        ///プレイヤーがいる部屋のドアを探す
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            var room = GameObject.FindObjectsByType<Room>(sortMode: FindObjectsSortMode.None);
-            foreach (var r in room)
-            {
-                if (r.InTheRoom)
-                {
-                    agent.SetTarget(r.Door);
-                    return;
-                }
-            }
+            agent.SetTarget(_rooms.TryGetOccupiedRoomDoor(out var door) ? door : null);
         }
     }
 }

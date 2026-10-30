@@ -1,93 +1,108 @@
-﻿using Still.GOAP.Agent.Config;
-using Still.GOAP.Planner.Executor;
+using Still.Common;
 using UnityEngine;
 using UnityEngine.AI;
 using VContainer;
-namespace Still.GOAP.Agent
+
+namespace Still.Goap
 {
+    ///<summary>
+    ///ゴーストの体。移動とアニメーションだけを担当し、判断はGoapExecutorが行う
+    ///</summary>
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-    public class GAgent : MonoBehaviour, IAgentController
+    public class GAgent : MonoBehaviour, IAgentController, IGhost
     {
+        ///<summary>ゴーストの設定</summary>
         public GhostConfig Config => _ghostConfig;
-
-        public float Speed => _speed;
-
-        public Vector3 Position => this.gameObject.transform.position;
-
-        public bool IsArrived => Vector3.Distance(Position, CurrentTarget.transform.position) < _ghostConfig.GhostStopDistance;
-
-        public GameObject CurrentTarget => _currentTarget;
-
+        ///<summary>ゴーストが鳴らす音のAudioSource</summary>
         public AudioSource AudioSource => _audioSource;
+        ///<summary>現在のターゲット（無ければnull）</summary>
+        public Transform CurrentTarget => _currentTarget;
+        ///<summary>現在位置</summary>
+        public Vector3 Position => transform.position;
+        ///<summary>ターゲットに十分近づいたか</summary>
+        public bool IsArrived => _currentTarget != null
+            && Vector3.Distance(Position, _currentTarget.position) < _ghostConfig.GhostStopDistance;
 
-        public void SetTarget(GameObject targetPos)
+        private GhostConfig _ghostConfig;
+        private AudioSource _audioSource;
+        private NavMeshAgent _navMeshAgent;
+        private Transform _currentTarget;
+
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
+        [Inject]
+        public void Construct(GhostConfig ghostConfig)
         {
-            _currentTarget = targetPos;
+            _ghostConfig = ghostConfig;
         }
+
+        ///<summary>
+        ///ターゲットを設定する
+        ///</summary>
+        public void SetTarget(Transform target)
+        {
+            _currentTarget = target;
+        }
+
+        ///<summary>
+        ///移動速度を設定する
+        ///</summary>
+        public void SetSpeed(float speed)
+        {
+            _navMeshAgent.speed = speed;
+        }
+
+        ///<summary>
+        ///NavMesh上のランダムな地点を取得する（見つからなければ現在位置）
+        ///</summary>
         public Vector3 GetRandomPos()
         {
             Vector2 random2D = Random.insideUnitCircle * _ghostConfig.Radius;
-            Vector3 randomDirection = new Vector3(random2D.x, 0f, random2D.y);
-            randomDirection += transform.position;
+            var candidate = transform.position + new Vector3(random2D.x, 0f, random2D.y);
 
-            if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, _ghostConfig.Radius / 2, NavMesh.AllAreas))
-                return hit.position;
-            else return Position;
+            return NavMesh.SamplePosition(candidate, out NavMeshHit hit, _ghostConfig.Radius / 2, NavMesh.AllAreas)
+                ? hit.position
+                : Position;
         }
 
-        public void PlayBoolAnimation(string param, bool flag) => _animator.SetBool(param, flag);
-        public void PlayTriggerAnimation(string param) => _animator.SetTrigger(param);
-
-        public void SetMoveDestination(Vector3 target)
+        ///<summary>
+        ///目的地へ移動を始める
+        ///</summary>
+        public void SetMoveDestination(Vector3 destination)
         {
-            _navmeshAgent.isStopped = false;
-            _navmeshAgent.SetDestination(target);
+            _navMeshAgent.isStopped = false;
+            _navMeshAgent.SetDestination(destination);
         }
 
-        public void SetSpeed(float speed) => _navmeshAgent.speed = speed;
+        ///<summary>
+        ///瞬間移動する
+        ///</summary>
+        public void Teleport(Vector3 position)
+        {
+            _navMeshAgent.Warp(position);
+        }
 
+        ///<summary>
+        ///その場で止まる
+        ///</summary>
         public void StopMove()
         {
-            _navmeshAgent.ResetPath();
-            _navmeshAgent.velocity = Vector3.zero;
-            _navmeshAgent.nextPosition = transform.position; // 次の位置も現在位置に固定
-        }
-
-        public void Teleport(Vector3 pos)
-        {
-            // テレポート
-            _navmeshAgent.Warp(pos);
-        }
-        private GhostConfig _ghostConfig;
-        private GoapExecutor _executor;
-        private AudioSource _audioSource;
-        private float _speed;
-        private Animator _animator;
-        private NavMeshAgent _navmeshAgent;
-        private GameObject _currentTarget;
-
-        [Inject]
-        public void Construct(GhostConfig ghostConfig, GoapExecutor executor)
-        {
-            _ghostConfig = ghostConfig;
-            _executor = executor;
+            _navMeshAgent.ResetPath();
+            _navMeshAgent.velocity = Vector3.zero;
+            // ResetPathだけだと次フレームに慣性で少し進むため、次の位置も固定する
+            _navMeshAgent.nextPosition = transform.position;
         }
 
         private void Awake()
         {
             _audioSource = GetComponent<AudioSource>();
-            _animator = GetComponent<Animator>();
-            _navmeshAgent = GetComponent<NavMeshAgent>();
-        }
-        private void Start()
-        {
-            _speed = _ghostConfig.GhostMoveSpeed;
-            _navmeshAgent.speed = _speed;
-        }
-        private void Update()
-        {
-            _executor?.SetAction(this);
+            _navMeshAgent = GetComponent<NavMeshAgent>();
         }
 
+        private void Start()
+        {
+            _navMeshAgent.speed = _ghostConfig.GhostMoveSpeed;
+        }
     }
 }
