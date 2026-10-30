@@ -25,7 +25,9 @@ namespace Still.Goap
         ///</summary>
         public bool CanSeePlayer(float distance)
         {
-            if (!Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance)) return false;
+            // 部屋や調べる範囲のトリガーは視線を遮らないので無視する
+            if (!Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, distance,
+                                 Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) return false;
             return hit.collider.transform.IsChildOf(_player.Transform);
         }
     }

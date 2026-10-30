@@ -32,7 +32,9 @@ namespace Still.Player
             else
                 OnHitPlayerLost?.Invoke();
 
-            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance))
+            // 見える／見えないの判定なので、部屋や調べる範囲のトリガーは無視して実体のあるものだけを見る
+            if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, config.RayDistance,
+                                Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
                 OnHitDetected?.Invoke(hit);
             else
                 OnHitLost?.Invoke();
