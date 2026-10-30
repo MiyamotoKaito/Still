@@ -16,7 +16,10 @@ namespace Still.Escape
         public bool IsOn => _isOn;
         ///<summary>スイッチの位置</summary>
         public Transform Transform => transform;
+        ///<summary>ミッションから指定するID（未設定なら空）</summary>
+        public string SwitchId => _switchId;
 
+        [SerializeField, Tooltip("ミッションから指定するID（儀式で点けておく照明など）")] private string _switchId;
         [SerializeField] private TextMeshProUGUI _text;
         [SerializeField] private Light _light;
 
