@@ -30,14 +30,16 @@ namespace Still.Goap
         }
 
         ///<summary>
-        ///点いているスイッチを探す
+        ///自分と同じ階で点いているスイッチを探す
         ///</summary>
         public override void SetTarget(IAgentController agent)
         {
             agent.SetTarget(null);
+            int floor = agent.Config.FloorOf(agent.Position);
             foreach (var lightSwitch in _lightSwitches.LightSwitches)
             {
-                if (!lightSwitch.IsOn) continue;
+                // 別の階のスイッチへはNavMeshがつながっておらず歩いて行けない
+                if (!lightSwitch.IsOn || agent.Config.FloorOf(lightSwitch.Transform.position) != floor) continue;
                 agent.SetTarget(lightSwitch.Transform);
                 return;
             }
