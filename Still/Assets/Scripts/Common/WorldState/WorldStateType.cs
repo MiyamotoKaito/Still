@@ -39,5 +39,8 @@ namespace Still.Common
 
         // ゴーストがプレイヤーに気づいた（見つめ終えた）
         Noticed,
+
+        // ミッションの儀式（蓄音機を鳴らし続ける）が進行中
+        RitualActive,
     }
 }
