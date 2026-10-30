@@ -1,31 +1,52 @@
-﻿using Still.Player.Model;
-using Still.Player.View;
-using UnityEngine;
-namespace Still.Player.Presenter
+using System;
+using R3;
+using Still.Common;
+using VContainer.Unity;
+
+namespace Still.Player
 {
-    public class PlayerSpotLightPresenter
+    ///<summary>
+    ///懐中電灯の入力と点灯状態を中継する
+    ///</summary>
+    public sealed class PlayerSpotLightPresenter : IInitializable, IDisposable
     {
-        private PlayerView _view;
-        private Light _spotLight;
-        private SpotLightModel _model;
-        public PlayerSpotLightPresenter(PlayerView view, Light light, SpotLightModel model)
+        public PlayerSpotLightPresenter(PlayerView playerView, PlayerSensorView sensorView, SpotLightEntity spotLight, IAudioService audio)
         {
-            _view = view;
-            _spotLight = light;
-            _model = model;
-
-            _view.OnLightToggleEvent += HandleSpotLight;
+            _playerView = playerView;
+            _sensorView = sensorView;
+            _spotLight = spotLight;
+            _audio = audio;
         }
 
-        private void HandleSpotLight()
+        private IDisposable _subscription;
+
+        private readonly PlayerView _playerView;
+        private readonly PlayerSensorView _sensorView;
+        private readonly SpotLightEntity _spotLight;
+        private readonly IAudioService _audio;
+
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize()
         {
-            _model.SwitchToggle();
-            AudioManager.Instance.PlaySE("Light");
-            _spotLight.enabled = _model.IsOn;
+            _playerView.OnLightToggleEvent += HandleToggle;
+            _subscription = _spotLight.IsOn.Subscribe(isOn => _sensorView.SpotLight.enabled = isOn);
         }
+
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
         public void Dispose()
         {
-            _view.OnLightToggleEvent -= HandleSpotLight;
+            _playerView.OnLightToggleEvent -= HandleToggle;
+            _subscription?.Dispose();
+        }
+
+        private void HandleToggle()
+        {
+            _spotLight.Toggle();
+            _audio.PlaySe("Light");
         }
     }
 }

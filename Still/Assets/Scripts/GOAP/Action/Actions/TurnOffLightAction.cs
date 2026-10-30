@@ -1,32 +1,48 @@
-﻿using Still.GOAP.Agent;
-using UnityEngine;
-namespace Still.GOAP.Action
+using System;
+using Still.Common;
+using VContainer;
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///ターゲットの照明スイッチを消す
+    ///</summary>
+    [Serializable]
     public class TurnOffLightAction : ActionBase
     {
+        private ILightSwitchUsecase _lightSwitches;
+        private ILightSwitch _target;
+
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
+        [Inject]
+        public void InjectDependencies(ILightSwitchUsecase lightSwitches)
+        {
+            _lightSwitches = lightSwitches;
+        }
+
+        ///<summary>
+        ///点いていれば消して完了
+        ///</summary>
         public override bool Perform(IAgentController agent)
         {
-            if (_lightSwith == null)
-            {
-                _lightSwith = GameObject.FindAnyObjectByType<LightSwitch>();
-                return false; // ターゲットがなければ即完了
-            }
-
-            // スイッチを切り替える（物理的な操作）
-            if (_lightSwith.IsOn) // 電気がついている場合のみオフにする
-            {
-                _lightSwith.SwitchToggle(); // スイッチをオフにする操作
-                Debug.Log($"[Action] {nameof(TurnOffLightAction)}: 電気スイッチをオフにしました。");
-            }
-            return true; // アクションは完了
+            if (_target != null && _target.IsOn) _lightSwitches.Toggle(_target);
+            return true;
         }
 
+        ///<summary>
+        ///ターゲットのTransformに対応するスイッチを探す
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
-            _lightSwith = agent.CurrentTarget.GetComponent<LightSwitch>();
+            _target = null;
+            foreach (var lightSwitch in _lightSwitches.LightSwitches)
+            {
+                if (lightSwitch.Transform != agent.CurrentTarget) continue;
+                _target = lightSwitch;
+                return;
+            }
         }
-        private LightSwitch _lightSwith;
     }
 }

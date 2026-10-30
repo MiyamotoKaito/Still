@@ -1,0 +1,17 @@
+{
+    "name": "Still.Container",
+    "rootNamespace": "Still.Container",
+    "references": [
+        "Still.Common",
+        "VContainer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

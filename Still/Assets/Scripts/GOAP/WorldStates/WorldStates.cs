@@ -1,51 +1,63 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Still.GOAP.WorldState.Config;
-using UniRx;
+using R3;
+using Still.Common;
 using UnityEngine;
-namespace Still.GOAP.WorldState
+
+namespace Still.Goap
 {
-    public class WorldStates
+    ///<summary>
+    ///GOAPのワールドステート
+    ///</summary>
+    public sealed class WorldStates : IWorldStates, IDisposable
     {
-        /// <summary>ステートの値が変わった時に発火されるイベント</summary>
-        public IObservable<string> OnStateChanged => _onStateChanged;
-        public Dictionary<string, int> CurrentStates => _currentWorldStates;
-
-        private readonly Subject<string> _onStateChanged = new();
-        private readonly Dictionary<string, int> _currentWorldStates = new();
-
-
         public WorldStates(WorldStateConfig config)
         {
-            foreach (var state in config.GetStates())
-            {
-                _currentWorldStates.Add(state.Key, state.Value);
-            }
-        }
-        /// <summary>
-        /// ステートの値を書き換える
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        public void ModifyState(string key, int value)
-        {
-            if (value == _currentWorldStates[key]) return;
-            _currentWorldStates[key] = value;
-            _onStateChanged.OnNext(key);
-            Debug.Log($"{key}の値が変更された : 現在{_currentWorldStates[key]}");
-        }
-        /// <summary>
-        /// ステートの値を加算する
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        public void AdditionState(string key, int value)
-        {
-            _currentWorldStates[key] += value;
-            _onStateChanged.OnNext(key);
-            Debug.Log($"{key}の値が書き変わった : 現在{_currentWorldStates[key]}");
+            _states = config.GetStates();
         }
 
-        public int GetStateValue(string key) => _currentWorldStates[key];
+        ///<summary>値が変わったキーを通知する</summary>
+        public Observable<WorldStateType> OnStateChanged => _onStateChanged;
+        ///<summary>現在の全ステート</summary>
+        public IReadOnlyDictionary<WorldStateType, int> CurrentStates => _states;
+
+        private readonly Dictionary<WorldStateType, int> _states;
+        private readonly Subject<WorldStateType> _onStateChanged = new();
+
+        ///<summary>
+        ///値を取得する（未登録のキーは0）
+        ///</summary>
+        public int GetStateValue(WorldStateType key)
+        {
+            return _states.TryGetValue(key, out int value) ? value : 0;
+        }
+
+        ///<summary>
+        ///値を上書きする（同じ値なら通知しない）
+        ///</summary>
+        public void ModifyState(WorldStateType key, int value)
+        {
+            if (_states.TryGetValue(key, out int current) && current == value) return;
+
+            _states[key] = value;
+            Debug.Log($"[WorldStates] {key} = {value}");
+            _onStateChanged.OnNext(key);
+        }
+
+        ///<summary>
+        ///値に加算する
+        ///</summary>
+        public void AddState(WorldStateType key, int value)
+        {
+            ModifyState(key, GetStateValue(key) + value);
+        }
+
+        ///<summary>
+        ///破棄する
+        ///</summary>
+        public void Dispose()
+        {
+            _onStateChanged.Dispose();
+        }
     }
 }

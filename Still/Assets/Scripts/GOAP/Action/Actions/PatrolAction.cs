@@ -1,29 +1,32 @@
-﻿using Still.GOAP.Agent;
-using Unity.Cinemachine;
+using System;
 using UnityEngine;
-namespace Still.GOAP.Action
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///周囲のランダムな地点へ歩く
+    ///</summary>
+    [Serializable]
     public class PatrolAction : ActionBase
     {
-        private Vector3 _targetPos;
+        private Vector3 _destination;
+
+        ///<summary>
+        ///目的地に着いたら完了
+        ///</summary>
         public override bool Perform(IAgentController agent)
         {
-            if (Vector3.Distance(agent.Position, _targetPos) < agent.Config.GhostStopDistance)
-            {
-                Debug.Log($"{this.GetType().Name}アクション完了");
-                return true;
-            }
-            return false;
+            return Vector3.Distance(agent.Position, _destination) < agent.Config.GhostStopDistance;
         }
 
+        ///<summary>
+        ///ランダムな目的地を決めて歩き出す
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
-            _targetPos = agent.GetRandomPos();
+            _destination = agent.GetRandomPos();
             agent.SetSpeed(agent.Config.GhostMoveSpeed);
-            // NavMeshAgent に目的地をセット
-            agent.SetMoveDestination(_targetPos);
+            agent.SetMoveDestination(_destination);
         }
     }
 }

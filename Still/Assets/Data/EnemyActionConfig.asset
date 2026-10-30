@@ -31,7 +31,7 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 622163703035068628
-      type: {class: PatrolAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: PatrolAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 5
@@ -43,7 +43,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 1
     - rid: 622163703035068630
-      type: {class: SetTargetToLightSwitchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: SetTargetToLightSwitchAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 9
@@ -55,7 +55,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 3
     - rid: 622163703035068634
-      type: {class: TurnOffLightAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: TurnOffLightAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 9
@@ -71,7 +71,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 2
     - rid: 6149759955516522610
-      type: {class: LookAroundAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: LookAroundAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 5
@@ -83,7 +83,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 1
     - rid: 6149759955516522634
-      type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: ChaseAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 5
     - rid: 6149759955516522635
-      type: {class: CatchAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: CatchAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 3
@@ -111,7 +111,7 @@ MonoBehaviour:
         _catchEvent:
           rid: 6149760213427159408
     - rid: 6149760095779029194
-      type: {class: KnockAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: KnockAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 16
@@ -127,7 +127,7 @@ MonoBehaviour:
           _value: 0
         _actionCost: 5
     - rid: 6149760095779029197
-      type: {class: SetTargetToRoom, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: SetTargetToRoomAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 16
@@ -139,7 +139,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 3
     - rid: 6149760113271898112
-      type: {class: LookAroundAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: LookAroundAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 4
@@ -155,7 +155,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 1
     - rid: 6149760133884018805
-      type: {class: FocusMeAction, ns: Still.GOAP.Action.Actions, asm: Assembly-CSharp}
+      type: {class: FocusMeAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 17
@@ -169,12 +169,12 @@ MonoBehaviour:
         _focusMeEvent:
           rid: 6149760133884018814
     - rid: 6149760133884018814
-      type: {class: FocusMeEvent, ns: , asm: Assembly-CSharp}
+      type: {class: FocusMeEvent, ns: Still.Player, asm: Still.Player}
       data:
         _focusDuration: 0.5
         _focusFOV: 10
     - rid: 6149760213427159326
-      type: {class: TeleportAction, ns: , asm: Assembly-CSharp}
+      type: {class: TeleportAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 18
@@ -186,10 +186,10 @@ MonoBehaviour:
           _value: 1
         _actionCost: 3
     - rid: 6149760213427159408
-      type: {class: GameOverEvent, ns: , asm: Assembly-CSharp}
+      type: {class: GameOverEvent, ns: Still.Player, asm: Still.Player}
       data: 
     - rid: 6149760229698174976
-      type: {class: ChaseAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: ChaseAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 15
@@ -201,7 +201,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 3
     - rid: 6149760229698175063
-      type: {class: TeleportAction, ns: , asm: Assembly-CSharp}
+      type: {class: TeleportAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 2
@@ -213,7 +213,7 @@ MonoBehaviour:
           _value: 1
         _actionCost: 3
     - rid: 7538373351181910093
-      type: {class: MoveAction, ns: Still.GOAP.Action, asm: Assembly-CSharp}
+      type: {class: MoveAction, ns: Still.Goap, asm: Still.Goap}
       data:
         _preconditions:
         - _key: 6

@@ -1,31 +1,56 @@
-﻿using Still.GOAP.Action;
-using Still.GOAP.Agent;
+using System;
 using UnityEngine;
-[System.Serializable]
-public class TeleportAction : ActionBase
+using VContainer;
+
+namespace Still.Goap
 {
-    public override bool Perform(IAgentController agent)
+    ///<summary>
+    ///いちばん遠いテレポート地点へ瞬間移動する
+    ///</summary>
+    [Serializable]
+    public class TeleportAction : ActionBase
     {
-        if (_farthestPos == null) return false;
-        agent.Teleport(_farthestPos);
-        return true;
-    }
+        private TeleportPoints _teleportPoints;
+        private Vector3 _farthestPos;
+        private bool _hasDestination;
 
-    public override void SetTarget(IAgentController agent)
-    {
-        var pos = GameObject.FindAnyObjectByType<TeleportPos>();
-        float dis = 0;
-        foreach (var p in pos.TeleportPosList)
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
+        [Inject]
+        public void InjectDependencies(TeleportPoints teleportPoints)
         {
-            float d = Mathf.Abs(agent.Position.x - p.transform.position.x)
-                                                + Mathf.Abs(agent.Position.z - p.transform.position.z);
+            _teleportPoints = teleportPoints;
+        }
 
-            if (d > dis)
+        ///<summary>
+        ///移動先があればテレポートして完了
+        ///</summary>
+        public override bool Perform(IAgentController agent)
+        {
+            if (!_hasDestination) return true;
+
+            agent.Teleport(_farthestPos);
+            return true;
+        }
+
+        ///<summary>
+        ///XZ平面のマンハッタン距離で最も遠い地点を選ぶ
+        ///</summary>
+        public override void SetTarget(IAgentController agent)
+        {
+            _hasDestination = false;
+            float farthest = -1f;
+            foreach (var point in _teleportPoints.Points)
             {
-                _farthestPos = p.transform.position;
-                dis = d;
+                var pos = point.position;
+                float distance = Mathf.Abs(agent.Position.x - pos.x) + Mathf.Abs(agent.Position.z - pos.z);
+                if (distance <= farthest) continue;
+
+                farthest = distance;
+                _farthestPos = pos;
+                _hasDestination = true;
             }
         }
     }
-    private Vector3 _farthestPos;
 }

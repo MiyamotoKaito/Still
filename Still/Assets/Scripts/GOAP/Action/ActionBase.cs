@@ -1,90 +1,59 @@
-﻿using System.Collections.Generic;
-using Still.GOAP.Action.Setting;
-using Still.GOAP.Agent;
-using Still.GOAP.Planner;
-using Still.GOAP.WorldState;
-using Still.Player;
+using System.Collections.Generic;
+using Still.Common;
 using UnityEngine;
 using VContainer;
-namespace Still.GOAP.Action
+
+namespace Still.Goap
 {
+    ///<summary>
+    ///アクションの基底。前提条件と効果はインスペクタで設定する
+    ///</summary>
     public abstract class ActionBase : IAction
     {
-        public Dictionary<string, Condition> Preconditions
-        {
-            get
-            {
-                if (_pDic == null)
-                    _pDic ??= ToDictionary(_preconditions);
-
-                return _pDic;
-            }
-        }
-
-        public Dictionary<string, int> Effects
-        {
-            get
-            {
-                if (_eDic == null)
-                    _eDic ??= ToDictionary(_effects);
-
-                return _eDic;
-            }
-        }
-
+        ///<summary>実行に必要な条件</summary>
+        public IReadOnlyDictionary<WorldStateType, Condition> Preconditions => _preconditionDict ??= ActionSettingConverter.ToDictionary(_preconditions);
+        ///<summary>完了時にワールドステートへ書き込む値</summary>
+        public IReadOnlyDictionary<WorldStateType, int> Effects => _effectDict ??= ActionSettingConverter.ToDictionary(_effects);
+        ///<summary>プランニング時のコスト</summary>
         public int ActionCost => _actionCost;
 
-        public virtual bool Execute(IAgentController agent)
-        {
-            if (Evalution.IsSatisfied(_worldStates.CurrentStates, Preconditions))
-            {
-                return true;
-            }
-            return false;
-        }
+        protected IWorldStates WorldStates;
 
-        public abstract bool Perform(IAgentController agent);
-
-        public abstract void SetTarget(IAgentController agent);
         [Header("設定")]
         [SerializeField] private List<HasConditionActions> _preconditions;
         [SerializeField] private List<NoConditionActions> _effects;
         [SerializeField] private int _actionCost;
 
-        private Dictionary<string, Condition> _pDic;
-        private Dictionary<string, int> _eDic;
-        protected WorldStates _worldStates;
-        protected GameInstaller _playerManager;
+        private Dictionary<WorldStateType, Condition> _preconditionDict;
+        private Dictionary<WorldStateType, int> _effectDict;
 
+        ///<summary>
+        ///依存を受け取る
+        ///</summary>
         [Inject]
-        public void Init(WorldStates worldState)
+        public void InjectWorldStates(IWorldStates worldStates)
         {
-            _worldStates = worldState;
-            _playerManager = GameObject.FindAnyObjectByType<GameInstaller>();
+            WorldStates = worldStates;
         }
-        public Dictionary<string, Condition> ToDictionary(List<HasConditionActions> list)
+
+        ///<summary>
+        ///実行中に前提条件が維持されているか確認する
+        ///</summary>
+        public virtual bool Execute(IAgentController agent)
         {
-            var dic = new Dictionary<string, Condition>();
-            foreach (var item in list)
-            {
-                if (!dic.ContainsKey(item.WorldStateKey))
-                {
-                    dic.Add(item.WorldStateKey, item.Value);
-                }
-            }
-            return dic;
+            return Evaluation.IsSatisfied(WorldStates.CurrentStates, Preconditions);
         }
-        public Dictionary<string, int> ToDictionary(List<NoConditionActions> list)
-        {
-            var dic = new Dictionary<string, int>();
-            foreach (var item in list)
-            {
-                if (!dic.ContainsKey(item.WorldStateKey))
-                {
-                    dic.Add(item.WorldStateKey, item.Value);
-                }
-            }
-            return dic;
-        }
+
+        ///<summary>
+        ///毎フレーム呼ばれる。完了したら true を返す
+        ///</summary>
+        public abstract bool Perform(IAgentController agent);
+
+        ///<summary>
+        ///アクション開始時に一度だけ呼ばれる
+        ///</summary>
+        public abstract void SetTarget(IAgentController agent);
+
+        public override string ToString() => GetType().Name;
     }
 }

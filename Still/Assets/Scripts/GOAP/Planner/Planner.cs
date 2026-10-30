@@ -1,164 +1,119 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using Still.GOAP.Action;
+using Still.Common;
+using Template.Runtime;
 using UnityEngine;
 
-namespace Still.GOAP.Planner
+namespace Still.Goap
 {
+    ///<summary>
+    ///ゴールから逆向きにA*で探索してアクション列を作る
+    ///</summary>
     public static class Planner
     {
-        public static Stack<IAction> Planning(List<IAction> usableActions,
-                                              Dictionary<string, int> currentWorldStates,
-                                              Dictionary<string, Condition> highestPriorityGoal)
+        ///<summary>
+        ///ゴールまでのアクション列を作る（見つからなければnull）
+        ///</summary>
+        public static Stack<IAction> Planning(IReadOnlyList<IAction> usableActions,
+                                              IReadOnlyDictionary<WorldStateType, int> currentStates,
+                                              IReadOnlyDictionary<WorldStateType, Condition> goal)
         {
-            var open = new PriorityQueue<Node>();
+            var open = new PriorityQueue<Node, int>();
             var closed = new HashSet<string>();
 
-            var start = new Node(null, highestPriorityGoal, null, 0,
-                                CountUnsatisfiedConditions(currentWorldStates, highestPriorityGoal));
+            var start = new Node(null, new Dictionary<WorldStateType, Condition>(goal.ToDictionary(kv => kv.Key, kv => kv.Value)),
+                                 null, 0, CountUnsatisfiedConditions(currentStates, goal));
             open.Enqueue(start, start.F);
 
             while (open.Count > 0)
             {
                 var current = open.Dequeue();
                 var hash = StateHash(current.SubGoals);
+                if (!closed.Add(hash)) continue;
 
-                if (closed.Contains(hash)) continue;
-                closed.Add(hash);
-
-                // ゴール到達チェック
-                if (Evalution.IsSatisfied(currentWorldStates, current.SubGoals))
+                if (Evaluation.IsSatisfied(currentStates, current.SubGoals))
                 {
                     return ReconstructPath(current);
                 }
 
-                // アクション展開
                 foreach (var action in usableActions)
                 {
                     if (!CanSatisfyAnyGoal(action, current.SubGoals)) continue;
 
-                    var newSubGoal = ApplyRegression(current.SubGoals, action);
-                    var newHash = StateHash(newSubGoal);
+                    var subGoals = ApplyRegression(current.SubGoals, action);
+                    if (closed.Contains(StateHash(subGoals))) continue;
 
-                    if (closed.Contains(newHash)) continue;
-
-                    int newG = current.G + action.ActionCost;
-                    int h = CountUnsatisfiedConditions(currentWorldStates, newSubGoal);
-                    var nextNode = new Node(current, newSubGoal, action, newG, h);
-                    open.Enqueue(nextNode, nextNode.F);
+                    var next = new Node(current, subGoals, action,
+                                        current.G + action.ActionCost,
+                                        CountUnsatisfiedConditions(currentStates, subGoals));
+                    open.Enqueue(next, next.F);
                 }
             }
 
-            Debug.LogWarning("プランニング失敗: ゴールに到達する経路が見つかりませんでした");
+            Debug.LogWarning("[Planner] ゴールに到達する経路が見つかりませんでした");
             return null;
         }
 
-        /// <summary>
-        /// アクションの効果がサブゴールの少なくとも1つを満たせるかチェック
-        /// </summary>
-        private static bool CanSatisfyAnyGoal(IAction action, Dictionary<string, Condition> subGoals)
+        // アクションの効果がサブゴールの少なくとも1つを満たせるか
+        private static bool CanSatisfyAnyGoal(IAction action, IReadOnlyDictionary<WorldStateType, Condition> subGoals)
         {
             foreach (var effect in action.Effects)
             {
-                if (subGoals.ContainsKey(effect.Key) &&
-                    IsSingleConditionMet(effect.Value, subGoals[effect.Key]))
-                {
-                    return true;
-                }
+                if (subGoals.TryGetValue(effect.Key, out var condition) && condition.IsSatisfiedBy(effect.Value)) return true;
             }
             return false;
         }
 
-        /// <summary>
-        /// サブゴールからアクションの効果を除去し、前提条件を追加
-        /// </summary>
-        private static Dictionary<string, Condition> ApplyRegression(
-            Dictionary<string, Condition> subGoals, IAction action)
+        // 効果で満たされるサブゴールを外し、代わりにアクションの前提条件を加える
+        private static Dictionary<WorldStateType, Condition> ApplyRegression(IReadOnlyDictionary<WorldStateType, Condition> subGoals, IAction action)
         {
-            var newSubGoals = new Dictionary<string, Condition>(subGoals);
+            var result = subGoals.ToDictionary(kv => kv.Key, kv => kv.Value);
 
-            // 効果で満たされる条件を削除
             foreach (var effect in action.Effects)
             {
-                if (newSubGoals.TryGetValue(effect.Key, out var condition) &&
-                    IsSingleConditionMet(effect.Value, condition))
+                if (result.TryGetValue(effect.Key, out var condition) && condition.IsSatisfiedBy(effect.Value))
                 {
-                    newSubGoals.Remove(effect.Key);
+                    result.Remove(effect.Key);
                 }
             }
-
-            // 前提条件を追加
             foreach (var precondition in action.Preconditions)
             {
-                newSubGoals[precondition.Key] = precondition.Value;
+                result[precondition.Key] = precondition.Value;
             }
-
-            return newSubGoals;
+            return result;
         }
 
-        /// <summary>
-        /// 単一の条件が満たされているかチェック（Evalution.IsSatisfiedのラッパー）
-        /// </summary>
-        private static bool IsSingleConditionMet(int value, Condition condition)
+        // ヒューリスティック：今のワールドステートで満たせていないサブゴールの数
+        private static int CountUnsatisfiedConditions(IReadOnlyDictionary<WorldStateType, int> currentStates,
+                                                      IReadOnlyDictionary<WorldStateType, Condition> subGoals)
         {
-            var state = new Dictionary<string, int> { { "temp", value } };
-            var cond = new Dictionary<string, Condition> { { "temp", condition } };
-            return Evalution.IsSatisfied(state, cond);
+            return subGoals.Count(goal => !currentStates.TryGetValue(goal.Key, out int value) || !goal.Value.IsSatisfiedBy(value));
         }
 
-        /// <summary>
-        /// 満たされていない条件の数をカウント
-        /// </summary>
-        private static int CountUnsatisfiedConditions(Dictionary<string, int> currentStates,
-                                                     Dictionary<string, Condition> subGoals)
-        {
-            return subGoals.Count(goal => !IsSingleConditionMet(
-                currentStates.GetValueOrDefault(goal.Key, int.MinValue), goal.Value));
-        }
-
-        /// <summary>
-        /// 状態のハッシュ文字列を生成
-        /// </summary>
-        private static string StateHash(Dictionary<string, Condition> subGoals)
+        private static string StateHash(IReadOnlyDictionary<WorldStateType, Condition> subGoals)
         {
             return string.Join("|", subGoals.OrderBy(kv => kv.Key)
                 .Select(kv => $"{kv.Key}={kv.Value.Comparison}:{kv.Value.Value}"));
         }
 
-        /// <summary>
-        /// アクション経路を再構築
-        /// </summary>
-        private static Stack<IAction> ReconstructPath(Node goalNode)
+        // 逆向き探索なので、ゴール側から辿った順がそのまま実行順になる
+        private static Stack<IAction> ReconstructPath(Node node)
         {
             var actions = new List<IAction>();
-            var current = goalNode;
-
-            while (current.Parent != null && current.Action != null)
+            for (var current = node; current.Action != null; current = current.Parent)
             {
                 actions.Add(current.Action);
-                current = current.Parent;
             }
-            Debug.Log($"最適パスを発見 : 累計コスト{goalNode.F} \n{string.Join(" -> ", actions)}");
+            Debug.Log($"[Planner] 最適パス（コスト{node.G}）: {string.Join(" -> ", actions)}");
 
-            // リストは既に正しい順序（開始→ゴール）なので、そのままStackに詰める
             var path = new Stack<IAction>();
-            for (int i = actions.Count - 1; i >= 0; i--)
-            {
-                path.Push(actions[i]);
-            }
+            for (int i = actions.Count - 1; i >= 0; i--) path.Push(actions[i]);
             return path;
         }
 
-        public class Node
+        private sealed class Node
         {
-            public Node Parent;
-            public Dictionary<string, Condition> SubGoals;
-            public IAction Action;
-            public int G;
-            public int H;
-            public int F => G + H;
-
-            public Node(Node parent, Dictionary<string, Condition> subGoals, IAction action, int g, int h)
+            public Node(Node parent, Dictionary<WorldStateType, Condition> subGoals, IAction action, int g, int h)
             {
                 Parent = parent;
                 SubGoals = subGoals;
@@ -166,27 +121,14 @@ namespace Still.GOAP.Planner
                 G = g;
                 H = h;
             }
-        }
 
-        public class PriorityQueue<T>
-        {
-            private List<(T item, int priority)> elements = new();
-            public int Count => elements.Count;
+            public readonly Node Parent;
+            public readonly Dictionary<WorldStateType, Condition> SubGoals;
+            public readonly IAction Action;
+            public readonly int G;
+            public readonly int H;
 
-            public void Enqueue(T item, int priority) => elements.Add((item, priority));
-
-            public T Dequeue()
-            {
-                int index = 0;
-                for (int i = 1; i < elements.Count; i++)
-                {
-                    if (elements[i].priority < elements[index].priority)
-                        index = i;
-                }
-                var best = elements[index].item;
-                elements.RemoveAt(index);
-                return best;
-            }
+            public int F => G + H;
         }
     }
 }

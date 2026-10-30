@@ -1,63 +1,87 @@
-﻿using Cysharp.Threading.Tasks;
-using Still.Camera.Model;
-using Still.Player.View;
-using Unity.Cinemachine;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using R3;
 using UnityEngine;
+using VContainer.Unity;
 
-public class PlayerFovPresenter
+namespace Still.Player
 {
-    private PlayerView _playerView;
-    private CameraView _cameraView;
-    private FieldOfViewModel _fovModel;
-    private CinemachineCamera _cinemachineCamera;
-
-    public PlayerFovPresenter(PlayerView playerView, CameraView cameraView, FieldOfViewModel fovModel)
+    ///<summary>
+    ///視野角をカメラへ反映し、ダッシュ中は広げる
+    ///</summary>
+    public sealed class PlayerFovPresenter : IInitializable, IDisposable
     {
-        _playerView = playerView;
-        _cameraView = cameraView;
-        _fovModel = fovModel;
+        private const float TransitionSeconds = 0.5f;
 
-        _cinemachineCamera = _cameraView.GetComponent<CinemachineCamera>();
-        _playerView.OnDashEvent += () => ModifyFOV(80);
-        _playerView.OnDashCancelEvent +=  ResetFOV;
-    }
-    public void UpdateFOV()
-    {
-        _cinemachineCamera.Lens.FieldOfView = _fovModel.FOV;
-    }
-
-    public void ModifyFOV(float newFOV)
-    {
-        SmoothChangeFOV(newFOV, 0.5f).Forget();
-    }
-
-    public void ResetFOV()
-    {
-        SmoothChangeFOV(_fovModel.DefaultFOV, 0.5f).Forget();
-    }
-
-    private async UniTask SmoothChangeFOV(float targetFOV, float duration)
-    {
-        float startFOV = _fovModel.FOV; // 現在のFOVを保存
-        float elapsed = 0f; // 経過時間
-
-        while (elapsed < duration)
+        public PlayerFovPresenter(PlayerView playerView, CameraView cameraView, FieldOfViewEntity fov, PlayerConfig config)
         {
-            // 経過時間を更新
-            elapsed += Time.deltaTime;
-            // 経過時間の割合を計算
-            var t = elapsed / duration;
-            // FOVを線形補間で更新
-            _fovModel.FOV = Mathf.Lerp(startFOV, targetFOV, t);
-            // 次のフレームまで待機
-            await UniTask.Yield();
+            _playerView = playerView;
+            _cameraView = cameraView;
+            _fov = fov;
+            _config = config;
         }
 
-        _fovModel.FOV = targetFOV; // 最終的に目標FOVに設定
-    }
-    public void Dispose()
-    {
-        _playerView.OnDashEvent -= () => ModifyFOV(80);
-        _playerView.OnDashCancelEvent -= ResetFOV;
+        private IDisposable _subscription;
+        private CancellationTokenSource _transitionCts;
+
+        private readonly PlayerView _playerView;
+        private readonly CameraView _cameraView;
+        private readonly FieldOfViewEntity _fov;
+        private readonly PlayerConfig _config;
+
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize()
+        {
+            _subscription = _fov.Fov.Subscribe(_cameraView.SetFieldOfView);
+            _playerView.OnDashEvent += HandleDash;
+            _playerView.OnDashCancelEvent += HandleDashCancel;
+        }
+
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
+        public void Dispose()
+        {
+            // 以前はラムダで購読していたため解除できていなかった
+            _playerView.OnDashEvent -= HandleDash;
+            _playerView.OnDashCancelEvent -= HandleDashCancel;
+            _subscription?.Dispose();
+            CancelTransition();
+        }
+
+        private void HandleDash() => StartTransition(_config.DashFOV);
+
+        private void HandleDashCancel() => StartTransition(_fov.DefaultFov);
+
+        private void StartTransition(float target)
+        {
+            // 連打で複数の補間が同時に走って値が揺れないよう、前の補間を止める
+            CancelTransition();
+            _transitionCts = new CancellationTokenSource();
+            TransitionAsync(target, _transitionCts.Token).Forget();
+        }
+
+        private void CancelTransition()
+        {
+            _transitionCts?.Cancel();
+            _transitionCts?.Dispose();
+            _transitionCts = null;
+        }
+
+        private async UniTaskVoid TransitionAsync(float target, CancellationToken ct)
+        {
+            float from = _fov.Fov.CurrentValue;
+            float elapsed = 0f;
+            while (elapsed < TransitionSeconds)
+            {
+                elapsed += Time.deltaTime;
+                _fov.SetFov(Mathf.Lerp(from, target, elapsed / TransitionSeconds));
+                await UniTask.Yield(ct);
+            }
+            _fov.SetFov(target);
+        }
     }
 }

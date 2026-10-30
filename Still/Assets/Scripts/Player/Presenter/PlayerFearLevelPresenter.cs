@@ -1,35 +1,41 @@
-﻿using Still.Enum.WorldStates;
-using Still.GOAP.WorldState;
-using Still.Player.Model;
-namespace Still.Player.Presenter
+using System;
+using R3;
+using Still.Common;
+using VContainer.Unity;
+
+namespace Still.Player
 {
-    public class PlayerFearLevelPresenter
+    ///<summary>
+    ///SAN値から求めた恐怖レベルをゴーストのワールドステートへ渡す
+    ///</summary>
+    // 以前はWorldStatesManagerとこのクラスが別々の閾値で同じキーを書き換えていた。計算はSanValueに一本化した
+    public sealed class PlayerFearLevelPresenter : IInitializable, IDisposable
     {
-        private SANValueModel _sanModel;
-        private WorldStates _worldStates;
-        public PlayerFearLevelPresenter(SANValueModel sanModel, WorldStates worldStates)
+        public PlayerFearLevelPresenter(PlayerStatusEntity status, IWorldStates worldStates)
         {
-            _sanModel = sanModel;
+            _status = status;
             _worldStates = worldStates;
-
-            _sanModel.OnSANChanged += LevelUpFearLevel;
         }
 
-        public void LevelUpFearLevel(float value)
+        private IDisposable _subscription;
+
+        private readonly PlayerStatusEntity _status;
+        private readonly IWorldStates _worldStates;
+
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize()
         {
-            int fearLevel = 0;
-            if (value < 10) fearLevel = 4;
-            else if (value < 30) fearLevel = 3;
-            else if (value < 60) fearLevel = 2;
-            else if (value < 80) fearLevel = 1;
-            else fearLevel = 0;
-
-            _worldStates.ModifyState(WorldStateType.FearLevel.ToString(), fearLevel);
-
+            _subscription = _status.San
+                .Select(san => san.ToFearLevel())
+                .DistinctUntilChanged()
+                .Subscribe(level => _worldStates.ModifyState(WorldStateType.FearLevel, level));
         }
-        public void Dispose()
-        {
-            _sanModel.OnSANChanged -= LevelUpFearLevel;
-        }
+
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
+        public void Dispose() => _subscription?.Dispose();
     }
 }

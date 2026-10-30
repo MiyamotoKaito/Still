@@ -1,189 +1,151 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using Still.GOAP.Action;
-using Still.GOAP.Agent;
-using Still.GOAP.Goal.Config;
-using Still.GOAP.WorldState;
-using UniRx;
+using Still.Common;
 using UnityEngine;
-namespace Still.GOAP.Planner.Executor
+using VContainer.Unity;
+
+namespace Still.Goap
 {
-    public class GoapExecutor
+    ///<summary>
+    ///最優先ゴールのプランを立て、アクションを毎フレーム実行する
+    ///</summary>
+    public sealed class GoapExecutor : IStartable, ITickable
     {
-        public KeyValuePair<SubGoalConfig, int> CurrentGoal => _currentGoal.Value;
-        public Dictionary<SubGoalConfig, int> Goals => _goals;
-        /// <summary>全てのゴールをまとめる辞書</summary>
-        private readonly Dictionary<SubGoalConfig, int> _goals = new();
-        /// <summary>現在最も優先度が高いゴール</summary>
-        private ReactiveProperty<KeyValuePair<SubGoalConfig, int>> _currentGoal = new();
+        public GoapExecutor(GhostActionData actionData, IWorldStates worldStates,
+                            List<SubGoalConfig> goals, IAgentController agent)
+        {
+            _usableActions = actionData.GhostActions;
+            _worldStates = worldStates;
+            _agent = agent;
+            foreach (var goal in goals) _goals[goal] = goal.AchievedPriority;
+        }
+
+        ///<summary>現在追っているゴール</summary>
+        public SubGoalConfig CurrentGoal => _currentGoal;
+
+        private SubGoalConfig _currentGoal;
+        private int _currentGoalPriority;
         private IAction _currentAction;
         private Stack<IAction> _routeActions = new();
-        private readonly List<IAction> _usableActions = new();
-        private WorldStates _worldStates;
-        // 初期化完了フラグ
-        private bool _isStarted = false;
+        private bool _isStarted;
 
-        public GoapExecutor(List<IAction> usableActions, WorldStates worldStates, List<SubGoalConfig> goals)
+        private readonly IReadOnlyList<IAction> _usableActions;
+        private readonly IWorldStates _worldStates;
+        private readonly IAgentController _agent;
+        private readonly Dictionary<SubGoalConfig, int> _goals = new();
+
+        ///<summary>
+        ///最優先ゴールを決めてプランニングを始める
+        ///</summary>
+        public void Start()
         {
-            if (usableActions == null || worldStates == null || goals == null)
-                Debug.Log("なんか入ってない");
-
-            Debug.Log("Executorが呼ばれた");
-
-            _usableActions = usableActions;
-            _worldStates = worldStates;
-            _goals = InitGoals(goals);
-            _currentGoal
-                .Where(x => x.Key != null)
-                .Subscribe(x =>
-                {
-                    if (_isStarted)
-                    {
-                        Plan(x.Key);
-                    }
-                });
-
-        }
-        /// <summary>
-        /// ゴールの初期化
-        /// </summary>
-        /// <param name="goals"></param>
-        /// <returns></returns>
-        private Dictionary<SubGoalConfig, int> InitGoals(List<SubGoalConfig> goals)
-        {
-            var dic = new Dictionary<SubGoalConfig, int>();
-            foreach (var goal in goals)
-            {
-                dic.Add(goal, goal.AchievedPriority);
-            }
-            return dic;
-        }
-        public void RefreshGoal()
-        {
-            SetGoalPriority();
             _isStarted = true;
-            Debug.Log("[GoapExecutor] プランニングを開始します。");
+            SelectBestGoal(forcePlan: true);
         }
-        public void SetAction(IAgentController controller)
+
+        ///<summary>
+        ///アクションを1フレーム分進める
+        ///</summary>
+        public void Tick()
         {
             if (!_isStarted) return;
 
-            // アクションが設定されていなかったらリターン
             if (_currentAction == null && _routeActions.Count == 0)
             {
-                // ゴールが設定されていた場合そのまま再計画
-                if (_currentGoal.Value.Key != null)
-                {
-                    Plan(_currentGoal.Value.Key);
-                }
+                // 前のプランを使い切ったら、同じゴールで立て直す
+                if (_currentGoal != null) Plan(_currentGoal);
                 return;
             }
-            // アクションを取り出してアクションをセットする
-            if (_currentAction == null)
+
+            // アクション内でワールドステートが変わると、その場でゴールが切り替わって計画が破棄されることがある。
+            // 実行中のアクションを手元に持ち、差し替わっていたら以降の処理をしない
+            var action = _currentAction;
+            if (action == null)
             {
-                _currentAction = _routeActions.Pop();
-                _currentAction.SetTarget(controller);
+                action = _routeActions.Pop();
+                _currentAction = action;
+                action.SetTarget(_agent);
+                if (_currentAction != action) return;
             }
-            // 実行中に前提条件が維持されているか確認
-            if (!_currentAction.Execute(controller))
+
+            if (!action.Execute(_agent))
             {
-                Debug.LogWarning($"[Executor] アクション {_currentAction.GetType().Name} の実行条件が破綻しました。");
+                if (_currentAction != action) return;
+                Debug.LogWarning($"[GoapExecutor] {action} の実行条件が崩れたので計画を破棄します");
                 CancelCurrentPlan();
-                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
-                SetGoalPriority();
+                UpdateGoalPriority(_currentGoal, _currentGoal.AchievedPriority);
                 return;
             }
-            // アクションの実行
-            if (_currentAction.Perform(controller))
-            {
-                var effects = _currentAction.Effects;
-                _currentAction = null;
-                ApplyEffects(effects);
-                CheckCurrentGoalStatus();
-            }
+
+            if (!action.Perform(_agent) || _currentAction != action) return;
+
+            _currentAction = null;
+            foreach (var effect in action.Effects) _worldStates.ModifyState(effect.Key, effect.Value);
+            CheckCurrentGoalStatus();
         }
-        /// <summary>
-        /// ゴールの優先度を変更する
-        /// </summary>
-        /// <param name="config"></param>
-        /// <param name="priority"></param>
-        public void UpdateGoalPriority(SubGoalConfig config, int priority)
+
+        ///<summary>
+        ///ゴールの現在の優先度を取得する
+        ///</summary>
+        public int GetPriority(SubGoalConfig goal) => _goals[goal];
+
+        ///<summary>
+        ///ゴールの優先度を変更し、最優先ゴールを選び直す
+        ///</summary>
+        public void UpdateGoalPriority(SubGoalConfig goal, int priority)
         {
-            _goals[config] = priority; // 追加または更新
-            SetGoalPriority();
+            _goals[goal] = priority;
+            SelectBestGoal(forcePlan: false);
         }
-        /// <summary>
-        /// 効果をワールドステートに反映する
-        /// </summary>
-        /// <param name="effects"></param>
-        public void ApplyEffects(Dictionary<string, int> effects)
-        {
-            foreach (var effect in effects)
-            {
-                _worldStates.ModifyState(effect.Key, effect.Value);
-            }
-        }
-        /// <summary>
-        /// 計画する
-        /// </summary>
-        /// <param name="goalConfig"></param>
-        private void Plan(SubGoalConfig goalConfig)
+
+        private void Plan(SubGoalConfig goal)
         {
             CancelCurrentPlan();
 
-            // 現在のワールドステートを取得
-            var currentWorldStates = _worldStates.CurrentStates;
-            // ゴールの条件を取得
-            var goal = goalConfig.GetGoalsConditions();
-            // 計画する
-            var plan = Planner.Planning(_usableActions, currentWorldStates, goal);
-
+            var plan = Planner.Planning(_usableActions, _worldStates.CurrentStates, goal.GetGoalsConditions());
             if (plan != null)
             {
                 _routeActions = plan;
-                Debug.Log($"{goalConfig.name} へのプラン作成成功。ステップ数: {plan.Count}");
+                Debug.Log($"[GoapExecutor] {goal.name} のプランを作成（{plan.Count}ステップ）");
+                return;
             }
-            else
-            {
-                Debug.LogWarning($"{goalConfig.name} へのパスが見つかりませんでした。");
-                UpdateGoalPriority(_currentGoal.Value.Key, _currentGoal.Value.Key.AchievedPriority);
-            }
+
+            Debug.LogWarning($"[GoapExecutor] {goal.name} へのプランが見つからないので優先度を下げます");
+            UpdateGoalPriority(goal, goal.AchievedPriority);
         }
-        /// <summary>
-        /// 現在のゴールが達成されているか確認して優先度を操作する
-        /// </summary>
+
         private void CheckCurrentGoalStatus()
         {
-            var config = _currentGoal.Value.Key;
-            if (config == null) return;
+            if (_currentGoal == null) return;
+            if (!Evaluation.IsSatisfied(_worldStates.CurrentStates, _currentGoal.GetGoalsConditions())) return;
 
-            // Evalutionクラスなどの判定メソッドを使って現在の状態をチェック
-            if (Evalution.IsSatisfied(_worldStates.CurrentStates, config.GetGoalsConditions()))
-            {
-                Debug.Log($"[Executor] アクションの結果、ゴール {config.name} を達成しました");
-                UpdateGoalPriority(config, config.AchievedPriority);
-            }
+            Debug.Log($"[GoapExecutor] ゴール {_currentGoal.name} を達成");
+            UpdateGoalPriority(_currentGoal, _currentGoal.AchievedPriority);
         }
-        /// <summary>
-        /// 今実行しているプランを破棄する
-        /// </summary>
+
         private void CancelCurrentPlan()
         {
             _currentAction = null;
             _routeActions.Clear();
         }
-        /// <summary>
-        /// 優先度が最も高いゴールを設定する
-        /// </summary>
-        private void SetGoalPriority()
+
+        private void SelectBestGoal(bool forcePlan)
         {
-            var bestGoal = _goals.OrderByDescending(x => x.Value).First();
-            //　今現在一番優先度が高いゴールではなかったら設定する
-            if (_currentGoal.Value.Value != bestGoal.Value)
-            {
-                Debug.Log($"最も高いゴールを設定{bestGoal.Key}{bestGoal.Value}");
-                _currentGoal.Value = bestGoal;
-            }
+            if (_goals.Count == 0) return;
+
+            var best = _goals.OrderByDescending(x => x.Value).First();
+            // 同点なら今のゴールを続ける（以前は優先度の値だけを比べていたため、同点の別ゴールへ切り替わらなかった）
+            var next = _currentGoal != null && _goals[_currentGoal] >= best.Value ? _currentGoal : best.Key;
+            int nextPriority = _goals[next];
+
+            bool changed = next != _currentGoal || nextPriority != _currentGoalPriority;
+            _currentGoal = next;
+            _currentGoalPriority = nextPriority;
+
+            if (!_isStarted || (!changed && !forcePlan)) return;
+
+            Debug.Log($"[GoapExecutor] 最優先ゴール: {next.name}（優先度{nextPriority}）");
+            Plan(next);
         }
     }
 }

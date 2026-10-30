@@ -1,0 +1,26 @@
+{
+    "name": "Still.Player",
+    "rootNamespace": "Still.Player",
+    "references": [
+        "Still.Common",
+        "Still.Input",
+        "VContainer",
+        "UniTask",
+        "R3.Unity",
+        "Unity.InputSystem",
+        "Unity.Cinemachine",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

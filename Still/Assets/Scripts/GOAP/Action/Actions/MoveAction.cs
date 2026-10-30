@@ -1,26 +1,36 @@
-﻿using Still.GOAP.Agent;
-using UnityEngine;
-namespace Still.GOAP.Action
+using System;
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///現在のターゲットまで移動する
+    ///</summary>
+    [Serializable]
     public class MoveAction : ActionBase
     {
-        public override bool Perform(IAgentController agent)
+        ///<summary>
+        ///ターゲットが無くなったら破綻とみなす
+        ///</summary>
+        public override bool Execute(IAgentController agent)
         {
-            if (agent.IsArrived)
-            {
-                Debug.Log("目的地にたどり着いた");
-                return true;
-            }
-            return false;
+            return agent.CurrentTarget != null && base.Execute(agent);
         }
 
+        ///<summary>
+        ///ターゲットに着いたら完了
+        ///</summary>
+        public override bool Perform(IAgentController agent)
+        {
+            return agent.IsArrived;
+        }
+
+        ///<summary>
+        ///ターゲットへの移動を開始する
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
-            _targetPos = agent.CurrentTarget;
-            agent.SetMoveDestination(_targetPos.transform.position);
+            if (agent.CurrentTarget == null) return;
+            agent.SetMoveDestination(agent.CurrentTarget.position);
         }
-        private GameObject _targetPos;
     }
 }

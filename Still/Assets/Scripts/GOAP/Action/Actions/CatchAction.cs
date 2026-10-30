@@ -1,23 +1,44 @@
-﻿using Still.GOAP.Agent;
+using System;
+using Still.Common;
+using Template.Editor;
 using UnityEngine;
-namespace Still.GOAP.Action
+using VContainer;
+
+namespace Still.Goap
 {
-    [System.Serializable]
+    ///<summary>
+    ///プレイヤーを捕まえる
+    ///</summary>
+    [Serializable]
     public class CatchAction : ActionBase
     {
         [SerializeReference, SubclassSelector]
         private IEvent _catchEvent;
+
+        ///<summary>
+        ///演出に依存を注入する
+        ///</summary>
+        [Inject]
+        public void InjectEvent(IObjectResolver resolver)
+        {
+            // 演出はSerializeReferenceの値なのでコンテナが生成できず、ここで注入する
+            if (_catchEvent != null) resolver.Inject(_catchEvent);
+        }
+
+        ///<summary>
+        ///捕まえた演出を開始して即完了する
+        ///</summary>
         public override bool Perform(IAgentController agent)
         {
-            Debug.Log("プレイヤーをキャッチ");
-            _catchEvent.Initialize();
-            _catchEvent.OnEvent();
+            _catchEvent?.Play();
             return true;
         }
 
+        ///<summary>
+        ///開始時の処理はない
+        ///</summary>
         public override void SetTarget(IAgentController agent)
         {
-            Debug.Log($"{this.GetType().Name}アクション開始");
         }
     }
 }
