@@ -90,6 +90,14 @@ namespace Still.Goap
         public int GetPriority(SubGoalConfig goal) => _goals[goal];
 
         ///<summary>
+        ///いまの計画を捨て、次のフレームで同じゴールの計画を立て直させる
+        ///</summary>
+        public void Replan()
+        {
+            CancelCurrentPlan();
+        }
+
+        ///<summary>
         ///ゴールの優先度を変更し、最優先ゴールを選び直す
         ///</summary>
         public void UpdateGoalPriority(SubGoalConfig goal, int priority)
