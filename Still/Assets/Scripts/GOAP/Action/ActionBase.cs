@@ -8,6 +8,7 @@ namespace Still.Goap
     ///<summary>
     ///アクションの基底。前提条件と効果はインスペクタで設定する
     ///</summary>
+    [System.Serializable]
     public abstract class ActionBase : IAction
     {
         ///<summary>実行に必要な条件</summary>

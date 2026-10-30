@@ -32,7 +32,7 @@ namespace Still.Utility
         public static void RegisterSceneComponents<T>(this IContainerBuilder builder) where T : Component
         {
             builder.Register(_ => new SceneComponentList<T>(
-                Object.FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None)), Lifetime.Singleton);
+                Object.FindObjectsByType<T>(FindObjectsInactive.Include)), Lifetime.Singleton);
         }
     }
 }
