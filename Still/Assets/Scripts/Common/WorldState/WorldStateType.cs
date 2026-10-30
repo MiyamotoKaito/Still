@@ -36,5 +36,8 @@ namespace Still.Common
         GhostDetected,
         FocusMe,
         Teleport,
+
+        // ゴーストがプレイヤーに気づいた（見つめ終えた）
+        Noticed,
     }
 }

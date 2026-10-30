@@ -18,6 +18,7 @@ MonoBehaviour:
   - rid: 622163703035068630
   - rid: 622163703035068634
   - rid: 7538373351181910093
+  - rid: 3903915687839269090
   - rid: 6149759955516522634
   - rid: 6149759955516522635
   - rid: 6149760095779029194
@@ -70,6 +71,22 @@ MonoBehaviour:
         - _key: 10
           _value: 1
         _actionCost: 2
+    - rid: 3903915687839269090
+      type: {class: NoticeAction, ns: Still.Goap, asm: Still.Goap}
+      data:
+        _preconditions:
+        - _key: 0
+          _value:
+            Value: 1
+            Comparison: 0
+        - _key: 20
+          _value:
+            Value: 0
+            Comparison: 0
+        _effects:
+        - _key: 20
+          _value: 1
+        _actionCost: 1
     - rid: 6149759955516522610
       type: {class: LookAroundAction, ns: Still.Goap, asm: Still.Goap}
       data:
@@ -87,6 +104,10 @@ MonoBehaviour:
       data:
         _preconditions:
         - _key: 0
+          _value:
+            Value: 1
+            Comparison: 0
+        - _key: 20
           _value:
             Value: 1
             Comparison: 0
@@ -196,6 +217,10 @@ MonoBehaviour:
           _value:
             Value: 0
             Comparison: 5
+        - _key: 0
+          _value:
+            Value: 0
+            Comparison: 0
         _effects:
         - _key: 3
           _value: 1

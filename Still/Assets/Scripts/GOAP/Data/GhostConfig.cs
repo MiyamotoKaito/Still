@@ -22,6 +22,12 @@ namespace Still.Goap
         [Header("<color=yellow>LookAroundAction</color>")]
         public float Duration;
 
+        [Header("<color=yellow>NoticeAction</color>")]
+        [Tooltip("見つけてから追い始めるまで、無言で見つめる秒数")]
+        public float NoticeSeconds = 1.75f;
+        [Tooltip("見つめている間にプレイヤーの方へ向き直る速さ（度/秒）")]
+        public float NoticeTurnSpeed = 90f;
+
         [Header("<color=yellow>視界</color>")]
         [Tooltip("プレイヤーを見失ってから PlayerVisible を0に戻すまでの秒数")]
         public float LoseSightSeconds = 5f;

@@ -71,6 +71,7 @@ namespace Still.Goap
         ///</summary>
         public void SetMoveDestination(Vector3 destination)
         {
+            _navMeshAgent.updateRotation = true;
             _navMeshAgent.isStopped = false;
             _navMeshAgent.SetDestination(destination);
         }
@@ -92,6 +93,22 @@ namespace Still.Goap
             _navMeshAgent.velocity = Vector3.zero;
             // ResetPathだけだと次フレームに慣性で少し進むため、次の位置も固定する
             _navMeshAgent.nextPosition = transform.position;
+        }
+
+        ///<summary>
+        ///指定位置の方へ水平に向き直る（移動を再開するまで自動の向き変更を止める）
+        ///</summary>
+        public void LookAt(Vector3 position, float degreesPerSecond)
+        {
+            // NavMeshAgentが向きを上書きしないよう、自分で回している間は止めておく
+            _navMeshAgent.updateRotation = false;
+
+            var direction = position - transform.position;
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f) return;
+
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, Quaternion.LookRotation(direction), degreesPerSecond * Time.deltaTime);
         }
 
         private void Awake()

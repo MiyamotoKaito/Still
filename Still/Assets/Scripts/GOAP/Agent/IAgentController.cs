@@ -47,5 +47,10 @@ namespace Still.Goap
         ///その場で止まる
         ///</summary>
         void StopMove();
+
+        ///<summary>
+        ///指定位置の方へ水平に向き直る（移動を再開するまで自動の向き変更を止める）
+        ///</summary>
+        void LookAt(Vector3 position, float degreesPerSecond);
     }
 }

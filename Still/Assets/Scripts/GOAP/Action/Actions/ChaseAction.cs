@@ -33,6 +33,8 @@ namespace Still.Goap
             agent.SetSpeed(agent.Config.GhostMoveSpeed);
             _audio.Stop(agent.AudioSource);
             WorldStates.ModifyState(WorldStateType.IsChasing, 0);
+            // 次に見つけたときも、まず見つめるところから始める
+            WorldStates.ModifyState(WorldStateType.Noticed, 0);
             return false;
         }
 
