@@ -1,10 +1,15 @@
 ﻿<Solution>
-  <Project Path="UniRx.csproj" />
-  <Project Path="MagicaClothV2.csproj" />
-  <Project Path="MagicaClothV2.Editor.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="UniRx.Examples.csproj" />
+  <Project Path="Still.Common.csproj" />
+  <Project Path="Still.Player.csproj" />
+  <Project Path="Still.Container.Editor.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Still.Goap.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
-  <Project Path="MagicaCloth2Example.csproj" />
+  <Project Path="Still.Utility.csproj" />
+  <Project Path="Still.GameFlow.csproj" />
+  <Project Path="Still.Escape.csproj" />
+  <Project Path="Still.Input.csproj" />
+  <Project Path="Still.Container.csproj" />
+  <Project Path="Still.Title.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
 </Solution>
