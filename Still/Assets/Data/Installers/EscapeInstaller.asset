@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4750d95171b7942429cb48a5e09dfec4, type: 3}
   m_Name: EscapeInstaller
   m_EditorClassIdentifier: Still.Escape::Still.Escape.EscapeInstaller
-  _requiredItemCount: 3
+  _missionConfig: {fileID: 11400000, guid: a0b72ed49de78db45a3907da64d4f8d1, type: 2}

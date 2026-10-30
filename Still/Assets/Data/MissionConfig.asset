@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0810b397d3e89494397ebc0ecdc5899a, type: 3}
+  m_Name: MissionConfig
+  m_EditorClassIdentifier: Still.Escape::Still.Escape.MissionConfig
+  _stages:
+  - _title: '1F: Search'
+    _onStart: []
+    _objectives:
+    - rid: 3903915687839269102
+    - rid: 3903915687839269103
+    - rid: 3903915687839269104
+    _onComplete:
+    - rid: 3903915687839269105
+    - rid: 3903915687839269106
+  - _title: '2F: Photos'
+    _onStart:
+    - rid: 3903915687839269107
+    - rid: 3903915687839269108
+    - rid: 3903915687839269109
+    - rid: 3903915687839269110
+    _objectives:
+    - rid: 3903915687839269111
+    _onComplete: []
+  - _title: Order 3-1-4-2
+    _onStart: []
+    _objectives:
+    - rid: 3903915687839269112
+    _onComplete:
+    - rid: 3903915687839269113
+    - rid: 3903915687839269114
+  - _title: Kids Room
+    _onStart: []
+    _objectives:
+    - rid: 3903915687839269115
+    _onComplete:
+    - rid: 3903915687839269116
+    - rid: 3903915687839269117
+  - _title: Get the key
+    _onStart: []
+    _objectives:
+    - rid: 3903915687839269118
+    _onComplete:
+    - rid: 3903915687839269119
+  _exitDoorId: Exit
+  _clearMessage: Escape!!
+  references:
+    version: 2
+    RefIds:
+    - rid: 3903915687839269102
+      type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Tv
+        _targetId: Tv
+    - rid: 3903915687839269103
+      type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: PlayMusic
+        _targetId: Music
+    - rid: 3903915687839269104
+      type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Book
+        _targetId: Book
+    - rid: 3903915687839269105
+      type: {class: UnlockDoorEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _doorId: Stairs
+    - rid: 3903915687839269106
+      type: {class: PlaySeEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _soundName: DoorOpen
+    - rid: 3903915687839269107
+      type: {class: RevealTargetEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _targetId: Photo1
+    - rid: 3903915687839269108
+      type: {class: RevealTargetEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _targetId: Photo2
+    - rid: 3903915687839269109
+      type: {class: RevealTargetEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _targetId: Photo3
+    - rid: 3903915687839269110
+      type: {class: RevealTargetEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _targetId: Photo4
+    - rid: 3903915687839269111
+      type: {class: CollectObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Photos
+        _targetIds:
+        - Photo1
+        - Photo2
+        - Photo3
+        - Photo4
+    - rid: 3903915687839269112
+      type: {class: SequenceObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Paintings
+        _orderedTargetIds:
+        - Painting3
+        - Painting1
+        - Painting4
+        - Painting2
+        _mistakeSanDamage: 10
+        _mistakeSe: Knock
+    - rid: 3903915687839269113
+      type: {class: UnlockDoorEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _doorId: KidsRoom
+    - rid: 3903915687839269114
+      type: {class: PlaySeEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _soundName: DoorOpen
+    - rid: 3903915687839269115
+      type: {class: RitualObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Music+Light
+        _activatorTargetId: Gramophone
+        _requiredLightIds:
+        - KidsRoomLight
+        _durationSeconds: 30
+    - rid: 3903915687839269116
+      type: {class: RevealTargetEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _targetId: Key
+    - rid: 3903915687839269117
+      type: {class: PlaySeEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _soundName: Laugh
+    - rid: 3903915687839269118
+      type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _label: Key
+        _targetId: Key
+    - rid: 3903915687839269119
+      type: {class: UnlockDoorEffect, ns: Still.Escape, asm: Still.Escape}
+      data:
+        _doorId: Exit
