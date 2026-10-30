@@ -1,10 +1,21 @@
+using UnityEngine;
+
 namespace Still.Escape
 {
     ///<summary>
-    ///鍵が無いと開かない出口の扉
+    ///ミッションで解錠されるまで開かないドア（出口・階段室・鍵の掛かった部屋）
     ///</summary>
     public class LockedDoor : DoorView
     {
+        ///<summary>ミッションから指定するID</summary>
+        public TargetId Id => new TargetId(_doorId);
+        ///<summary>開けたときにプレイヤーを移動させる先（階段室用。無ければnull）</summary>
+        public Transform WarpDestination => _warpDestination;
+
+        [SerializeField, Tooltip("ミッションから指定するID")] private string _doorId = "Exit";
+        [SerializeField, Tooltip("施錠中に出す操作ガイド")] private string _lockedLabel = "Locked\nCollect The Key!!";
+        [SerializeField, Tooltip("開けたときに移動させる先（階段室用）")] private Transform _warpDestination;
+
         private bool _isLocked = true;
 
         ///<summary>
@@ -27,7 +38,7 @@ namespace Still.Escape
             }
 
             _text.gameObject.SetActive(true);
-            _text.text = "Locked\nCollect The Key!!";
+            _text.text = _lockedLabel;
         }
     }
 }
