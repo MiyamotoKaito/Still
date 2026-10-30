@@ -33,6 +33,7 @@ namespace Still.Goap
             builder.RegisterEntryPoint<WorldStatesObserver>();
             builder.RegisterEntryPoint<GhostSightTicker>();
             builder.RegisterEntryPoint<KnockTimer>();
+            builder.RegisterEntryPoint<GhostFloorFollower>();
 
             builder.RegisterComponentInHierarchy<GAgent>().As<IAgentController>();
             builder.RegisterComponentInHierarchy<GhostSensorView>();
