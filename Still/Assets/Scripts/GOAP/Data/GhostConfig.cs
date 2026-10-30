@@ -35,5 +35,16 @@ namespace Still.Goap
         [Header("<color=yellow>ノック</color>")]
         [Tooltip("プレイヤーが部屋に居続けてからノックするまでの秒数")]
         public float KnockAfterSeconds = 15f;
+
+        [Header("<color=yellow>階</color>")]
+        [Tooltip("1階分の高さ。y座標をこれで割って何階かを判断する")]
+        public float FloorHeight = 10f;
+        [Tooltip("プレイヤーと違う階にいる時間がこれを超えたら、プレイヤーの階へ移る")]
+        public float FollowFloorSeconds = 20f;
+
+        ///<summary>
+        ///位置が何階か（1階=0）
+        ///</summary>
+        public int FloorOf(Vector3 position) => Mathf.RoundToInt(position.y / FloorHeight);
     }
 }
