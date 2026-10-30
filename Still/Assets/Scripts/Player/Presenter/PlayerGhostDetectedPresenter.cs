@@ -1,41 +1,41 @@
-﻿using Still.Enum.WorldStates;
-using Still.GOAP.Agent;
-using Still.GOAP.WorldState;
+using System;
+using Still.Common;
 using UnityEngine;
-namespace Still.Player.Presenter
+using VContainer.Unity;
+
+namespace Still.Player
 {
-    public class PlayerGhostDetectedPresenter
+    ///<summary>
+    ///プレイヤーがゴーストを見たことをワールドステートへ伝える
+    ///</summary>
+    public sealed class PlayerGhostDetectedPresenter : IInitializable, IDisposable
     {
-        private readonly PlayerSensorView _playerSensorView;
-        private readonly WorldStates _worldStates;
-        private int _ghostDetectedValue;
-
-        public PlayerGhostDetectedPresenter(PlayerSensorView playerSensorView, WorldStates worldStates)
+        public PlayerGhostDetectedPresenter(PlayerSensorView sensorView, IWorldStates worldStates)
         {
-            _playerSensorView = playerSensorView;
+            _sensorView = sensorView;
             _worldStates = worldStates;
-            Initialize();
         }
 
-        private void Initialize()
-        {
-            _playerSensorView.OnHitDetected += HandleGhostDetected;
-        }
+        private readonly PlayerSensorView _sensorView;
+        private readonly IWorldStates _worldStates;
 
-        private void HandleGhostDetected(RaycastHit hit)
-        {
-            if (hit.collider.TryGetComponent<GAgent>(out var agent))
-            {
-                if (_ghostDetectedValue == 1) return;
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize() => _sensorView.OnHitDetected += HandleHit;
 
-                _ghostDetectedValue = 1;
-                _worldStates.ModifyState(WorldStateType.GhostDetected.ToString(), _ghostDetectedValue);
-                Debug.Log("ゴーストを検知した");
-            }
-        }
-        public void Dispose()
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
+        public void Dispose() => _sensorView.OnHitDetected -= HandleHit;
+
+        private void HandleHit(RaycastHit hit)
         {
-            _playerSensorView.OnHitDetected -= HandleGhostDetected;
+            if (hit.collider.GetComponentInParent<IGhost>() == null) return;
+            // 以前は一度検知すると自前のフラグが立ちっぱなしで、FocusMe達成後に二度と検知できなかった
+            if (_worldStates.GetStateValue(WorldStateType.GhostDetected) == 1) return;
+
+            _worldStates.ModifyState(WorldStateType.GhostDetected, 1);
         }
     }
 }

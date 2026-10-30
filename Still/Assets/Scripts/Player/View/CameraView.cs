@@ -1,22 +1,36 @@
-﻿using UnityEngine;
-namespace Still.Player.View
+using Unity.Cinemachine;
+using UnityEngine;
+
+namespace Still.Player
 {
+    ///<summary>
+    ///プレイヤーの一人称カメラ（CinemachineCameraと同じGameObjectに付ける）
+    ///</summary>
     public class CameraView : MonoBehaviour
     {
-        public bool IsObjectHit => _isObjectHit;
+        ///<summary>レンズ設定を持つカメラ</summary>
+        public CinemachineCamera CinemachineCamera => _cinemachineCamera != null ? _cinemachineCamera : _cinemachineCamera = GetComponent<CinemachineCamera>();
 
-        private bool _isObjectHit;
+        // PresenterはスコープのAwake（このViewのAwakeより前）で購読するため、取得を遅らせる
+        private CinemachineInputAxisController InputAxisController => _inputAxisController != null ? _inputAxisController : _inputAxisController = GetComponent<CinemachineInputAxisController>();
 
-        private void CheckObjectHit(float FovLength)
+        private CinemachineCamera _cinemachineCamera;
+        private CinemachineInputAxisController _inputAxisController;
+
+        ///<summary>
+        ///視野角を反映する
+        ///</summary>
+        public void SetFieldOfView(float fov)
         {
-            if (Physics.Raycast(this.transform.position, this.transform.forward, FovLength))
-            {
-                _isObjectHit = true;
-            }
-            else
-            {
-                _isObjectHit = false;
-            }
+            CinemachineCamera.Lens.FieldOfView = fov;
+        }
+
+        ///<summary>
+        ///マウスによる視点操作の有効／無効を切り替える
+        ///</summary>
+        public void SetLookInputEnabled(bool isEnabled)
+        {
+            InputAxisController.enabled = isEnabled;
         }
     }
 }

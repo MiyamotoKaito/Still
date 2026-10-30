@@ -1,53 +1,38 @@
-﻿using Still.Player.Model;
-using Still.Player.View;
-using UnityEngine;
-namespace Still.Player.Presenter
+using System;
+using R3;
+using VContainer.Unity;
+
+namespace Still.Player
 {
-    public class PlayerStatusPresenter
+    ///<summary>
+    ///SAN値とスタミナを画面に表示する
+    ///</summary>
+    public sealed class PlayerStatusPresenter : IInitializable, IDisposable
     {
-        private readonly PlayerView _playerView;
-        private readonly StaminaView _staminaView;
-        private readonly SANView _sanView;
-        private readonly StaminaModel _staminaModel;
-        private readonly SANValueModel _sanValueModel;
-
-        public PlayerStatusPresenter(PlayerConfig config, PlayerView playerView, StaminaView staminaView, SANView sanView, StaminaModel staminaModel, SANValueModel sanValueModel)
+        public PlayerStatusPresenter(PlayerStatusEntity status, SANView sanView, StaminaView staminaView)
         {
-            _playerView = playerView;
-            _staminaView = staminaView;
+            _status = status;
             _sanView = sanView;
-            _staminaModel = staminaModel;
-            _sanValueModel = sanValueModel;
-
-            _staminaModel.SetMaxStamina(config.DefaultStaminaValue);
-            _sanValueModel.SetMaxSAN(config.DefaultSANValue);
+            _staminaView = staminaView;
         }
 
-        public void StatusUpdate()
+        private readonly PlayerStatusEntity _status;
+        private readonly SANView _sanView;
+        private readonly StaminaView _staminaView;
+        private readonly CompositeDisposable _disposables = new();
+
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize()
         {
-            if (_playerView.IsDash)
-            {
-                _staminaModel.ModifyStamina(-10 * Time.deltaTime);
+            _status.San.Subscribe(san => _sanView.UpdateSAN(san.Value)).AddTo(_disposables);
+            _status.Stamina.Subscribe(stamina => _staminaView.UpdateStamina(stamina.Ratio)).AddTo(_disposables);
+        }
 
-                _sanValueModel.ModifySAN(-0.1f * Time.deltaTime);
-
-            }
-            else if (_staminaModel.CurrentStamina < _staminaModel.MaxStamina && !_playerView.IsDash)
-            {
-                _staminaModel.ModifyStamina(5 * Time.deltaTime);
-            }
-            _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
-            _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
-        }
-        public void SANValueChange(float value)
-        {
-            _sanValueModel.ModifySAN(value);
-            _sanView.UpdateSAN(_sanValueModel.CurrentSAN);
-        }
-        public void StaminaValueChange(float value)
-        {
-            _staminaModel.ModifyStamina(value);
-            _staminaView.UpdateStamina(_staminaModel.CurrentStamina);
-        }
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
+        public void Dispose() => _disposables.Dispose();
     }
 }

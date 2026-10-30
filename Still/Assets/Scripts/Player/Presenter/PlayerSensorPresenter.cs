@@ -1,47 +1,69 @@
-﻿using Still.Player.View;
+using System;
+using Still.Common;
 using UnityEngine;
-namespace Still.Player.Presenter
+using VContainer.Unity;
+
+namespace Still.Player
 {
-    public class PlayerSensorPresenter
+    ///<summary>
+    ///視線の先の調べられるオブジェクトにガイドを出し、調べる入力を中継する
+    ///</summary>
+    public sealed class PlayerSensorPresenter : IInitializable, IDisposable
     {
-        private PlayerSensorView _playerSensorView;
-        private PlayerView _playerView;
-        private IInteractable _currentInteractable;
-        public PlayerSensorPresenter(PlayerSensorView playerSensorView, PlayerView playerView)
+        public PlayerSensorPresenter(PlayerSensorView sensorView, PlayerView playerView)
         {
-            _playerSensorView = playerSensorView;
+            _sensorView = sensorView;
             _playerView = playerView;
-            _playerView.OnInteractEvent += HandleInteractableInteract;
-            _playerSensorView.OnHitPlayerDetected += HandleHitDetected;
-            _playerSensorView.OnHitPlayerLost += HandleHitLost;
         }
-        private void HandleInteractableInteract()
+
+        private IInteractable _current;
+
+        private readonly PlayerSensorView _sensorView;
+        private readonly PlayerView _playerView;
+
+        ///<summary>
+        ///購読を始める
+        ///</summary>
+        public void Initialize()
         {
-            if (_currentInteractable != null)
-            {
-                _currentInteractable.Interact();
-            }
+            _playerView.OnInteractEvent += HandleInteract;
+            _sensorView.OnHitPlayerDetected += HandleHit;
+            _sensorView.OnHitPlayerLost += ClearCurrent;
         }
-        private void HandleHitDetected(RaycastHit hit)
-        {
-            if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
-            {
-                _currentInteractable = interactable;
-                interactable.ShowUI();
-            }
-        }
-        private void HandleHitLost()
-        {
-            if (_currentInteractable != null)
-            {
-                _currentInteractable.HideUI();
-                _currentInteractable = null;
-            }
-        }
+
+        ///<summary>
+        ///購読をやめる
+        ///</summary>
         public void Dispose()
         {
-            _playerSensorView.OnHitPlayerDetected -= HandleHitDetected;
-            _playerSensorView.OnHitPlayerLost -= HandleHitLost;
+            _playerView.OnInteractEvent -= HandleInteract;
+            _sensorView.OnHitPlayerDetected -= HandleHit;
+            _sensorView.OnHitPlayerLost -= ClearCurrent;
+        }
+
+        private void HandleInteract()
+        {
+            _current?.Interact();
+        }
+
+        private void HandleHit(RaycastHit hit)
+        {
+            if (!hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            {
+                ClearCurrent();
+                return;
+            }
+
+            // 別のオブジェクトへ視線が移ったときに前のガイドが残らないようにする
+            if (_current != interactable) ClearCurrent();
+            _current = interactable;
+            interactable.ShowUI();
+        }
+
+        private void ClearCurrent()
+        {
+            _current?.HideUI();
+            _current = null;
         }
     }
 }
