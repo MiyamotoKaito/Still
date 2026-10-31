@@ -26,6 +26,14 @@ namespace Still.Player
         }
 
         ///<summary>
+        ///カメラを前後軸まわりに傾ける（めまい・揺れの演出用）
+        ///</summary>
+        public void SetDutch(float degrees)
+        {
+            CinemachineCamera.Lens.Dutch = degrees;
+        }
+
+        ///<summary>
         ///マウスによる視点操作の有効／無効を切り替える
         ///</summary>
         public void SetLookInputEnabled(bool isEnabled)
