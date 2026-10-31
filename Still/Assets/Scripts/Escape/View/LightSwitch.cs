@@ -18,6 +18,8 @@ namespace Still.Escape
         public Transform Transform => transform;
         ///<summary>ミッションから指定するID（未設定なら空）</summary>
         public string SwitchId => _switchId;
+        ///<summary>光の位置</summary>
+        public Vector3 LightPosition => _light.transform.position;
 
         [SerializeField, Tooltip("ミッションから指定するID（儀式で点けておく照明など）")] private string _switchId;
         [SerializeField] private TextMeshProUGUI _text;
@@ -40,6 +42,14 @@ namespace Still.Escape
         {
             _isOn = isOn;
             _light.enabled = isOn;
+        }
+
+        ///<summary>
+        ///点灯状態は変えずに、光だけを一時的に点けたり消したりする（ちらつき演出用）
+        ///</summary>
+        public void SetLightVisible(bool isVisible)
+        {
+            _light.enabled = isVisible;
         }
 
         ///<summary>
