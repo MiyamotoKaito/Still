@@ -26,7 +26,7 @@ namespace Still.Player
         ///</summary>
         public void Initialize()
         {
-            _status.San.Subscribe(san => _sanView.UpdateSAN(san.Value)).AddTo(_disposables);
+            _status.San.Subscribe(san => _sanView.UpdateSAN(san.Ratio)).AddTo(_disposables);
             _status.Stamina.Subscribe(stamina => _staminaView.UpdateStamina(stamina.Ratio)).AddTo(_disposables);
         }
 
