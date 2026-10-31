@@ -24,6 +24,7 @@ namespace Still.Escape
             builder.Register<MissionUsecase>(Lifetime.Singleton);
             builder.Register<LightSwitchUsecase>(Lifetime.Singleton).AsSelf().As<ILightSwitchUsecase>();
             builder.Register<RoomQuery>(Lifetime.Singleton).As<IRoomQuery>();
+            builder.Register<LightFlickerService>(Lifetime.Singleton).As<IAmbientLightFlicker>();
 
             builder.RegisterComponentInHierarchy<EscapeChecklistView>();
             builder.RegisterSceneComponents<MissionTargetView>();
