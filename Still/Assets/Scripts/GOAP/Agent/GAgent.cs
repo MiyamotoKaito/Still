@@ -82,6 +82,9 @@ namespace Still.Goap
         public void Teleport(Vector3 position)
         {
             _navMeshAgent.Warp(position);
+            // 当たり判定は次の物理更新まで元の位置に残るため、同じフレームのプレイヤーの視線が
+            // 消えたはずのゴーストに当たり、FocusMeがもう一度発動してしまう。その場で位置を反映させる
+            Physics.SyncTransforms();
         }
 
         ///<summary>
