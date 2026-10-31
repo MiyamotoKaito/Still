@@ -17,6 +17,8 @@ namespace Still.Player
         public bool IsDepleted => _entity.San.CurrentValue.IsDepleted;
         ///<summary>ダッシュできるか</summary>
         public bool CanDash => !_entity.Stamina.CurrentValue.IsEmpty;
+        ///<summary>スタミナ回復の倍率（恐怖で息が上がると下がる）</summary>
+        public float RecoveryMultiplier { get; set; } = 1f;
 
         private readonly PlayerStatusEntity _entity;
         private readonly PlayerConfig _config;
@@ -44,7 +46,7 @@ namespace Still.Player
                 return;
             }
 
-            if (!stamina.IsFull) _entity.SetStamina(stamina.Add(_config.StaminaRecovery * deltaTime));
+            if (!stamina.IsFull) _entity.SetStamina(stamina.Add(_config.StaminaRecovery * RecoveryMultiplier * deltaTime));
         }
     }
 }
