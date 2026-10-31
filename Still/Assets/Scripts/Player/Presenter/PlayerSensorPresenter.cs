@@ -48,7 +48,9 @@ namespace Still.Player
 
         private void HandleHit(RaycastHit hit)
         {
-            if (!hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            // 両開きの扉などは子の扉板にもコライダーがあるため、親に付いた操作対象まで辿る
+            var interactable = hit.collider.GetComponentInParent<IInteractable>();
+            if (interactable == null)
             {
                 ClearCurrent();
                 return;
