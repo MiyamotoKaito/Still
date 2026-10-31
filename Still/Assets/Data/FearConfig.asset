@@ -1,0 +1,572 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70bde27956bc43e4d9ed9ca9993ddc7b, type: 3}
+  m_Name: FearConfig
+  m_EditorClassIdentifier: Still.Player::Still.Player.FearConfig
+  _sanEffects:
+  - rid: 3903915687839269125
+  - rid: 3903915687839269126
+  - rid: 3903915687839269127
+  - rid: 3903915687839269128
+  - rid: 3903915687839269129
+  - rid: 3903915687839269130
+  - rid: 3903915687839269131
+  - rid: 3903915687839269132
+  - rid: 3903915687839269133
+  _ghostSeenReactions:
+  - _name: "\u606F\u3092\u306E\u3080"
+    _minFearLevel: 0
+    _maxFearLevel: 1
+    _weight: 2
+    _actions:
+    - rid: 3903915687839269134
+    - rid: 3903915687839269135
+  - _name: "\u6620\u50CF\u304C\u4E71\u308C\u308B"
+    _minFearLevel: 0
+    _maxFearLevel: 4
+    _weight: 2
+    _actions:
+    - rid: 3903915687839269136
+    - rid: 3903915687839269137
+    - rid: 3903915687839269138
+    - rid: 3903915687839269139
+    - rid: 3903915687839269140
+  - _name: "\u60B2\u9CF4"
+    _minFearLevel: 2
+    _maxFearLevel: 4
+    _weight: 1.5
+    _actions:
+    - rid: 3903915687839269141
+    - rid: 3903915687839269142
+    - rid: 3903915687839269143
+    - rid: 3903915687839269144
+  - _name: "\u5632\u7B11"
+    _minFearLevel: 3
+    _maxFearLevel: 4
+    _weight: 1
+    _actions:
+    - rid: 3903915687839269145
+    - rid: 3903915687839269146
+    - rid: 3903915687839269147
+    - rid: 3903915687839269148
+  _ghostSeenCooldown: 8
+  _hallucinations:
+  - _name: "\u80CC\u5F8C\u3067\u30CE\u30C3\u30AF"
+    _minFearLevel: 1
+    _maxFearLevel: 4
+    _weight: 2
+    _actions:
+    - rid: 3903915687839269149
+  - _name: "\u3069\u3053\u304B\u3067\u30C9\u30A2\u304C\u958B\u304F"
+    _minFearLevel: 1
+    _maxFearLevel: 4
+    _weight: 1.5
+    _actions:
+    - rid: 3903915687839269150
+  - _name: "\u7167\u660E\u304C\u3061\u3089\u3064\u304F"
+    _minFearLevel: 2
+    _maxFearLevel: 4
+    _weight: 2
+    _actions:
+    - rid: 3903915687839269151
+  - _name: "\u61D0\u4E2D\u96FB\u706F\u304C\u3061\u3089\u3064\u304F"
+    _minFearLevel: 2
+    _maxFearLevel: 4
+    _weight: 1.5
+    _actions:
+    - rid: 3903915687839269152
+  - _name: "\u8996\u754C\u306E\u7AEF\u306B\u7ACB\u3064"
+    _minFearLevel: 3
+    _maxFearLevel: 4
+    _weight: 2
+    _actions:
+    - rid: 3903915687839269153
+  - _name: "\u8033\u5143\u306E\u7B11\u3044\u58F0"
+    _minFearLevel: 3
+    _maxFearLevel: 4
+    _weight: 1
+    _actions:
+    - rid: 3903915687839269154
+    - rid: 3903915687839269155
+  _minHallucinationFearLevel: 1
+  _hallucinationIntervalCalm: {x: 45, y: 70}
+  _hallucinationIntervalInsane: {x: 8, y: 15}
+  _fearFollowSpeed: 0.3
+  references:
+    version: 2
+    RefIds:
+    - rid: 3903915687839269125
+      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _parameter: 0
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.3
+            value: 0.1
+            inSlope: 0.4
+            outSlope: 0.4
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269126
+      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _parameter: 1
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.4
+            value: -15
+            inSlope: -60
+            outSlope: -60
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: -70
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269127
+      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _parameter: 2
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.4
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269128
+      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _parameter: 3
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.3
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.6
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269129
+      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _parameter: 4
+        _curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.7
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: -0.2
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269130
+      type: {class: LoopSoundByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _soundName: Heartbeat
+        _volume:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.3
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        _pitch:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0.9
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269131
+      type: {class: LoopSoundByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _soundName: Breath
+        _volume:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.5
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.8
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        _pitch:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1.2
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269132
+      type: {class: ViewSwayByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _amplitude:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0.6
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 3
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        _frequency: 0.25
+    - rid: 3903915687839269133
+      type: {class: StaminaRecoveryByFear, ns: Still.Player, asm: Still.Player}
+      data:
+        _multiplier:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.5
+            value: 0.85
+            inSlope: -0.5999999
+            outSlope: -0.5999999
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.4
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 9
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 3903915687839269134
+      type: {class: CameraShake, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _amplitude: 1.2
+        _duration: 0.35
+        _frequency: 18
+    - rid: 3903915687839269135
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 2
+        _peak: 0.5
+        _duration: 0.4
+    - rid: 3903915687839269136
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 2
+        _peak: 1
+        _duration: 0.7
+    - rid: 3903915687839269137
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 3
+        _peak: 1
+        _duration: 0.7
+    - rid: 3903915687839269138
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 4
+        _peak: -0.45
+        _duration: 0.5
+    - rid: 3903915687839269139
+      type: {class: PlaySound, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _soundName: Noise
+    - rid: 3903915687839269140
+      type: {class: FlashlightFlicker, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _duration: 0.8
+    - rid: 3903915687839269141
+      type: {class: ColorFlash, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _color: {r: 0.7, g: 0, b: 0, a: 0.7}
+        _duration: 0.35
+    - rid: 3903915687839269142
+      type: {class: CameraShake, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _amplitude: 3
+        _duration: 0.6
+        _frequency: 18
+    - rid: 3903915687839269143
+      type: {class: PlaySound, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _soundName: Scream
+    - rid: 3903915687839269144
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 0
+        _peak: 0.4
+        _duration: 1
+    - rid: 3903915687839269145
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 1
+        _peak: -80
+        _duration: 1.5
+    - rid: 3903915687839269146
+      type: {class: PlaySound, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0.3
+        _soundName: Laugh
+    - rid: 3903915687839269147
+      type: {class: RoomLightFlicker, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _radius: 15
+        _duration: 1.2
+    - rid: 3903915687839269148
+      type: {class: SanDamage, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0.3
+        _amount: 3
+    - rid: 3903915687839269149
+      type: {class: PlaySoundNearby, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _soundName: Knock
+        _distance: 4
+        _minAngleFromForward: 120
+    - rid: 3903915687839269150
+      type: {class: PlaySoundNearby, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _soundName: DoorOpen
+        _distance: 7
+        _minAngleFromForward: 90
+    - rid: 3903915687839269151
+      type: {class: RoomLightFlicker, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _radius: 12
+        _duration: 1.5
+    - rid: 3903915687839269152
+      type: {class: FlashlightFlicker, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _duration: 1.2
+    - rid: 3903915687839269153
+      type: {class: PhantomAppear, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _distance: 7
+        _angleFromForward: 40
+        _duration: 2
+        _vanishAngle: 12
+    - rid: 3903915687839269154
+      type: {class: PlaySoundNearby, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _soundName: Laugh
+        _distance: 1.5
+        _minAngleFromForward: 150
+    - rid: 3903915687839269155
+      type: {class: PostProcessPulse, ns: Still.Player, asm: Still.Player}
+      data:
+        _delay: 0
+        _parameter: 2
+        _peak: 0.6
+        _duration: 0.6

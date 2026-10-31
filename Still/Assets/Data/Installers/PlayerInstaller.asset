@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: PlayerInstaller
   m_EditorClassIdentifier: Still.Player::Still.Player.PlayerInstaller
   _config: {fileID: 11400000, guid: 93770a1d4f06f394ebaca2fb80f6fab3, type: 2}
+  _fearConfig: {fileID: 11400000, guid: bb13b81b74a1f6b4d9bf96c7332aca5f, type: 2}
