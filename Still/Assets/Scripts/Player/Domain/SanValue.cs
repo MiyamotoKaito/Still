@@ -20,6 +20,8 @@ namespace Still.Player
         public float Value { get; }
         ///<summary>最大値</summary>
         public float Max { get; }
+        ///<summary>最大値に対する割合（0〜1）</summary>
+        public float Ratio => Value / Max;
         ///<summary>ゲームオーバーになるか（表示が0%になった時点）</summary>
         public bool IsDepleted => Value < 1f;
 
