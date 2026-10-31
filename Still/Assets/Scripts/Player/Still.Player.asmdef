@@ -4,6 +4,7 @@
     "references": [
         "Still.Common",
         "Still.Input",
+        "Template",
         "VContainer",
         "UniTask",
         "R3.Unity",
