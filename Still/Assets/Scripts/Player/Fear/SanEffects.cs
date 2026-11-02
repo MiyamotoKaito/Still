@@ -24,6 +24,58 @@ namespace Still.Player
     }
 
     ///<summary>
+    ///画面効果を恐怖の度合いに応じた強さで、ときどき波のように強める
+    ///</summary>
+    // 歪みのように常にかかると見づらいだけの効果は、強めては戻すのを繰り返す
+    [Serializable]
+    public class PostProcessSurgeByFear : ISanEffect
+    {
+        [SerializeField] private FearPostProcessParameter _parameter;
+        [SerializeField, Tooltip("横軸=恐怖の度合い(0〜1)、縦軸=波の頂点での効果の値")] private AnimationCurve _curve = AnimationCurve.Linear(0.7f, 0f, 1f, -0.2f);
+        [SerializeField, Tooltip("1回の波で強まってから戻るまでの秒数")] private float _duration = 2.5f;
+        [SerializeField, Tooltip("次の波までの秒数（最小〜最大）")] private Vector2 _interval = new(4f, 9f);
+
+        [NonSerialized] private float _untilNext;
+        [NonSerialized] private float _elapsed = float.MaxValue;
+
+        ///<summary>
+        ///反映する
+        ///</summary>
+        public void Apply(float fear, FearEffectContext context)
+        {
+            float peak = _curve.Evaluate(fear);
+            // 効果が出ない間は待たせない。SAN値が下がった直後に最初の波が来る
+            if (Mathf.Approximately(peak, 0f))
+            {
+                Reset(context);
+                return;
+            }
+
+            _elapsed += Time.deltaTime;
+            _untilNext -= Time.deltaTime;
+            if (_untilNext <= 0f)
+            {
+                _elapsed = 0f;
+                _untilNext = _duration + UnityEngine.Random.Range(_interval.x, _interval.y);
+            }
+
+            float progress = _elapsed / _duration;
+            float envelope = progress < 1f ? Mathf.Sin(progress * Mathf.PI) : 0f;
+            context.PostProcess.SetBase(_parameter, peak * envelope);
+        }
+
+        ///<summary>
+        ///元に戻す
+        ///</summary>
+        public void Reset(FearEffectContext context)
+        {
+            _untilNext = 0f;
+            _elapsed = float.MaxValue;
+            context.PostProcess.SetBase(_parameter, 0f);
+        }
+    }
+
+    ///<summary>
     ///心音や息遣いをループさせ、恐怖の度合いで音量と速さを変える
     ///</summary>
     // 音はAudioManagerのBGMリストに名前で登録する。未登録なら最初の1回だけ警告して鳴らさない
@@ -32,7 +84,7 @@ namespace Still.Player
     {
         private const float Silent = 0.001f;
 
-        [SerializeField, Tooltip("AudioManagerのBGMリストに登録した名前")] private string _soundName = "Heartbeat";
+        [SerializeField, Tooltip("AudioManagerのBGMリストに登録した名前")] private string _soundName = "HeartBeat";
         [SerializeField, Tooltip("横軸=恐怖の度合い、縦軸=音量の倍率")] private AnimationCurve _volume = AnimationCurve.Linear(0.3f, 0f, 1f, 1f);
         [SerializeField, Tooltip("横軸=恐怖の度合い、縦軸=再生速度（心拍が速くなる）")] private AnimationCurve _pitch = AnimationCurve.Linear(0f, 0.9f, 1f, 1.4f);
 

@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -173,7 +173,7 @@ MonoBehaviour:
   - _clip: {fileID: 8300000, guid: 471377d328303f74cb589e136a70b885, type: 3}
     _name: Chase
     _volume: 0.1
-  - _clip: {fileID: 8300000, guid: 0c1a612c124258b45a86af4c2773607e, type: 3}
+  - _clip: {fileID: 8300000, guid: 64568e6f7078f604c979c7198ecc695b, type: 3}
     _name: Scream
     _volume: 0.1
   _bgmList:
@@ -185,6 +185,12 @@ MonoBehaviour:
     _volume: 0.1
   - _clip: {fileID: 8300000, guid: 248d9caca93f33a40b3d777f8d911fed, type: 3}
     _name: Recorder2
+    _volume: 0.1
+  - _clip: {fileID: 8300000, guid: 5ed7875c76be9d24380972633df5cb94, type: 3}
+    _name: HeartBeat
+    _volume: 0.1
+  - _clip: {fileID: 8300000, guid: 625896487c7fb9f45b5aab292c125405, type: 3}
+    _name: Breath
     _volume: 0.1
 --- !u!4 &351287624
 Transform:

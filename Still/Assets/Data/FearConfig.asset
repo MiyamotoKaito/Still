@@ -235,7 +235,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
     - rid: 3903915687839269129
-      type: {class: PostProcessByFear, ns: Still.Player, asm: Still.Player}
+      type: {class: PostProcessSurgeByFear, ns: Still.Player, asm: Still.Player}
       data:
         _parameter: 4
         _curve:
@@ -265,7 +265,7 @@ MonoBehaviour:
     - rid: 3903915687839269130
       type: {class: LoopSoundByFear, ns: Still.Player, asm: Still.Player}
       data:
-        _soundName: Heartbeat
+        _soundName: HeartBeat
         _volume:
           serializedVersion: 2
           m_Curve:
