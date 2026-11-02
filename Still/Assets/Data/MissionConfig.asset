@@ -59,17 +59,17 @@ MonoBehaviour:
     - rid: 3903915687839269102
       type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
       data:
-        _label: Tv
+        _label: Watch the TV
         _targetId: Tv
     - rid: 3903915687839269103
       type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
       data:
-        _label: PlayMusic
+        _label: Play the music
         _targetId: Music
     - rid: 3903915687839269104
       type: {class: InteractObjective, ns: Still.Escape, asm: Still.Escape}
       data:
-        _label: Book
+        _label: Take the book
         _targetId: Book
     - rid: 3903915687839269105
       type: {class: UnlockDoorEffect, ns: Still.Escape, asm: Still.Escape}
