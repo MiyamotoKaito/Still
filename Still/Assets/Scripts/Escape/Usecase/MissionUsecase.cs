@@ -13,12 +13,13 @@ namespace Still.Escape
     public sealed class MissionUsecase : IMissionEffectContext, IMissionContext
     {
         private const float EscapeFadeSeconds = 2f;
-        private const int WaitAfterEscapeFadeMilliseconds = 2000;
+        private const float EndingRevealSeconds = 0.5f;
         private const float TravelFadeSeconds = 0.6f;
 
         public MissionUsecase(MissionConfig config, MissionEntity entity, SceneComponentList<LightSwitch> lightSwitches,
                               IWorldStates worldStates, IAudioService audio, ISanUsecase san,
-                              IPlayerAvatar player, IScreenFader fader, IStateMachine stateMachine)
+                              IPlayerAvatar player, IScreenFader fader, IStateMachine stateMachine,
+                              IGhostAi ghost, EndingView ending)
         {
             _config = config;
             _entity = entity;
@@ -29,6 +30,8 @@ namespace Still.Escape
             _player = player;
             _fader = fader;
             _stateMachine = stateMachine;
+            _ghost = ghost;
+            _ending = ending;
         }
 
         ///<summary>全ステージを終えたか</summary>
@@ -45,6 +48,8 @@ namespace Still.Escape
         private readonly IPlayerAvatar _player;
         private readonly IScreenFader _fader;
         private readonly IStateMachine _stateMachine;
+        private readonly IGhostAi _ghost;
+        private readonly EndingView _ending;
 
         ///<summary>
         ///最初のステージから始める
@@ -115,13 +120,22 @@ namespace Still.Escape
         public bool IsExit(TargetId door) => door.Value == _config.ExitDoorId;
 
         ///<summary>
-        ///暗転してタイトルへ戻る
+        ///暗転してエンディングを流し、タイトルへ戻る
         ///</summary>
         public async UniTask EscapeAsync(CancellationToken ct)
         {
             _player.LockInput();
+            // エンディング中に捕まってチェックポイントへ戻されないよう、ゴーストを止めておく
+            _ghost.Stop();
             await _fader.FadeOutAsync(EscapeFadeSeconds, ct);
-            await UniTask.Delay(WaitAfterEscapeFadeMilliseconds, cancellationToken: ct);
+
+            // エンディングは黒い画面から始まるので、暗転を解いても見た目は黒のまま切り替わる
+            var ending = _ending.PlayAsync(ct);
+            await _fader.FadeInAsync(EndingRevealSeconds, ct);
+            await ending;
+
+            // エンディングの最後の黒画面のまま、タイトルへ切り替わるまで暗転で覆っておく
+            _fader.SetBlack();
             await _stateMachine.ChangeStateAsync(GameModeType.Title);
         }
 

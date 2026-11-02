@@ -27,6 +27,7 @@ namespace Still.Escape
             builder.Register<LightFlickerService>(Lifetime.Singleton).As<IAmbientLightFlicker>();
 
             builder.RegisterComponentInHierarchy<EscapeChecklistView>();
+            builder.RegisterComponentInHierarchy<EndingView>();
             builder.RegisterSceneComponents<MissionTargetView>();
             builder.RegisterSceneComponents<LockedDoor>();
             builder.RegisterSceneComponents<DoorView>();

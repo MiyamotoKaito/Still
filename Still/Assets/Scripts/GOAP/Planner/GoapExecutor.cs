@@ -9,7 +9,7 @@ namespace Still.Goap
     ///<summary>
     ///最優先ゴールのプランを立て、アクションを毎フレーム実行する
     ///</summary>
-    public sealed class GoapExecutor : IStartable, ITickable
+    public sealed class GoapExecutor : IStartable, ITickable, IGhostAi
     {
         public GoapExecutor(GhostActionData actionData, IWorldStates worldStates,
                             List<SubGoalConfig> goals, IAgentController agent)
@@ -82,6 +82,16 @@ namespace Still.Goap
             _currentAction = null;
             foreach (var effect in action.Effects) _worldStates.ModifyState(effect.Key, effect.Value);
             CheckCurrentGoalStatus();
+        }
+
+        ///<summary>
+        ///計画を捨てて立ち止まり、以降は計画を立てない
+        ///</summary>
+        public void Stop()
+        {
+            _isStarted = false;
+            CancelCurrentPlan();
+            _agent.StopMove();
         }
 
         ///<summary>

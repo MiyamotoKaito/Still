@@ -29,7 +29,7 @@ namespace Still.Goap
             builder.RegisterInstance(_subGoals);
 
             builder.Register<WorldStates>(Lifetime.Singleton).As<IWorldStates>();
-            builder.RegisterEntryPoint<GoapExecutor>().AsSelf();
+            builder.RegisterEntryPoint<GoapExecutor>().AsSelf().As<IGhostAi>();
             builder.RegisterEntryPoint<WorldStatesObserver>();
             builder.RegisterEntryPoint<GhostSightTicker>();
             builder.RegisterEntryPoint<KnockTimer>();
