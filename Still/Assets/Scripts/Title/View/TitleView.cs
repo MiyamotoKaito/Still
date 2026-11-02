@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Still.Title
 {
     ///<summary>
-    ///タイトル画面のカメラとUI
+    ///タイトル画面のカメラとテレビ画面の文字
     ///</summary>
     public class TitleView : MonoBehaviour
     {
@@ -14,7 +14,8 @@ namespace Still.Title
         [SerializeField] private CinemachineCamera _startCam;
         [SerializeField] private CinemachineCamera _endCam;
         [SerializeField] private int _startDelay = 800;
-        [SerializeField] private Canvas _canvas;
+        // UIで重ねるとテレビから浮いて見えるので、文字はテレビ画面へのデカールとして置く
+        [SerializeField] private GameObject _screenText;
 
         ///<summary>
         ///タイトル表示の状態にする
@@ -22,15 +23,15 @@ namespace Still.Title
         public void ShowTitle()
         {
             SetPriority(1, 0);
-            _canvas.enabled = true;
+            _screenText.SetActive(true);
         }
 
         ///<summary>
-        ///UIを消して奥へ進むカメラ演出を始める
+        ///画面の文字を消して奥へ進むカメラ演出を始める
         ///</summary>
         public void PlayStartTransition()
         {
-            _canvas.enabled = false;
+            _screenText.SetActive(false);
             SetPriority(0, 1);
         }
 
